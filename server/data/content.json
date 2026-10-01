@@ -1,0 +1,218 @@
+{
+  "admin": {
+    "username": "beaneryeatery@gmail.com",
+    "salt": "0ee0d3e2d71b0dbee237a561a480cba7",
+    "key": "ca51356ad5c6c9b3c5ffd35d9460f51357fa1bd6f372f78cd7b37e5dfd0b6a34ceefa3e8bb4ee2fe89cb6f399a07d833d67a0e428a57af877013400b9df47fc0"
+  },
+  "content": {
+    "site": {
+      "reserveUrl": "https://www.google.com/maps/reserve/v/dine/c/pclcfD0uASk",
+      "mapsUrl": "https://maps.app.goo.gl/VFNfybtJFMzzDoCM9?g_st=aw",
+      "instagramUrl": "https://www.instagram.com/beanery.pune/",
+      "liveMenuUrl": "https://www.zomato.com/pune/beanery-cafe-senapati-bapat-road/order?disableOpenApp=1&fsc=1"
+    },
+    "pages": {
+      "home": {
+        "label": "Home",
+        "eyebrowLeft": "Est. 2025 · Pune, India",
+        "eyebrowRight": "Coffee · Kitchen · All day",
+        "titleLine1": "Made for coffee.",
+        "titleLine2": "Built for the whole day.",
+        "intro": "From traceable coffees and precise brews to sourdough, pasta and dessert, Beanery is built around the things we want to return to, made with care, served without fuss."
+      },
+      "coffee": {
+        "label": "Coffee",
+        "eyebrowLeft": "Coffee",
+        "eyebrowRight": "Origins · Espresso · Manual brews",
+        "titleLine1": "Coffee, chosen",
+        "titleLine2": "with purpose,",
+        "titleLine3": "brewed with care.",
+        "intro": "Our coffee list moves with the season. We choose traceable lots for sweetness and character, then dial each one for the way it is served: espresso, filter or milk."
+      },
+      "story": {
+        "label": "Our story",
+        "eyebrowLeft": "Our story",
+        "eyebrowRight": "Established 2025 · Pune",
+        "titleLine1": "Made from coffee.",
+        "titleLine2": "Shaped by the room.",
+        "intro": ""
+      },
+      "experiences": {
+        "label": "Experiences",
+        "eyebrowLeft": "Experiences",
+        "eyebrowRight": "Brunches · Workshops · Tastings · Private events",
+        "titleLine1": "More ways to",
+        "titleLine2": "spend time at",
+        "titleLine3": "Beanery.",
+        "intro": ""
+      },
+      "journal": {
+        "label": "Journal",
+        "eyebrowLeft": "Journal",
+        "eyebrowRight": "Coffee · Food · People · Behind the scenes",
+        "titleLine1": "Stories from behind",
+        "titleLine2": "the cup and plate.",
+        "intro": ""
+      },
+      "visit": {
+        "label": "Visit",
+        "eyebrowLeft": "Visit Beanery",
+        "eyebrowRight": "Doors open from 8 AM",
+        "titleLine1": "Beanery,",
+        "titleLine2": "Senapati Bapat Road.",
+        "intro": "",
+        "address": "Beside Chaturshrungi Temple\nSenapati Bapat Road\nPune 411016",
+        "hours": "Mon – Thu 8:00 – 23:00\nFri – Sun 8:00 – 23:30\nKitchen until 22:30",
+        "contact": "+91 98609 34080\nhello@beanery.cafe\n@beanery.pune",
+        "goodToKnow": "Walk-ins welcome\nLaptops welcome until 5 PM\nStreet parking after 7 PM"
+      }
+    },
+    "menu": {
+      "eyebrowLeft": "Beanery · Pune",
+      "eyebrowRight": "Served daily from 8 AM",
+      "kicker": "The food menu",
+      "titleLine1": "Choose well.",
+      "titleLine2": "Stay a while.",
+      "intro": "A concise guide to the kitchen. Availability and pricing can change with the day; the live ordering menu is always current.",
+      "legendNote": "Please tell the team about allergies before ordering.",
+      "groups": [
+        {
+          "id": "light",
+          "number": "01",
+          "title": "Soups & salads",
+          "note": "Lighter plates, made to order.",
+          "items": [
+            {
+              "name": "Carrot Bisque",
+              "description": "Silky carrot and ginger soup, crispy sweet potato",
+              "price": "",
+              "diet": "V"
+            },
+            {
+              "name": "Burrata di Puglia",
+              "description": "Burrata, heirloom tomatoes, basil, extra virgin olive oil",
+              "price": "",
+              "diet": "V"
+            },
+            {
+              "name": "Beetroot & Orange Salad",
+              "description": "Kale, wild rice, candied walnut, mascarpone, citrus",
+              "price": "",
+              "diet": "V"
+            },
+            {
+              "name": "Chicken Caesar Salad",
+              "description": "Roasted chicken, romaine, croutons, tomato, parmesan",
+              "price": "",
+              "diet": "NV"
+            }
+          ]
+        },
+        {
+          "id": "small-plates",
+          "number": "02",
+          "title": "Sandwiches & small plates",
+          "note": "For the table or a quick lunch.",
+          "items": [
+            {
+              "name": "Roasted Mushroom Sandwich",
+              "description": "Sour cream, cheddar, mushroom and confit onion",
+              "price": "",
+              "diet": "V"
+            },
+            {
+              "name": "Three Cheese Sandwich",
+              "description": "Focaccia, onion marmalade and three cheeses",
+              "price": "",
+              "diet": "V"
+            },
+            {
+              "name": "Corn Ribs",
+              "description": "Charred sweet corn with herb tzatziki",
+              "price": "",
+              "diet": "V"
+            },
+            {
+              "name": "French Chicken Confit",
+              "description": "Slow-cooked chicken, mash and chicken jus",
+              "price": "",
+              "diet": "NV"
+            }
+          ]
+        },
+        {
+          "id": "pasta",
+          "number": "03",
+          "title": "Pasta & mains",
+          "note": "Substantial plates from the kitchen.",
+          "items": [
+            {
+              "name": "Aglio e Olio",
+              "description": "Garlic butter, chilli, olives, tomato and parmesan",
+              "price": "",
+              "diet": "V"
+            },
+            {
+              "name": "Spaghetti al Pesto Piccante",
+              "description": "Spicy pesto, pine nuts, parmesan and burrata",
+              "price": "",
+              "diet": "V"
+            },
+            {
+              "name": "Pesto-Grilled Cottage Cheese",
+              "description": "Fragrant rice, seasonal vegetables and pesto",
+              "price": "",
+              "diet": "V"
+            },
+            {
+              "name": "Chicken Xacuti",
+              "description": "Goan-spiced chicken with burnt garlic rice",
+              "price": "",
+              "diet": "NV"
+            }
+          ]
+        },
+        {
+          "id": "pizza-dessert",
+          "number": "04",
+          "title": "Pizza & dessert",
+          "note": "Neapolitan-style pies and something sweet.",
+          "items": [
+            {
+              "name": "Margherita",
+              "description": "Pomodoro, cherry tomato, fresh mozzarella and basil",
+              "price": "",
+              "diet": "V"
+            },
+            {
+              "name": "Mediterranean",
+              "description": "Olives, peppers, mushroom, mozzarella and feta",
+              "price": "",
+              "diet": "V"
+            },
+            {
+              "name": "Cajun Smoked Chicken",
+              "description": "Chicken, peppers, paprika chilli and mozzarella",
+              "price": "",
+              "diet": "NV"
+            },
+            {
+              "name": "Old School Chocolate Cake",
+              "description": "A rich house chocolate cake",
+              "price": "",
+              "diet": "V"
+            },
+            {
+              "name": "Blueberry Cheesecake",
+              "description": "Creamy cheesecake with blueberry",
+              "price": "",
+              "diet": "V"
+            }
+          ]
+        }
+      ]
+    },
+    "images": {}
+  },
+  "uploads": []
+}

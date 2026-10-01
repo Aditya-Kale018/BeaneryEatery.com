@@ -1,0 +1,317 @@
+// Must come first: it populates process.env for every module below.
+import './env.js';
+
+import path from 'node:path';
+import fs from 'node:fs';
+import crypto from 'node:crypto';
+import { fileURLToPath } from 'node:url';
+import express from 'express';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import multer from 'multer';
+
+import {
+  SESSION_COOKIE,
+  createSession,
+  destroySession,
+  readSession,
+  requireAuth,
+  verifyPassword,
+} from './auth.js';
+import {
+  UPLOADS_DIR,
+  addUpload,
+  getAdmin,
+  getContent,
+  listUploads,
+  removeUpload,
+  setContent,
+} from './store.js';
+import { normaliseContent } from './validate.js';
+import {
+  googleAllowlistEmpty,
+  googleClientId,
+  googleConfigured,
+  verifyGoogleCredential,
+} from './google.js';
+import { isR2Configured, uploadToR2, deleteFromR2 } from './r2.js';
+
+const here = path.dirname(fileURLToPath(import.meta.url));
+const distDir = path.join(here, '..', 'dist');
+const PORT = Number(process.env.PORT) || 3001;
+
+const app = express();
+
+// CORS configuration for Cloudflare Pages and local dev
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'http://localhost:3001',
+  process.env.FRONTEND_URL,
+].filter(Boolean);
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      if (
+        allowedOrigins.includes(origin) ||
+        process.env.FRONTEND_URL === '*' ||
+        /\.pages\.dev$/.test(origin)
+      ) {
+        return callback(null, true);
+      }
+      return callback(null, true);
+    },
+    credentials: true,
+  })
+);
+
+app.use(express.json({ limit: '1mb' }));
+app.use(cookieParser());
+
+/* ---------------------------------------------------------------- uploads -- */
+
+const ALLOWED_TYPES = new Map([
+  ['image/webp', '.webp'],
+  ['image/jpeg', '.jpg'],
+  ['image/png', '.png'],
+  ['image/avif', '.avif'],
+]);
+
+const upload = multer({
+  storage: isR2Configured()
+    ? multer.memoryStorage()
+    : multer.diskStorage({
+        destination: (req, file, cb) => cb(null, UPLOADS_DIR),
+        filename: (req, file, cb) =>
+          cb(null, `${crypto.randomBytes(16).toString('hex')}${ALLOWED_TYPES.get(file.mimetype)}`),
+      }),
+  limits: { fileSize: 8 * 1024 * 1024, files: 1 },
+  fileFilter: (req, file, cb) => {
+    if (!ALLOWED_TYPES.has(file.mimetype)) {
+      cb(new Error('Only WebP, JPEG, PNG or AVIF images are allowed'));
+      return;
+    }
+    cb(null, true);
+  },
+});
+
+if (fs.existsSync(UPLOADS_DIR)) {
+  app.use('/uploads', express.static(UPLOADS_DIR, { maxAge: '1y', immutable: true }));
+}
+
+/* ------------------------------------------------------------------- auth -- */
+
+async function issueSession(res, username) {
+  const token = await createSession(username);
+  res.cookie(SESSION_COOKIE, token, {
+    httpOnly: true,
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 12 * 60 * 60 * 1000,
+  });
+}
+
+app.post('/api/auth/google', async (req, res) => {
+  if (!googleConfigured()) {
+    res.status(503).json({ error: 'Google sign-in is not configured on this server' });
+    return;
+  }
+  try {
+    const user = await verifyGoogleCredential(req.body?.credential);
+    await issueSession(res, user.username);
+    res.json(user);
+  } catch (err) {
+    res.status(401).json({ error: err.message });
+  }
+});
+
+app.post('/api/auth/login', async (req, res) => {
+  if (googleConfigured()) {
+    res.status(403).json({ error: 'This site uses Google sign-in.' });
+    return;
+  }
+
+  const { username, password } = req.body ?? {};
+  const admin = await getAdmin();
+
+  if (!admin) {
+    res.status(503).json({ error: 'No admin account yet. Run: npm run admin:password' });
+    return;
+  }
+  if (typeof username !== 'string' || typeof password !== 'string') {
+    res.status(400).json({ error: 'Username and password are required' });
+    return;
+  }
+  if (username !== admin.username || !verifyPassword(password, admin)) {
+    res.status(401).json({ error: 'Incorrect username or password' });
+    return;
+  }
+
+  await issueSession(res, admin.username);
+  res.json({ username: admin.username });
+});
+
+app.post('/api/auth/logout', async (req, res) => {
+  await destroySession(req.cookies?.[SESSION_COOKIE]);
+  res.clearCookie(SESSION_COOKIE, {
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    secure: process.env.NODE_ENV === 'production',
+  });
+  res.json({ ok: true });
+});
+
+app.get('/api/auth/me', async (req, res) => {
+  const session = await readSession(req.cookies?.[SESSION_COOKIE]);
+  const google = googleConfigured();
+  const admin = await getAdmin();
+  res.json({
+    user: session ? { username: session.username } : null,
+    authMode: google ? 'google' : 'password',
+    googleClientId: google ? googleClientId() : '',
+    googleAllowlistEmpty: google ? googleAllowlistEmpty() : false,
+    hasAdmin: Boolean(admin),
+  });
+});
+
+/* ---------------------------------------------------------------- content -- */
+
+app.get('/api/content', async (req, res) => {
+  try {
+    const content = await getContent();
+    res.json(content);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.put('/api/content', requireAuth, async (req, res) => {
+  try {
+    const uploads = await listUploads();
+    const uploadUrls = new Set(uploads.map((u) => u.url));
+    const current = await getContent();
+    const normalised = normaliseContent(req.body, current, uploadUrls);
+    const updated = await setContent(normalised);
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* ------------------------------------------------------------ upload CRUD -- */
+
+app.get('/api/uploads', requireAuth, async (req, res) => {
+  try {
+    const uploads = await listUploads();
+    res.json(uploads);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/uploads', requireAuth, upload.single('image'), async (req, res) => {
+  if (!req.file) {
+    res.status(400).json({ error: 'No image received' });
+    return;
+  }
+
+  try {
+    const ext = ALLOWED_TYPES.get(req.file.mimetype);
+    const id = crypto.randomBytes(16).toString('hex');
+    let fileUrl = '';
+
+    if (isR2Configured()) {
+      const filename = `${id}${ext}`;
+      fileUrl = await uploadToR2(filename, req.file.buffer, req.file.mimetype);
+    } else {
+      fileUrl = `/uploads/${req.file.filename}`;
+    }
+
+    const entry = await addUpload({
+      id: id,
+      url: fileUrl,
+      name: String(req.file.originalname || '').slice(0, 120),
+      size: req.file.size,
+      uploadedAt: new Date().toISOString(),
+    });
+
+    res.status(201).json(entry);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.delete('/api/uploads/:id', requireAuth, async (req, res) => {
+  try {
+    const entry = await removeUpload(req.params.id);
+    if (!entry) {
+      res.status(404).json({ error: 'No such upload' });
+      return;
+    }
+
+    const content = await getContent();
+    const images = Object.fromEntries(
+      Object.entries(content.images || {}).filter(([, url]) => url !== entry.url),
+    );
+    await setContent({ ...content, images });
+
+    if (isR2Configured()) {
+      const filename = path.basename(entry.url);
+      await deleteFromR2(filename);
+    } else {
+      fs.rm(path.join(UPLOADS_DIR, path.basename(entry.url)), { force: true }, () => {});
+    }
+
+    res.json({ ok: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* -------------------------------------------------------- built site (prod) */
+
+if (fs.existsSync(distDir)) {
+  app.use(express.static(distDir));
+  app.get(/^\/admin\/?$/, (req, res) => res.sendFile(path.join(distDir, 'admin.html')));
+  app.use((req, res, next) => {
+    const passThrough =
+      req.method !== 'GET' || req.path.startsWith('/api/') || req.path.startsWith('/uploads/');
+    if (passThrough) {
+      next();
+      return;
+    }
+    res.sendFile(path.join(distDir, 'index.html'));
+  });
+}
+
+// Error handling
+app.use((err, req, res, next) => {
+  if (res.headersSent) {
+    next(err);
+    return;
+  }
+  const tooBig = err?.code === 'LIMIT_FILE_SIZE';
+  res.status(tooBig ? 413 : 400).json({ error: err?.message || 'Request failed' });
+});
+
+// Standalone server start (when not running as a Vercel serverless function)
+if (!process.env.VERCEL && !process.env.NOW_REGION) {
+  app.listen(PORT, async () => {
+    console.log(`Beanery API on http://localhost:${PORT}`);
+    if (googleConfigured()) {
+      console.log('Sign-in: Google');
+      if (googleAllowlistEmpty()) {
+        console.log('  WARNING: ADMIN_EMAILS is empty, so nobody can sign in yet.');
+      }
+    } else {
+      console.log('Sign-in: username and password (set GOOGLE_CLIENT_ID for Google)');
+      const admin = await getAdmin();
+      if (!admin) {
+        console.log('  No admin account yet - create one with: npm run admin:password');
+      }
+    }
+  });
+}
+
+export default app;

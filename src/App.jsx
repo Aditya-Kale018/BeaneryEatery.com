@@ -1,0 +1,2516 @@
+import React from 'react';
+import ImageSlot from './components/ImageSlot';
+import StoryPage from './components/StoryPage';
+import HospitalityHome from './components/HospitalityHome';
+import LocalityMap from './components/LocalityMap';
+import logoDark from './assets/brand/beanery-logo-dark.png';
+import logoLight from './assets/brand/beanery-logo-light.png';
+import faceRelief from './assets/brand/beanery-face-relief-v1.webp';
+import flowerLamp from './assets/brand/beanery-flower-lamp-anime-papercraft-v3.webp';
+import venueInterior from './assets/images/beanery-interior-real-v1.webp';
+import { ContentContext, useContent } from './content/ContentProvider';
+import { st } from './lib/style';
+import './styles/global.css';
+import './styles/hover.css';
+import './styles/motion.css';
+
+
+
+
+/**
+ * Safari paints a grey placeholder box for an <img> that already has layout
+ * dimensions but no decoded data yet - Chrome paints nothing there. `Img`
+ * keeps the element hidden until the load settles, so the box never shows.
+ * The ref covers images the cache completes before React attaches onLoad.
+ */
+function settleImg(el) {
+  if (el && el.complete) el.setAttribute('data-settled', '');
+}
+
+function onSettle(e) {
+  e.currentTarget.setAttribute('data-settled', '');
+}
+
+function Img(props) {
+  return <img {...props} data-await-load="" ref={settleImg} onLoad={onSettle} onError={onSettle} />;
+}
+
+/** Renders newline-separated content as <br />-separated lines. */
+function Lines({ text }) {
+  return String(text ?? '').split('\n').map((line, i) => (
+    <React.Fragment key={i}>
+      {i > 0 ? <br /> : null}
+      {line}
+    </React.Fragment>
+  ));
+}
+
+function PaperFlower({ variant = 'page' }) {
+  return (
+    <div data-paper-flower="" data-flower-variant={variant} aria-hidden="true">
+      <Img src={flowerLamp} alt="" loading="eager" fetchpriority="high" decoding="async" />
+      <span />
+    </div>
+  );
+}
+
+function PracticalFoodMenu({ openOrder, openReserve }) {
+  const { menu } = useContent();
+  const groups = menu.groups;
+
+  return (
+    <main className="menu-page">
+      <header className="menu-hero" data-flower-section="">
+        <PaperFlower variant="menu" />
+        <div className="menu-hero__eyebrow"><span>{menu.eyebrowLeft}</span><span>{menu.eyebrowRight}</span></div>
+        <div className="menu-hero__grid">
+          <div>
+            <p className="menu-kicker">{menu.kicker}</p>
+            <h1>{menu.titleLine1}<br /><em>{menu.titleLine2}</em></h1>
+          </div>
+          <div className="menu-hero__aside">
+            <p>{menu.intro}</p>
+            <div className="menu-actions">
+              <button onClick={openOrder}>View live menu</button>
+              <button className="menu-actions__quiet" onClick={openReserve}>Reserve a table</button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <nav className="menu-jump" aria-label="Menu categories">
+        {groups.map((group) => (
+          <button key={group.id} onClick={() => document.getElementById(`menu-${group.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}>
+            {group.title}
+          </button>
+        ))}
+      </nav>
+
+      <div className="menu-legend">
+        <span><i className="menu-dot menu-dot--veg" /> V · Vegetarian</span>
+        <span><i className="menu-dot menu-dot--nonveg" /> NV · Non-vegetarian</span>
+        <span>{menu.legendNote}</span>
+      </div>
+
+      <div className="menu-groups">
+        {groups.map((group) => (
+          <section id={`menu-${group.id}`} className="menu-group" key={group.id}>
+            <div className="menu-group__heading">
+              <span>{group.number}</span>
+              <div><h2>{group.title}</h2><p>{group.note}</p></div>
+            </div>
+            <div className="menu-items">
+              {group.items.map((entry, i) => (
+                <article className="menu-item" key={`${group.id}-${i}`}>
+                  <div><h3>{entry.name}</h3><p>{entry.description}</p></div>
+                  {/* Price is optional - an item with none simply shows the diet mark. */}
+                  {entry.price ? <span className="menu-price">{entry.price}</span> : null}
+                  <span className={`menu-diet menu-diet--${entry.diet === 'V' ? 'veg' : 'nonveg'}`} role="img" aria-label={entry.diet === 'V' ? 'Vegetarian' : 'Non-vegetarian'} />
+                </article>
+              ))}
+            </div>
+          </section>
+        ))}
+      </div>
+
+      <aside className="menu-footer-cta">
+        <div><p className="menu-kicker">Ready when you are</p><h2>Lunch, dinner,<br /><em>or a table in between.</em></h2></div>
+        <div className="menu-actions"><button onClick={openReserve}>Reserve a table</button><button className="menu-actions__quiet" onClick={openOrder}>Order online</button></div>
+      </aside>
+    </main>
+  );
+}
+
+/**
+ * Beanery: Coffee · Kitchen.
+ *
+ * A React port of the Claude Design prototype (`Beanery Website.dc.html`). The
+ * prototype was itself React underneath, so the component logic below is the
+ * design's own: same state shape, same content arrays, same reveal and rail
+ * behaviour. The markup keeps every style as the CSS declaration string the
+ * design authored, parsed by `st()`. Nothing was retyped, so nothing drifted.
+ *
+ * Props mirror the three knobs the design exposed in its properties panel.
+ */
+export default class App extends React.Component {
+  // The site's editable copy, images and links. A class component reads it
+  // through contextType rather than the useContent hook.
+  static contextType = ContentContext;
+
+  static defaultProps = {
+    motion: 'soft', // 'restrained' | 'soft' | 'rich'
+    showPrices: true,
+  };
+
+  state = {
+    page: ['home', 'story', 'coffee', 'food', 'experiences', 'journal', 'visit'].includes(window.location.hash.replace('#/', ''))
+      ? window.location.hash.replace('#/', '')
+      : 'home',
+    cup: 0,
+    menu: false,
+    brew: 0,
+    bean: 0,
+    part: 0,
+  };
+
+  dayparts = [
+    { key: 'Morning', hours: '08:00 to 11:30', title: 'First cups, fresh bakes', copy: 'The day starts with a dialled-in bar, warm pastry and the kind of coffee you can make a ritual of. Quick at the counter or slow at the table. Both work.', slot: 'part-morning', shot: 'Morning: sunlight across the counter, espresso being pulled, croissants on a tray, one guest standing' },
+    { key: 'Afternoon', hours: '11:30 - 18:00', title: 'Lunch, filters, a little more time', copy: 'Pasta, sourdough sandwiches and filter coffees take over the table. Come for lunch, stay for a meeting, or make a second cup part of the plan.', slot: 'part-afternoon', shot: 'Afternoon: two guests at a window table mid-conversation, plated pasta and a carafe, west light' },
+    { key: 'Evening', hours: '18:00 to close', title: 'Coffee still on. Plates for the table.', copy: 'The room settles into the evening with plates to share, dessert to linger over and the espresso machine still on. Beanery does not change character after dark - it simply slows down.', slot: 'part-evening', shot: 'Evening: low warm light, shared plates and glassware on marble, candle, guests in soft focus' },
+  ];
+
+  pillars = [
+    { n: '01', name: 'Coffee', copy: 'Traceable coffees, dialled with care and brewed for clarity, balance and consistency.' },
+    { n: '02', name: 'Kitchen', copy: 'A focused all-day menu built on fresh prep, good ingredients and dishes worth returning to.' },
+    { n: '03', name: 'Curiosity', copy: 'We taste, test and learn constantly, from new coffee lots to recipes, pairings and seasonal ideas.' },
+    { n: '04', name: 'Hospitality', copy: 'Warm, attentive and never overdone. Good service should feel natural.' },
+    { n: '05', name: 'Consistency', copy: 'The details matter every day: the shot, the loaf, the plate and the welcome.' },
+  ];
+
+  pages = [
+    ['home', 'Home'], ['story', 'Our Story'], ['coffee', 'Coffee'],
+    ['food', 'Menu'], ['experiences', 'Events'], ['journal', 'Journal'], ['visit', 'Visit Us'],
+  ];
+
+  go(page) {
+    return (e) => {
+      if (e) e.preventDefault();
+      if (window.location.hash !== `#/${page}`) window.history.pushState({ page }, '', `#/${page}`);
+      this.setState({ page }, () => window.scrollTo({ top: 0, behavior: 'auto' }));
+      requestAnimationFrame(() => this.setupReveals(true));
+    };
+  }
+
+  componentDidMount() {
+    this.onScroll = () => {
+      const n = this.navRef; if (!n) return;
+      const s = window.scrollY > 40;
+      n.style.background = s ? '#EDD3B7' : 'rgba(237,211,183,0)';
+      n.style.boxShadow = s ? '0 1px 0 rgba(53,38,31,.12)' : 'none';
+      n.style.backdropFilter = s ? 'blur(18px) saturate(1.15)' : 'none';
+      n.style.padding = s ? '14px 40px' : '26px 40px';
+      const total = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      document.documentElement.style.setProperty('--scroll-progress', Math.min(1, window.scrollY / total));
+    };
+    window.addEventListener('scroll', this.onScroll, { passive: true });
+    this.onPopState = () => {
+      const page = window.location.hash.replace('#/', '');
+      if (this.pages.some(([key]) => key === page)) this.setState({ page }, () => window.scrollTo({ top: 0 }));
+    };
+    window.addEventListener('popstate', this.onPopState);
+    this.onPointerMove = (event) => {
+      if (!window.matchMedia('(pointer: fine)').matches) return;
+      this.pointerX = event.clientX;
+      if (this.pointerFrame) return;
+      this.pointerFrame = requestAnimationFrame(() => {
+        this.pointerFrame = null;
+        const lamps = document.querySelectorAll('[data-paper-flower]');
+        if (!lamps.length) return;
+        const x = Math.max(-1, Math.min(1, (this.pointerX / window.innerWidth - .5) * 2));
+        lamps.forEach((lamp) => lamp.style.setProperty('--lamp-cursor-angle', `${x * 2.2}deg`));
+      });
+    };
+    this.resetPointer = () => {
+      document.querySelectorAll('[data-paper-flower]').forEach((lamp) => lamp.style.removeProperty('--lamp-cursor-angle'));
+    };
+    window.addEventListener('pointermove', this.onPointerMove, { passive: true });
+    window.addEventListener('blur', this.resetPointer);
+    this.onScroll();
+    this.setupReveals();
+    this.pulse = setInterval(() => this.setupReveals(), 400);
+    this.pulseStop = setTimeout(() => { clearInterval(this.pulse); this.setupReveals(true); }, 6000);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.onScroll);
+    window.removeEventListener('popstate', this.onPopState);
+    window.removeEventListener('pointermove', this.onPointerMove);
+    window.removeEventListener('blur', this.resetPointer);
+    if (this.pointerFrame) cancelAnimationFrame(this.pointerFrame);
+    if (this.revealScroll) { window.removeEventListener('scroll', this.revealScroll); window.removeEventListener('resize', this.revealScroll); }
+    clearInterval(this.pulse);
+    clearTimeout(this.pulseStop);
+    document.body.style.overflow = '';
+  }
+
+  componentDidUpdate() {
+    this.setupReveals();
+    document.body.style.overflow = this.state.menu ? 'hidden' : '';
+  }
+
+  motionSpec() {
+    const m = this.props.motion || 'soft';
+    if (m === 'restrained') return { y: 10, d: 520 };
+    if (m === 'rich') return { y: 46, d: 1100 };
+    return { y: 22, d: 780 };
+  }
+
+  reveal(el, delay) {
+    el.setAttribute('data-rv', 'shown');
+    el.style.transitionDelay = (delay || 0) + 'ms';
+    el.style.opacity = '1';
+    el.style.transform = 'none';
+  }
+
+  // Scroll-driven, no IntersectionObserver: every pass looks at ALL [data-reveal]
+  // nodes, so nothing can ever be stranded invisible.
+  setupReveals(forceAll) {
+    const { y, d } = this.motionSpec();
+    const nodes = document.querySelectorAll('[data-reveal]');
+    const vh = window.innerHeight;
+    nodes.forEach((el) => {
+      const state = el.getAttribute('data-rv');
+      if (state !== 'hidden' && state !== 'shown') {
+        el.style.transition = `opacity ${d}ms cubic-bezier(.2,.7,.2,1), transform ${d}ms cubic-bezier(.2,.7,.2,1)`;
+        el.style.opacity = '0';
+        el.style.transform = `translateY(${y}px)`;
+        el.setAttribute('data-rv', 'hidden');
+      }
+      if (state === 'shown') return;
+      const delay = parseFloat(el.getAttribute('data-reveal')) || 0;
+      if (forceAll) { this.reveal(el, 0); return; }
+      if (el.getBoundingClientRect().top < vh * 0.92) this.reveal(el, delay);
+    });
+    if (!this.revealScroll) {
+      this.revealScroll = () => {
+        if (this.revealQueued) return;
+        this.revealQueued = true;
+        requestAnimationFrame(() => { this.revealQueued = false; this.setupReveals(); });
+      };
+      window.addEventListener('scroll', this.revealScroll, { passive: true });
+      window.addEventListener('resize', this.revealScroll, { passive: true });
+    }
+  }
+
+  scrollRail(key, dir) {
+    return () => {
+      const el = this.rails && this.rails[key];
+      if (!el) return;
+      el.scrollBy({ left: dir * Math.min(el.clientWidth * 0.72, 620), behavior: 'smooth' });
+    };
+  }
+
+  railRef(key) {
+    return (el) => { this.rails = this.rails || {}; if (el) this.rails[key] = el; };
+  }
+
+  cups = [
+    {
+      cup: 'Ethiopia Guji · Pour-Over',
+      notes: 'Jasmine, bergamot, white peach',
+      body: 'Light roast, 1:16, 92°C',
+      dish: 'Burnt Basque Cheesecake',
+      dishNote: 'The Basque’s caramelised top meets the Guji’s tea-like florals, while the creamy centre softens the coffee’s bright acidity and brings the peach forward.',
+      slot: 'pair-guji',
+      shot: 'Overhead: Basque cheesecake wedge on ceramic, pour-over carafe alongside, warm daylight',
+    },
+    {
+      cup: 'Lychee Cold Brew',
+      notes: 'Lychee, cane sugar, cocoa nib',
+      body: '18-hour steep, served over clear ice',
+      dish: 'Aglio Olio Pasta',
+      dishNote: 'Cold, lightly sweet lychee lifts the chilli and garlic, giving the palate a clean reset without flattening the pasta’s heat.',
+      slot: 'pair-lychee',
+      shot: 'Aglio olio being twirled, tall glass of cold brew sweating beside it, linen napkin',
+    },
+    {
+      cup: 'House Espresso · Doppio',
+      notes: 'Dark chocolate, date, walnut',
+      body: '18g in, 38g out, 27 seconds',
+      dish: 'Cured Ham & Comté Baguette',
+      dishNote: 'Salty ham and nutty Comté sit naturally beside a syrupy, cocoa-led doppio: compact, savoury and built for a quick counter stop.',
+      slot: 'pair-espresso',
+      shot: 'Close-up: espresso crema in a small ceramic cup, baguette half in soft focus',
+    },
+    {
+      cup: 'Cortado',
+      notes: 'Toasted hazelnut, brown butter',
+      body: 'Doppio with 60ml silk-textured milk',
+      dish: 'Almond Croissant',
+      dishNote: 'Frangipane, toasted almond and browned butter echo the cortado’s soft, nutty sweetness. Rich, balanced and made for alternating bites and sips.',
+      slot: 'pair-cortado',
+      shot: 'Almond croissant with flaked almonds, cortado glass, marble tabletop',
+    },
+    {
+      cup: 'Kenya Nyeri · AeroPress',
+      notes: 'Blackcurrant, tomato leaf, cane',
+      body: '15g, 200ml, 2:10 inverted',
+      dish: 'Tomato & Burrata Sourdough',
+      dishNote: 'Blackcurrant-like acidity meets ripe tomato, while burrata brings enough richness to pull the cup and the plate into balance.',
+      slot: 'pair-kenya',
+      shot: 'Open-faced sourdough with burrata and tomato, AeroPress mid-plunge behind',
+    },
+  ];
+
+  beans = [
+    { origin: 'Ethiopia', farm: 'Guji · Hambela Wamena', alt: '2,050 m', process: 'Natural, 18 days raised bed', roast: 'Light', varietal: 'Heirloom', notes: ['Jasmine', 'Bergamot', 'White peach'], profile: { Acidity: 88, Body: 46, Sweetness: 72, Florality: 92, Bitterness: 22 }, slot: 'bean-eth', shot: 'Ethiopian green beans in a linen bag, hand-lettered origin tag' },
+    { origin: 'Colombia', farm: 'Huila · Finca La Esperanza', alt: '1,750 m', process: 'Washed, 36-hour ferment', roast: 'Medium', varietal: 'Caturra, Castillo', notes: ['Red apple', 'Panela', 'Almond'], profile: { Acidity: 62, Body: 70, Sweetness: 84, Florality: 40, Bitterness: 34 }, slot: 'bean-col', shot: 'Roasted beans cascading from a scoop, close-up, warm light' },
+    { origin: 'Kenya', farm: 'Nyeri · Gichathaini', alt: '1,880 m', process: 'Washed, double soaked', roast: 'Light-medium', varietal: 'SL28, SL34', notes: ['Blackcurrant', 'Tomato leaf', 'Cane'], profile: { Acidity: 94, Body: 58, Sweetness: 66, Florality: 55, Bitterness: 28 }, slot: 'bean-ken', shot: 'Cupping table: spoons, bowls, slurping in progress' },
+    { origin: 'India', farm: 'Chikmagalur · Estate No. 4', alt: '1,300 m', process: 'Monsooned, honey lot', roast: 'Medium-dark', varietal: 'S795', notes: ['Cocoa', 'Date', 'Toasted walnut'], profile: { Acidity: 38, Body: 90, Sweetness: 78, Florality: 18, Bitterness: 58 }, slot: 'bean-ind', shot: 'Drying beds on an Indian estate, low morning sun' },
+  ];
+
+  brews = [
+    { name: 'Espresso', kicker: '27 seconds', spec: ['18 g in · 38 g out', '93°C, 9 bar', 'Served in ceramic'], copy: 'Our bar standard: a syrupy doppio with enough sweetness and structure to drink straight or carry through milk.', price: '₹180', slot: 'brew-esp', shot: 'Espresso pulling into a warm cup, crema forming' },
+    { name: 'Pour-Over', kicker: '3:30 total', spec: ['15 g · 240 ml', '1:16, 92°C', 'Four-pour cascade'], copy: 'Single-origin coffee brewed to order on V60, designed to bring out clarity, aroma and the details of the lot.', price: '₹320', slot: 'brew-po', shot: 'Gooseneck kettle pouring in a spiral, steam catching daylight' },
+    { name: 'French Press', kicker: '4 minutes', spec: ['30 g · 500 ml', 'Full immersion', 'Served for two'], copy: 'Full-immersion brewing gives a rounder body and softer edges. Served for two, made for a slower table.', price: '₹340', slot: 'brew-fp', shot: 'French press on a linen tray, two cups, morning table' },
+    { name: 'AeroPress', kicker: '2:10 inverted', spec: ['15 g · 200 ml', 'Inverted, one press', 'Bright and clean'], copy: 'A compact, expressive brew with a clean finish, especially good when you want sweetness and body without heaviness.', price: '₹290', slot: 'brew-ap', shot: 'AeroPress mid-plunge, barista hands, close crop' },
+    { name: 'Cold Brew', kicker: '18 hours', spec: ['1:8 concentrate', 'Steeped cold, never heated', 'Lychee or classic'], copy: 'Steeped cold for 18 hours and served over clear ice. Choose it classic, or with lychee for a brighter, lightly sweet finish.', price: '₹280', slot: 'brew-cb', shot: 'Tall glass of cold brew, clear ice, condensation, dark wood' },
+  ];
+
+  signature = [
+    { kicker: 'Coffee', name: 'Lychee Cold Brew', copy: 'Cold-steeped for 18 hours, finished with lychee and a touch of cane.', slot: 'sig-1', shot: 'Lychee cold brew, tall glass, clear ice, backlit garnish' },
+    { kicker: 'Pasta', name: 'Aglio Olio', copy: 'Spaghetti, garlic, chilli and olive oil: glossy, savoury and deliberately simple.', slot: 'sig-2', shot: 'Aglio olio plated restaurant-style, chilli oil, overhead' },
+    { kicker: 'Dessert', name: 'Burnt Basque Cheesecake', copy: 'Deeply caramelised on top, creamy through the centre, and never off the favourites list.', slot: 'sig-3', shot: 'Basque cheesecake wedge plated, burnt top, cracked surface, cake fork' },
+    { kicker: 'Bakery', name: 'Levain Sourdough', copy: 'Slow-fermented, baked fresh and served across the menu while it lasts.', slot: 'sig-4', shot: 'Levain loaf, scored crust, flour dust, board' },
+    { kicker: 'Sandwich', name: 'Comté & Cured Ham', copy: 'Cured ham and Comté on baguette with cultured butter and cornichons.', slot: 'sig-5', shot: 'Comté and ham baguette cut clean, plated with cornichons' },
+    { kicker: 'Seasonal', name: 'Saffron Cardamom Latte', copy: 'A seasonal cup with Kashmiri saffron, green cardamom and whole milk.', slot: 'sig-6', shot: 'Saffron latte, threads on foam, ceramic cup, warm tones' },
+  ];
+
+  journal = [
+    { cat: 'Coffee', date: 'August 2026', title: 'How processing changes the cup', dek: 'The same Colombian coffee, three processing styles, and what changes when you taste them side by side.', read: '6 min', slot: 'j-1', shot: 'Cupping spoons and bowls on a dark table, overhead' },
+    { cat: 'Café Culture', date: 'July 2026', title: 'Why some coffees are better at the counter', dek: 'A note on quick espressos, standing counters and the rituals that make coffee part of the day.', read: '4 min', slot: 'j-2', shot: 'Standing bar counter, cups on saucers, motion blur of a barista' },
+    { cat: 'Kitchen', date: 'July 2026', title: 'What a slow ferment changes', dek: 'Our baker on timing, Pune humidity and the small decisions behind a better loaf.', read: '8 min', slot: 'j-3', shot: 'Baker hands shaping dough, flour, morning light' },
+  ];
+
+  testimonials = [
+    { quote: 'The only place in Pune where I’ll order a pour-over and a pasta in the same sitting and not feel silly about it.', who: 'Aditi R.', meta: 'Regular since 2023' },
+    { quote: 'I came for the cheesecake. I stayed because someone explained the Kenya to me for ten minutes and meant it.', who: 'Kabir M.', meta: 'Sunday brunch' },
+    { quote: 'It feels European without pretending to be somewhere else. The light at four in the afternoon is the reason I work here.', who: 'Sana D.', meta: 'Afternoon regular' },
+  ];
+
+  renderVals() {
+    const page = this.state.page;
+    const content = this.context;
+    const site = content.site;
+    const copy = content.pages;
+    const mk = (arr) => arr.map(([key, label]) => ({
+      key, label, go: this.go(key), active: page === key ? '1' : '0',
+      style: page === key ? 'font-size:12px;letter-spacing:.11em;text-transform:uppercase;font-weight:500;color:#A35730;cursor:pointer' : 'font-size:12px;letter-spacing:.11em;text-transform:uppercase;font-weight:500;color:#5E2B17;cursor:pointer',
+    }));
+    const cup = this.cups[this.state.cup] || this.cups[0];
+    const bean = this.beans[this.state.bean] || this.beans[0];
+    const part = this.dayparts[this.state.part] || this.dayparts[0];
+
+    return {
+      copy,
+      site,
+      pillars: this.pillars,
+      dayparts: this.dayparts.map((d, i) => ({
+        ...d, i,
+        pick: () => this.setState({ part: i }),
+        style: i === this.state.part
+          ? 'display:flex;justify-content:space-between;align-items:baseline;gap:20px;width:100%;text-align:left;padding:22px 24px;border:none;border-top:1px solid rgba(94,43,23,.16);background:#5E2B17;color:#FBF8F4;cursor:pointer;transition:background .4s ease,color .4s ease'
+          : 'display:flex;justify-content:space-between;align-items:baseline;gap:20px;width:100%;text-align:left;padding:22px 24px;border:none;border-top:1px solid rgba(94,43,23,.16);background:transparent;color:#5E2B17;cursor:pointer;transition:background .4s ease,color .4s ease',
+        hourStyle: i === this.state.part ? 'font-size:11px;letter-spacing:.14em;color:rgba(251,248,244,.65)' : 'font-size:11px;letter-spacing:.14em;color:#96755C',
+      })),
+      part,
+      menuOpen: this.state.menu,
+      openMenu: (e) => { if (e) e.preventDefault(); this.setState({ menu: true }); },
+      closeMenu: (e) => { if (e) e.preventDefault(); this.setState({ menu: false }); },
+      navAll: this.pages.map(([key, label]) => ({
+        key, label,
+        go: (e) => { if (e) e.preventDefault(); if (window.location.hash !== `#/${key}`) window.history.pushState({ page: key }, '', `#/${key}`); this.setState({ menu: false, page: key }, () => window.scrollTo({ top: 0 })); requestAnimationFrame(() => this.setupReveals(true)); },
+      })),
+      navRef: (el) => { this.navRef = el; },
+      navLeft: mk(this.pages.slice(0, 4)),
+      navRight: mk(this.pages.slice(4)),
+      goHome: this.go('home'),
+      isHome: page === 'home', isStory: page === 'story', isCoffee: page === 'coffee',
+      isFood: page === 'food', isExp: page === 'experiences', isJournal: page === 'journal',
+      isVisit: page === 'visit',
+      signature: this.signature.slice(0, 4),
+      journal: this.journal,
+      testimonials: this.testimonials,
+      brews: this.brews.slice(0, 4),
+      showPrices: this.props.showPrices !== false,
+      cups: this.cups.map((c, i) => ({
+        ...c, i,
+        pick: () => this.setState({ cup: i }),
+        style: i === this.state.cup
+          ? 'display:block;width:100%;text-align:left;padding:18px 20px;border:none;border-top:1px solid rgba(94,43,23,.14);background:#5E2B17;color:#FBF8F4;cursor:pointer;transition:background .35s ease,color .35s ease'
+          : 'display:block;width:100%;text-align:left;padding:18px 20px;border:none;border-top:1px solid rgba(94,43,23,.14);background:transparent;color:#5E2B17;cursor:pointer;transition:background .35s ease,color .35s ease',
+        subStyle: i === this.state.cup ? 'font-size:11.5px;color:rgba(251,248,244,.7);margin-top:5px' : 'font-size:11.5px;color:#96755C;margin-top:5px',
+      })),
+      cup,
+      beans: this.beans.map((b, i) => ({
+        ...b, i,
+        pick: () => this.setState({ bean: i }),
+        style: i === this.state.bean
+          ? 'font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:11px 18px;border:1px solid #5E2B17;background:#5E2B17;color:#FBF8F4;cursor:pointer;transition:all .3s ease'
+          : 'font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:11px 18px;border:1px solid rgba(94,43,23,.22);background:transparent;color:#5E2B17;cursor:pointer;transition:all .3s ease',
+      })),
+      bean,
+      beanProfile: Object.keys(bean.profile).map((k) => ({
+        label: k, value: bean.profile[k],
+        barStyle: `height:2px;background:#A35730;width:${bean.profile[k]}%;transition:width .7s cubic-bezier(.2,.7,.2,1)`,
+        num: bean.profile[k],
+      })),
+      railRefSig: this.railRef('sig'), railSigPrev: this.scrollRail('sig', -1), railSigNext: this.scrollRail('sig', 1),
+      railRefBrew: this.railRef('brew'), railBrewPrev: this.scrollRail('brew', -1), railBrewNext: this.scrollRail('brew', 1),
+      railRefExp: this.railRef('exp'), railExpPrev: this.scrollRail('exp', -1), railExpNext: this.scrollRail('exp', 1),
+      openReserve: (e) => { if (e) e.preventDefault(); window.open(site.reserveUrl, '_blank', 'noopener,noreferrer'); },
+      openOrder: (e) => { if (e) e.preventDefault(); window.open(site.mapsUrl, '_blank', 'noopener,noreferrer'); },
+      openMenuOrder: (e) => { if (e) e.preventDefault(); window.open(site.liveMenuUrl, '_blank', 'noopener,noreferrer'); },
+      goCoffee: this.go('coffee'), goFood: this.go('food'), goStory: this.go('story'),
+      goJournal: this.go('journal'), goVisit: this.go('visit'), goExp: this.go('experiences'),
+    };
+  }
+
+  render() {
+    const {
+      bean, beanProfile, beans, brews, closeMenu, copy, cup, cups, dayparts,
+      goCoffee, goExp, goFood, goHome, goJournal, goStory, goVisit,
+      isCoffee, isExp, isFood, isHome, isJournal, isStory, isVisit,
+      journal, menuOpen, navAll, navLeft, navRef, navRight, openMenu, openMenuOrder, openOrder, openReserve,
+      part, pillars, railBrewNext, railBrewPrev, railExpNext, railExpPrev, railRefBrew,
+      railRefExp, railRefSig, railSigNext, railSigPrev,
+      showPrices, signature, site, testimonials,
+    } = this.renderVals();
+
+    return (
+      <>
+      <div data-premium-grain="" aria-hidden="true" />
+      <div data-scroll-progress="" aria-hidden="true" />
+      <div data-site-intro="" aria-hidden="true">
+        <div data-intro-faces="">
+          <Img src={faceRelief} alt="" loading="eager" fetchpriority="high" decoding="async" />
+          <Img src={faceRelief} alt="" loading="eager" fetchpriority="high" decoding="async" />
+          <Img src={faceRelief} alt="" loading="eager" fetchpriority="high" decoding="async" />
+        </div>
+        <div data-intro-lockup="">
+          <small>Awaken the senses</small>
+          <span>Beanery</span>
+          <i />
+          <b>Coffee · Kitchen · Pune</b>
+        </div>
+      </div>
+      <div data-r="nav" style={st("position:fixed;top:0;left:0;right:0;z-index:90;background:rgba(251,248,244,0);transition:background .45s ease,box-shadow .45s ease,padding .45s ease;padding:26px 40px")} ref={navRef}>
+        <div style={st("display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:24px;max-width:1560px;margin:0 auto")}>
+          <button onClick={openMenu} data-r="mobonly" aria-label="Menu" style={st("display:none;align-items:center;gap:10px;background:transparent;border:none;padding:0;cursor:pointer;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:#5E2B17")}>
+            <span style={st("display:flex;flex-direction:column;gap:4px;width:22px")}>
+              <span style={st("height:1px;background:#5E2B17;display:block")} />
+              <span style={st("height:1px;background:#5E2B17;display:block")} />
+            </span>
+            {" Menu "}
+          </button>
+          <nav data-r="deskonly" style={st("display:flex;gap:26px;align-items:center")}>
+            {navLeft.map((item, i) => (
+              <a key={i} className="hv1" href={`#/${item.key}`} onClick={item.go} data-navlink="1" data-navactive={item.active} style={st("font-size:12px;letter-spacing:.11em;text-transform:uppercase;font-weight:500;padding-bottom:5px;cursor:pointer")}>
+                {item.label}
+              </a>
+            ))}
+          </nav>
+          <a href="#/home" onClick={goHome} style={st("text-align:center;display:flex;flex-direction:column;align-items:center;cursor:pointer")}>
+            <Img src={logoDark} alt="Beanery: Coffee · Kitchen" style={st("width:175px;height:auto;display:block")} />
+          </a>
+          <nav data-r="deskonly" style={st("display:flex;gap:26px;align-items:center;justify-content:flex-end")}>
+            {navRight.map((item, i) => (
+              <a key={i} className="hv1" href={`#/${item.key}`} onClick={item.go} data-navlink="1" data-navactive={item.active} style={st("font-size:12px;letter-spacing:.11em;text-transform:uppercase;font-weight:500;padding-bottom:5px;cursor:pointer")}>
+                {item.label}
+              </a>
+            ))}
+            <button className="hv2 cafe-green-button" onClick={openReserve} style={st("font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:500;color:#FBF8F4;background:#5E2B17;border:none;padding:13px 22px;cursor:pointer;transition:background .3s ease")}>
+              Reserve a table
+            </button>
+          </nav>
+          <div data-r="mobonly" style={st("display:none;justify-content:flex-end")}>
+            <button onClick={openReserve} style={st("font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:500;color:#FBF8F4;background:#5E2B17;border:none;padding:11px 16px;cursor:pointer")}>
+              Book
+            </button>
+          </div>
+        </div>
+      </div>
+      {menuOpen && (
+        <>
+          <div data-overlay="menu" style={st("position:fixed;inset:0;z-index:150;background:#EDD3B7;display:flex;flex-direction:column;padding:26px 24px 40px")}>
+            <div style={st("display:flex;justify-content:space-between;align-items:center")}>
+              <Img src={logoDark} alt="Beanery: Coffee · Kitchen" style={st("width:136px;height:auto;display:block")} />
+              <button onClick={closeMenu} aria-label="Close menu" style={st("background:transparent;border:none;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#96755C;cursor:pointer")}>
+                Close ×
+              </button>
+            </div>
+            <nav style={st("display:flex;flex-direction:column;margin-top:44px;border-top:1px solid rgba(94,43,23,.14)")}>
+              {navAll.map((item, i) => (
+                <a key={i} href={`#/${item.key}`} onClick={item.go} style={st("font-family:'Playfair Display',Georgia,serif;font-size:34px;font-weight:400;padding:18px 0;border-bottom:1px solid rgba(94,43,23,.14);cursor:pointer")}>
+                  {item.label}
+                </a>
+              ))}
+            </nav>
+            <div style={st("margin-top:auto;padding-top:34px;display:flex;flex-direction:column;gap:14px")}>
+              <button onClick={openReserve} style={st("text-align:left;font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:500;color:#FBF8F4;background:#5E2B17;border:none;padding:19px 24px;cursor:pointer")}>
+                Reserve a table
+              </button>
+              <div style={st("font-size:12.5px;line-height:1.8;color:#96755C")}>
+                Senapati Bapat Road, Pune · Daily from 8 AM
+                <br />
+                +91 98609 34080
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+      <div id="top" />
+      <div key={this.state.page} data-page-enter="" className={isFood ? 'menu-route' : undefined}>
+        {isHome && (
+          <>
+            <div>
+              <section data-home-hero="" data-flower-section="" style={st("padding:146px 40px 0;background:#EDD3B7;position:relative;overflow:hidden;isolation:isolate")}>
+                <PaperFlower variant="hero" />
+                <div style={st("max-width:1560px;margin:0 auto")}>
+                  <div style={st("display:flex;justify-content:space-between;align-items:flex-end;gap:40px;flex-wrap:wrap;padding-bottom:26px;border-bottom:1px solid rgba(94,43,23,.14)")}>
+                    <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
+                      {copy.home.eyebrowLeft}
+                    </div>
+                    <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#96755C")}>
+                      {copy.home.eyebrowRight}
+                    </div>
+                  </div>
+                  <h1 data-reveal="0" style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(46px,8.6vw,158px);line-height:.9;letter-spacing:-.03em;margin:52px 0 0")}>
+                    {copy.home.titleLine1}
+                    <br />
+                    <span style={st("font-style:italic;color:#A35730")}>{copy.home.titleLine2}</span>
+                  </h1>
+                  <div data-reveal="120" style={st("display:grid;grid-template-columns:1.1fr 1fr;gap:56px;align-items:end;margin:56px 0 60px")}>
+                    <p style={st("font-size:16.5px;line-height:1.75;color:#6E4A34;max-width:56ch")}>
+                      {copy.home.intro}
+                    </p>
+                    <div style={st("display:flex;gap:14px;justify-content:flex-end;flex-wrap:wrap")}>
+                      <button className="hv2 cafe-green-button" onClick={openReserve} style={st("font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:500;color:#FBF8F4;background:#5E2B17;border:none;padding:19px 34px;cursor:pointer;transition:background .35s ease")}>
+                        Reserve a table
+                      </button>
+                      <button className="hv5" onClick={openOrder} style={st("font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:500;color:#5E2B17;background:transparent;border:1px solid rgba(94,43,23,.3);padding:19px 34px;cursor:pointer;transition:all .35s ease")}>
+                        Order online
+                      </button>
+                    </div>
+                  </div>
+                  <div data-reveal="200" style={st("display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:18px;align-items:end")}>
+                    <div style={st("overflow:hidden;height:60vh;min-height:420px;background:#EFE3D8")}>
+                      <div className="hv7" style={st("width:100%;height:100%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)")}>
+                        <ImageSlot id="hero-grid-1" priority placeholder="Wide: the dining room in warm daylight - banquette, glassware, marble counter, guests mid-meal" />
+                      </div>
+                    </div>
+                    <div style={st("overflow:hidden;height:44vh;min-height:320px;background:#DFCBB9")}>
+                      <div className="hv7" style={st("width:100%;height:100%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)")}>
+                        <ImageSlot id="hero-grid-2" priority placeholder="Close craft: espresso extraction into a warm cup, crema forming, barista hands, shallow depth" />
+                      </div>
+                    </div>
+                    <div style={st("overflow:hidden;height:52vh;min-height:380px;background:#EFE3D8")}>
+                      <div className="hv7" style={st("width:100%;height:100%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)")}>
+                        <ImageSlot id="hero-grid-3" priority placeholder="Restaurant plating: chef's hands finishing a dish with sauce and oil, overhead, dark ceramic" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <HospitalityHome openReserve={openReserve} goFood={goFood} goExp={goExp} goVisit={goVisit} />
+              <section data-home-trim="" style={st("padding:140px 40px 120px;background:#EDD3B7")}>
+                <div style={st("max-width:1560px;margin:0 auto")}>
+                  <div data-reveal="0" style={st("display:flex;align-items:baseline;gap:18px;padding-bottom:26px;border-bottom:1px solid rgba(94,43,23,.14)")}>
+                    <span style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
+                      The Beanery way
+                    </span>
+                    <span style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#96755C")}>
+                      Coffee · Food · Hospitality
+                    </span>
+                  </div>
+                  <p data-reveal="60" style={st("font-family:'Playfair Display',Georgia,serif;font-size:clamp(30px,4.4vw,74px);line-height:1.14;font-weight:400;letter-spacing:-.025em;max-width:26ch;margin-top:56px")}>
+                    Serious about coffee. Particular about food. Easy about everything else.
+                  </p>
+                  <div data-reveal="140" style={st("display:grid;grid-template-columns:1fr 1fr 1fr;gap:44px;margin-top:76px;padding-top:36px;border-top:1px solid rgba(94,43,23,.14)")}>
+                    <p style={st("font-size:14.5px;line-height:1.85;color:#6E4A34")}>
+                      We keep the coffee list focused: distinct origins, clear flavour, and recipes dialled for the way each cup is served. The selection moves with the season.
+                    </p>
+                    <p style={st("font-size:14.5px;line-height:1.85;color:#6E4A34")}>
+                      The menu stays tight so the kitchen can pay attention: fresh prep, good ingredients, and dishes built to be ordered again, not just photographed once.
+                    </p>
+                    <p style={st("font-size:14.5px;line-height:1.85;color:#6E4A34")}>
+                      Beanery is made for the full day: quick coffees, long lunches, work that runs over, catch-ups that turn into dinner, and one more cup when you feel like staying.
+                    </p>
+                  </div>
+                </div>
+              </section>
+              <section data-home-trim="" style={st("padding:0 40px 130px;background:#EDD3B7")}>
+                <div style={st("max-width:1560px;margin:0 auto")}>
+                  <div data-reveal="0" style={st("display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap;padding-bottom:24px;border-bottom:1px solid rgba(94,43,23,.14)")}>
+                    <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
+                      What we care about
+                    </div>
+                    <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#96755C")}>
+                      The standards behind Beanery
+                    </div>
+                  </div>
+                  <div style={st("display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;border-bottom:1px solid rgba(94,43,23,.14)")}>
+                    {pillars.map((p, i) => (
+                      <div key={i} className="hv8" data-reveal="40" style={st("padding:34px 24px 38px;border-right:1px solid rgba(94,43,23,.14);color:#5E2B17;transition:background .55s cubic-bezier(.22,.7,.2,1),color .55s ease")}>
+                        <div style={st("font-family:'Playfair Display',Georgia,serif;font-size:13px;letter-spacing:.24em;color:#B78765")}>
+                          {p.n}
+                        </div>
+                        <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:25px;margin-top:14px;line-height:1.12;color:inherit")}>
+                          {p.name}
+                        </h3>
+                        <p style={st("font-size:13px;line-height:1.7;color:inherit;opacity:.72;margin-top:10px")}>
+                          {p.copy}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </section>
+              <section style={st("background:#EFE3D8;padding:120px 40px")}>
+                <div style={st("max-width:1560px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:76px;align-items:center")}>
+                  <div data-reveal="0" style={st("overflow:hidden;background:#DFCBB9;aspect-ratio:4/5")}>
+                    <div className="hv7" style={st("width:100%;height:100%;transition:transform 1.5s cubic-bezier(.2,.7,.2,1)")}>
+                      <ImageSlot id="feat-coffee" placeholder="Close craft: V60 pour in a spiral, gooseneck kettle, steam catching daylight (portrait 4:5)" />
+                    </div>
+                  </div>
+                  <div data-feature-copy="">
+                    <div data-feature-relief="" aria-hidden="true">
+                      <span />
+                      <Img src={faceRelief} alt="" />
+                    </div>
+                    <div data-reveal="40" style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
+                      Featured coffee · On the bar
+                    </div>
+                    <h2 data-reveal="90" style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(38px,4.4vw,66px);line-height:1.02;letter-spacing:-.02em;margin:22px 0 0")}>
+                      Ethiopia Guji
+                      <br />
+                      <span style={st("font-style:italic")}>Hambela Wamena</span>
+                    </h2>
+                    <p data-reveal="140" style={st("font-size:15.5px;line-height:1.8;color:#6E4A34;margin-top:28px;max-width:48ch")}>
+                      A naturally processed coffee from Hambela Wamena, grown at 2,050 metres and roasted light for filter. Expect jasmine and bergamot up front, with white peach through the finish. Try it on V60 for clarity or AeroPress for a rounder cup.
+                    </p>
+                    <div data-reveal="190" style={st("margin-top:40px;border-top:1px solid rgba(94,43,23,.18)")}>
+                      <div style={st("display:flex;justify-content:space-between;padding:16px 0;border-bottom:1px solid rgba(94,43,23,.12);font-size:13px")}>
+                        <span style={st("letter-spacing:.14em;text-transform:uppercase;font-size:10.5px;color:#96755C")}>
+                          Process
+                        </span>
+                        <span>Natural · raised bed, 18 days</span>
+                      </div>
+                      <div style={st("display:flex;justify-content:space-between;padding:16px 0;border-bottom:1px solid rgba(94,43,23,.12);font-size:13px")}>
+                        <span style={st("letter-spacing:.14em;text-transform:uppercase;font-size:10.5px;color:#96755C")}>
+                          Altitude
+                        </span>
+                        <span>2,050 m</span>
+                      </div>
+                      <div style={st("display:flex;justify-content:space-between;padding:16px 0;border-bottom:1px solid rgba(94,43,23,.12);font-size:13px")}>
+                        <span style={st("letter-spacing:.14em;text-transform:uppercase;font-size:10.5px;color:#96755C")}>
+                          Roast
+                        </span>
+                        <span>Light · filter</span>
+                      </div>
+                      <div style={st("display:flex;justify-content:space-between;padding:16px 0;font-size:13px")}>
+                        <span style={st("letter-spacing:.14em;text-transform:uppercase;font-size:10.5px;color:#96755C")}>
+                          Notes
+                        </span>
+                        <span>Jasmine · bergamot · white peach</span>
+                      </div>
+                    </div>
+                    <a className="hv9" href="#top" onClick={goCoffee} data-reveal="240" style={st("display:inline-flex;align-items:center;gap:12px;margin-top:36px;font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:500;padding-bottom:8px;border-bottom:1px solid #5E2B17")}>
+                      {"Explore the coffee "}
+                      <span style={st("font-family:Georgia,serif")}>→</span>
+                    </a>
+                  </div>
+                </div>
+              </section>
+              <section style={st("padding:130px 40px;background:#EDD3B7")}>
+                <div style={st("max-width:1560px;margin:0 auto")}>
+                  <div data-reveal="0" style={st("display:flex;justify-content:space-between;align-items:flex-end;gap:36px;flex-wrap:wrap;padding-bottom:28px;border-bottom:1px solid rgba(94,43,23,.14)")}>
+                    <div>
+                      <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
+                        From the kitchen
+                      </div>
+                      <h2 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(34px,4vw,58px);line-height:1.04;letter-spacing:-.02em;margin-top:18px")}>
+                        A focused menu,
+                        <br />
+                        made for the whole day
+                      </h2>
+                    </div>
+                    <a className="hv9" href="#top" onClick={goFood} style={st("font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:500;padding-bottom:8px;border-bottom:1px solid #5E2B17;white-space:nowrap")}>
+                      Explore the menu →
+                    </a>
+                  </div>
+                  <div style={st("display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:56px")}>
+                    <div data-reveal="40">
+                      <div style={st("overflow:hidden;background:#EFE3D8;aspect-ratio:3/4")}>
+                        <div className="hv10" style={st("width:100%;height:100%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)")}>
+                          <ImageSlot id="dish-1" placeholder="Restaurant plating: aglio olio nested with tongs, chilli oil and parsley, dark ceramic, overhead" />
+                        </div>
+                      </div>
+                      <div style={st("display:flex;justify-content:space-between;align-items:baseline;margin-top:20px;gap:16px")}>
+                        <div style={st("display:flex;align-items:center;gap:10px")}>
+                          <span style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#A35730")}>
+                            Italy
+                          </span>
+                          <span style={st("display:flex;align-items:center;gap:6px;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:#2E5D36;border:1px solid rgba(107,143,90,.6);padding:4px 8px")}>
+                            <span style={st("width:5px;height:5px;background:#6B8F5A;display:block")} />
+                            Veg
+                          </span>
+                        </div>
+                        <div style={st("font-size:11px;color:#96755C")}>Most ordered</div>
+                      </div>
+                      <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:27px;margin-top:10px")}>
+                        Aglio Olio
+                      </h3>
+                      <p style={st("font-size:14px;line-height:1.75;color:#6E4A34;margin-top:10px")}>
+                        Spaghetti, garlic, chilli, parsley and olive oil, emulsified until glossy. Simple ingredients, exacting technique.
+                      </p>
+                    </div>
+                    <div data-reveal="120">
+                      <div style={st("overflow:hidden;background:#EFE3D8;aspect-ratio:3/4")}>
+                        <div className="hv10" style={st("width:100%;height:100%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)")}>
+                          <ImageSlot id="dish-2" placeholder="Croque monsieur cut clean, béchamel edge caught under the grill, on ceramic with cornichons" />
+                        </div>
+                      </div>
+                      <div style={st("display:flex;justify-content:space-between;align-items:baseline;margin-top:20px;gap:16px")}>
+                        <div style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#A35730")}>
+                          France
+                        </div>
+                        <div style={st("font-size:11px;color:#96755C")}>All day</div>
+                      </div>
+                      <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:27px;margin-top:10px")}>
+                        Croque Monsieur
+                      </h3>
+                      <p style={st("font-size:14px;line-height:1.75;color:#6E4A34;margin-top:10px")}>
+                        House sourdough layered with cured ham and Comté béchamel, grilled until crisp at the edges. Cornichons on the side.
+                      </p>
+                    </div>
+                    <div data-reveal="200">
+                      <div style={st("overflow:hidden;background:#EFE3D8;aspect-ratio:3/4")}>
+                        <div className="hv10" style={st("width:100%;height:100%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)")}>
+                          <ImageSlot id="dish-3" placeholder="Basque cheesecake: caramelised top, one wedge lifted, crumb visible, cake fork and linen" />
+                        </div>
+                      </div>
+                      <div style={st("display:flex;justify-content:space-between;align-items:baseline;margin-top:20px;gap:16px")}>
+                        <div style={st("display:flex;align-items:center;gap:10px")}>
+                          <span style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#A35730")}>
+                            Spain
+                          </span>
+                          <span style={st("display:flex;align-items:center;gap:6px;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:#2E5D36;border:1px solid rgba(107,143,90,.6);padding:4px 8px")}>
+                            <span style={st("width:5px;height:5px;background:#6B8F5A;display:block")} />
+                            Veg
+                          </span>
+                        </div>
+                        <div style={st("font-size:11px;color:#96755C")}>Baked fresh daily</div>
+                      </div>
+                      <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:27px;margin-top:10px")}>
+                        Burnt Basque Cheesecake
+                      </h3>
+                      <p style={st("font-size:14px;line-height:1.75;color:#6E4A34;margin-top:10px")}>
+                        Deeply caramelised on top, soft at the centre, baked fresh and served simply.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <section style={st("padding:120px 0 130px;background:#5E2B17;color:#FBF8F4;overflow:hidden")}>
+                <div style={st("max-width:1560px;margin:0 auto;padding:0 40px")}>
+                  <div data-reveal="0" style={st("display:flex;justify-content:space-between;align-items:flex-end;gap:36px;flex-wrap:wrap;padding-bottom:26px;border-bottom:1px solid rgba(251,248,244,.2)")}>
+                    <div>
+                      <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#B78765;font-weight:500")}>
+                        Beanery favourites
+                      </div>
+                      <h2 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(34px,4vw,58px);line-height:1.04;letter-spacing:-.02em;margin-top:18px")}>
+                        The cups and plates
+                        <br />
+                        worth coming back for
+                      </h2>
+                    </div>
+                    <div style={st("display:flex;gap:8px")}>
+                      <button className="hv11" onClick={railSigPrev} aria-label="Previous" style={st("width:48px;height:48px;border:1px solid rgba(251,248,244,.3);background:transparent;color:#FBF8F4;cursor:pointer;font-size:16px;transition:all .3s ease")}>
+                        ←
+                      </button>
+                      <button className="hv11" onClick={railSigNext} aria-label="Next" style={st("width:48px;height:48px;border:1px solid rgba(251,248,244,.3);background:transparent;color:#FBF8F4;cursor:pointer;font-size:16px;transition:all .3s ease")}>
+                        →
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div data-reveal="60" data-rail="" ref={railRefSig} style={st("display:flex;gap:28px;overflow-x:auto;scroll-snap-type:x mandatory;padding:52px 40px 32px;max-width:1640px;margin:0 auto")}>
+                  {signature.map((s, i) => (
+                    <div key={i} style={st("flex:0 0 380px;scroll-snap-align:start;background:rgba(251,248,244,.05);border:1px solid rgba(251,248,244,.12);padding:24px;display:flex;flex-direction:column;justify-content:space-between")}>
+                      <div>
+                        <div style={st("overflow:hidden;background:#71351C;aspect-ratio:1/1")}>
+                          <div className="hv12" style={st("width:100%;height:100%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)")}>
+                            <ImageSlot id={s.slot} placeholder={s.shot} />
+                          </div>
+                        </div>
+                        <div style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#B78765;margin-top:22px")}>
+                          {s.kicker}
+                        </div>
+                        <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:24px;line-height:1.2;margin-top:10px")}>
+                          {s.name}
+                        </h3>
+                        <p style={st("font-size:13.5px;line-height:1.75;color:rgba(251,248,244,.7);margin-top:12px")}>
+                          {s.copy}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+              <section data-home-story="" style={st("display:grid;grid-template-columns:1fr 1fr;min-height:88vh;background:#EDD3B7")}>
+                <div data-sculpture-copy="" style={st("padding:130px 40px;max-width:820px;margin-right:auto;display:flex;flex-direction:column;justify-content:center;order:2;position:relative;overflow:hidden")}>
+                  <div data-face-signature="" aria-hidden="true">
+                    <Img src={faceRelief} alt="" />
+                  </div>
+                  <div data-reveal="0" style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
+                    Why Beanery
+                  </div>
+                  <h2 data-reveal="60" style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(36px,4.3vw,64px);line-height:1.03;letter-spacing:-.02em;margin-top:22px")}>
+                    Built around the things
+                    <br />
+                    <span style={st("font-style:italic")}>we come back for.</span>
+                  </h2>
+                  <p data-reveal="120" style={st("font-size:15.5px;line-height:1.8;color:#6E4A34;margin-top:30px;max-width:48ch")}>
+                    Beanery started with coffee, but never stopped there. We wanted a place where the espresso mattered as much as the lunch, the menu felt considered without becoming complicated, and staying for another cup always felt like a good idea.
+                  </p>
+                  <p data-reveal="170" style={st("font-family:'Cormorant Garamond',Georgia,serif;font-size:23px;line-height:1.55;font-style:italic;color:#5E2B17;margin-top:34px;padding-left:24px;border-left:1px solid #A35730;max-width:40ch")}>
+                    “Make the coffee memorable. Make the room worth returning to.”
+                  </p>
+                  <a className="hv9" href="#top" onClick={goStory} data-reveal="220" style={st("display:inline-flex;align-items:center;gap:12px;margin-top:40px;font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:500;padding-bottom:8px;border-bottom:1px solid #5E2B17;align-self:flex-start")}>
+                    {"The Beanery story "}
+                    <span style={st("font-family:Georgia,serif")}>→</span>
+                  </a>
+                </div>
+                <div style={st("position:relative;overflow:hidden;background:#DFCBB9;min-height:520px;order:1")}>
+                  <div data-real-interior="" className="hv7" style={st("position:absolute;inset:0;transition:transform 1.5s cubic-bezier(.2,.7,.2,1)")}>
+                    <Img src={venueInterior} alt="Beanery dining room with cane furniture, flower pendant lights and warm plaster walls" loading="lazy" decoding="async" />
+                    <span>Inside Beanery · Senapati Bapat Road</span>
+                  </div>
+                </div>
+              </section>
+              <section data-home-trim="" style={st("padding:0 0 0;background:#EDD3B7")}>
+                <div style={st("max-width:1560px;margin:0 auto;padding:0 40px")}>
+                  <div style={st("height:1px;background:rgba(94,43,23,.14)")} />
+                </div>
+                <div style={st("display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:stretch")}>
+                  <div style={st("padding:120px 40px;max-width:820px;margin-left:auto")}>
+                    <div data-reveal="0" style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
+                      Our coffee
+                    </div>
+                    <h3 data-reveal="60" style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(30px,3.3vw,46px);line-height:1.08;margin-top:20px")}>
+                      Coffee with a
+                      <br />
+                      clear point of view
+                    </h3>
+                    <p data-reveal="110" style={st("font-size:15px;line-height:1.8;color:#6E4A34;margin-top:24px;max-width:46ch")}>
+                      We choose coffees for sweetness, clarity and character, then dial each one for the way it is served. Espresso should hold its own in milk; filter should let the origin speak. Freshness and consistency are non-negotiable.
+                    </p>
+                    <div data-reveal="160" style={st("display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:38px")}>
+                      <div style={st("border-top:1px solid rgba(94,43,23,.18);padding-top:16px")}>
+                        <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#96755C")}>
+                          Sourcing
+                        </div>
+                        <div style={st("font-size:14px;margin-top:8px;line-height:1.6")}>
+                          Traceable lots from named farms
+                        </div>
+                      </div>
+                      <div style={st("border-top:1px solid rgba(94,43,23,.18);padding-top:16px")}>
+                        <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#96755C")}>
+                          On bar
+                        </div>
+                        <div style={st("font-size:14px;margin-top:8px;line-height:1.6")}>
+                          A focused espresso and filter selection
+                        </div>
+                      </div>
+                      <div style={st("border-top:1px solid rgba(94,43,23,.18);padding-top:16px")}>
+                        <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#96755C")}>
+                          Water
+                        </div>
+                        <div style={st("font-size:14px;margin-top:8px;line-height:1.6")}>
+                          Remineralised for consistency
+                        </div>
+                      </div>
+                      <div style={st("border-top:1px solid rgba(94,43,23,.18);padding-top:16px")}>
+                        <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#96755C")}>
+                          Dialling
+                        </div>
+                        <div style={st("font-size:14px;margin-top:8px;line-height:1.6")}>
+                          Checked and adjusted through the day
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div style={st("overflow:hidden;background:#EFE3D8;min-height:600px")}>
+                    <div className="hv7" style={st("width:100%;height:100%;transition:transform 1.5s cubic-bezier(.2,.7,.2,1)")}>
+                      <ImageSlot id="phil-coffee" placeholder="Craft detail: grinder chute and dosed portafilter, hands, textural close crop (full-bleed)" />
+                    </div>
+                  </div>
+                </div>
+                <div style={st("display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:stretch;border-top:1px solid rgba(94,43,23,.14)")}>
+                  <div style={st("overflow:hidden;background:#DFCBB9;min-height:600px;order:1")}>
+                    <div className="hv7" style={st("width:100%;height:100%;transition:transform 1.5s cubic-bezier(.2,.7,.2,1)")}>
+                      <ImageSlot id="phil-food" placeholder="Ingredient detail: sourdough crumb torn open, olive oil pooling, marble and linen (full-bleed)" />
+                    </div>
+                  </div>
+                  <div style={st("padding:120px 40px;max-width:820px;order:2")}>
+                    <div data-reveal="0" style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
+                      Our kitchen
+                    </div>
+                    <h3 data-reveal="60" style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(30px,3.3vw,46px);line-height:1.08;margin-top:20px")}>
+                      A smaller menu.
+                      <br />
+                      More attention.
+                    </h3>
+                    <p data-reveal="110" style={st("font-size:15px;line-height:1.8;color:#6E4A34;margin-top:24px;max-width:46ch")}>
+                      Our kitchen is deliberately focused. Bread is slow-fermented, pasta is cooked to order, and the dessert case stays small. Every dish has to be good enough to be someone’s reason for coming back.
+                    </p>
+                    <div data-reveal="160" style={st("display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:38px")}>
+                      <div style={st("border-top:1px solid rgba(94,43,23,.18);padding-top:16px")}>
+                        <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#96755C")}>
+                          Bread
+                        </div>
+                        <div style={st("font-size:14px;margin-top:8px;line-height:1.6")}>
+                          Slow-fermented levain, baked fresh
+                        </div>
+                      </div>
+                      <div style={st("border-top:1px solid rgba(94,43,23,.18);padding-top:16px")}>
+                        <div style={st("display:flex;align-items:center;gap:8px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#2E5D36")}>
+                          <span style={st("width:7px;height:7px;background:#6B8F5A;display:block")} />
+                          Produce
+                        </div>
+                        <div style={st("font-size:14px;margin-top:8px;line-height:1.6")}>
+                          Seasonal produce from Pune growers
+                        </div>
+                      </div>
+                      <div style={st("border-top:1px solid rgba(94,43,23,.18);padding-top:16px")}>
+                        <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#96755C")}>
+                          Kitchen
+                        </div>
+                        <div style={st("font-size:14px;margin-top:8px;line-height:1.6")}>
+                          Cooked fresh, finished to order
+                        </div>
+                      </div>
+                      <div style={st("border-top:1px solid rgba(94,43,23,.18);padding-top:16px")}>
+                        <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#96755C")}>
+                          Case
+                        </div>
+                        <div style={st("font-size:14px;margin-top:8px;line-height:1.6")}>
+                          A small daily dessert selection
+                        </div>
+                      </div>
+                    </div>
+                    <div data-reveal="200" style={st("margin-top:34px;background:#2E5D36;color:#FBF8F4;padding:30px 32px;border-top:3px solid #6B8F5A;display:grid;grid-template-columns:auto 1fr;gap:34px;align-items:center;max-width:46ch")}>
+                      <div>
+                        <div style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#A7B88F")}>
+                          Vegetarian-forward
+                        </div>
+                        <div style={st("font-family:'Playfair Display',Georgia,serif;font-size:38px;line-height:1;margin-top:10px")}>
+                          14/22
+                        </div>
+                      </div>
+                      <div>
+                        <p style={st("font-size:13.5px;line-height:1.75;color:rgba(251,248,244,.82)")}>
+                          Most of the menu is vegetarian, clearly marked, and built around produce sourced from growers in and around Pune.
+                        </p>
+                        <div style={st("display:flex;gap:16px;flex-wrap:wrap;margin-top:14px")}>
+                          <span style={st("display:flex;align-items:center;gap:7px;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#A7B88F")}>
+                            <span style={st("width:7px;height:7px;background:#6B8F5A;display:block")} />
+                            Vegetarian
+                          </span>
+                          <span style={st("display:flex;align-items:center;gap:7px;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#A7B88F")}>
+                            <span style={st("width:7px;height:7px;background:#6B8F5A;display:block")} />
+                            Locally sourced
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <section style={st("padding:130px 40px;background:#EFE3D8")}>
+                <div style={st("max-width:1560px;margin:0 auto")}>
+                  <div data-reveal="0" style={st("display:flex;justify-content:space-between;align-items:flex-end;gap:36px;flex-wrap:wrap;padding-bottom:26px;border-bottom:1px solid rgba(94,43,23,.18)")}>
+                    <div>
+                      <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
+                        Coffee + food
+                      </div>
+                      <h2 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(34px,4vw,58px);line-height:1.04;letter-spacing:-.02em;margin-top:18px")}>
+                        Coffee meets
+                        <br />
+                        the plate.
+                      </h2>
+                    </div>
+                    <p style={st("font-size:14px;line-height:1.75;color:#6E4A34;max-width:34ch")}>
+                      Five pairings chosen to make both the cup and the plate taste better.
+                    </p>
+                  </div>
+                  <div style={st("display:grid;grid-template-columns:minmax(300px,1fr) 1.55fr;gap:56px;margin-top:56px;align-items:start")}>
+                    <div data-reveal="40" style={st("border-bottom:1px solid rgba(94,43,23,.14)")}>
+                      {cups.map((c, i) => (
+                        <button key={i} onClick={c.pick} style={st(c.style)}>
+                          <div style={st("font-size:14.5px;font-weight:500;letter-spacing:.01em")}>{c.cup}</div>
+                          <div style={st(c.subStyle)}>{c.notes}</div>
+                        </button>
+                      ))}
+                    </div>
+                    <div data-reveal="100" style={st("display:grid;grid-template-columns:1fr 1fr;gap:0;background:#EDD3B7")}>
+                      <div style={st("overflow:hidden;background:#DFCBB9;min-height:460px")}>
+                        <div className="hv10" style={st("width:100%;height:100%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)")}>
+                          <ImageSlot id={cup.slot} placeholder={cup.shot} />
+                        </div>
+                      </div>
+                      <div style={st("padding:44px 40px;display:flex;flex-direction:column;justify-content:center")}>
+                        <div style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#A35730")}>
+                          Pairs with
+                        </div>
+                        <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(26px,2.6vw,38px);line-height:1.1;margin-top:14px")}>
+                          {cup.dish}
+                        </h3>
+                        <p style={st("font-size:14.5px;line-height:1.8;color:#6E4A34;margin-top:18px")}>
+                          {cup.dishNote}
+                        </p>
+                        <div style={st("margin-top:28px;padding-top:18px;border-top:1px solid rgba(94,43,23,.14)")}>
+                          <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#96755C")}>
+                            In the cup
+                          </div>
+                          <div style={st("font-size:14px;margin-top:8px")}>{cup.notes}</div>
+                          <div style={st("font-size:12.5px;color:#96755C;margin-top:6px")}>{cup.body}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <section data-home-trim="" style={st("padding:120px 0;background:#EDD3B7")}>
+                <div style={st("max-width:1560px;margin:0 auto;padding:0 40px")}>
+                  <div data-reveal="0" style={st("display:grid;grid-template-columns:1fr auto;gap:40px;align-items:end;padding-bottom:28px;border-bottom:1px solid rgba(94,43,23,.14)")}>
+                    <h2 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(30px,3.4vw,50px);line-height:1.05;letter-spacing:-.02em")}>
+                      How we brew
+                    </h2>
+                    <div style={st("font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#96755C")}>
+                      From dial-in to last cup
+                    </div>
+                  </div>
+                  <div data-reveal="60" style={st("display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:220px 300px;gap:16px;margin-top:44px")}>
+                    <div style={st("grid-column:span 2;grid-row:span 2;overflow:hidden;background:#EFE3D8")}>
+                      <div className="hv7" style={st("width:100%;height:100%;transition:transform 1.5s cubic-bezier(.2,.7,.2,1)")}>
+                        <ImageSlot id="btb-1" placeholder="Candid portrait: barista at the machine mid-shot, apron, concentrated, warm daylight (tall)" />
+                      </div>
+                    </div>
+                    <div style={st("overflow:hidden;background:#DFCBB9")}>
+                      <div className="hv10" style={st("width:100%;height:100%;transition:transform 1.5s cubic-bezier(.2,.7,.2,1)")}>
+                        <ImageSlot id="btb-2" placeholder="Detail: scale, timer, tamper and cloth laid out on the bar" />
+                      </div>
+                    </div>
+                    <div style={st("overflow:hidden;background:#EFE3D8")}>
+                      <div className="hv10" style={st("width:100%;height:100%;transition:transform 1.5s cubic-bezier(.2,.7,.2,1)")}>
+                        <ImageSlot id="btb-3" placeholder="Milk poured into a cortado, latte art closing, close crop" />
+                      </div>
+                    </div>
+                    <div style={st("grid-column:span 2;overflow:hidden;background:#DFCBB9")}>
+                      <div className="hv7" style={st("width:100%;height:100%;transition:transform 1.5s cubic-bezier(.2,.7,.2,1)")}>
+                        <ImageSlot id="btb-4" placeholder="Wide: the pass mid-service - plated dishes waiting under the lamp, chef wiping a rim" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <section style={st("padding:130px 40px;background:#EDD3B7")}>
+                <div style={st("max-width:1560px;margin:0 auto")}>
+                  <div data-reveal="0" style={st("display:flex;justify-content:space-between;align-items:flex-end;gap:36px;flex-wrap:wrap;padding-bottom:26px;border-bottom:1px solid rgba(94,43,23,.14)")}>
+                    <div>
+                      <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
+                        Beanery, all day
+                      </div>
+                      <h2 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(34px,4.2vw,62px);line-height:1.02;letter-spacing:-.022em;margin-top:18px")}>
+                        One room.
+                        <br />
+                        Many reasons to stay.
+                      </h2>
+                    </div>
+                    <p style={st("font-size:14.5px;line-height:1.8;color:#6E4A34;max-width:34ch")}>
+                      Morning coffee, a lunch that runs long, an evening plate and one last espresso. The mood changes through the day; the care does not.
+                    </p>
+                  </div>
+                  <div style={st("display:grid;grid-template-columns:minmax(280px,.72fr) 1.28fr;gap:56px;margin-top:54px;align-items:start")}>
+                    <div data-reveal="40" style={st("border-bottom:1px solid rgba(94,43,23,.16)")}>
+                      {dayparts.map((d, i) => (
+                        <button key={i} onClick={d.pick} style={st(d.style)}>
+                          <span style={st("font-family:'Playfair Display',Georgia,serif;font-size:27px;font-weight:400")}>
+                            {d.key}
+                          </span>
+                          <span style={st(d.hourStyle)}>{d.hours}</span>
+                        </button>
+                      ))}
+                      <div style={st("padding:30px 24px 34px;border-top:1px solid rgba(94,43,23,.16)")}>
+                        <div style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#A35730")}>
+                          Right now
+                        </div>
+                        <p style={st("font-family:'Cormorant Garamond',Georgia,serif;font-size:22px;line-height:1.5;font-style:italic;margin-top:12px")}>
+                          {part.title}
+                        </p>
+                      </div>
+                    </div>
+                    <div data-reveal="100" style={st("position:relative")}>
+                      <div style={st("overflow:hidden;background:#DFCBB9;aspect-ratio:16/9")}>
+                        <div className="hv7" style={st("width:100%;height:100%;transition:transform 1.6s cubic-bezier(.2,.7,.2,1)")}>
+                          <ImageSlot id={part.slot} placeholder={part.shot} />
+                        </div>
+                      </div>
+                      <div style={st("display:grid;grid-template-columns:auto 1fr;gap:44px;margin-top:34px;padding-top:26px;border-top:1px solid rgba(94,43,23,.14)")}>
+                        <div style={st("font-family:'Playfair Display',Georgia,serif;font-size:clamp(28px,3vw,44px);line-height:1;white-space:nowrap")}>
+                          {part.key}
+                        </div>
+                        <p style={st("font-size:15px;line-height:1.85;color:#6E4A34;max-width:52ch")}>{part.copy}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <section data-home-trim="" style={st("background:#3A5C3A;color:#FBF8F4;padding:96px 40px")}>
+                <div style={st("max-width:1560px;margin:0 auto;display:grid;grid-template-columns:1fr auto;gap:56px;align-items:end")}>
+                  <p data-reveal="0" style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(30px,4.4vw,74px);line-height:1.02;letter-spacing:-.025em;max-width:24ch")}>
+                    Come for the coffee. Stay for the day.
+                  </p>
+                  <div data-reveal="80" style={st("display:flex;flex-direction:column;gap:14px;padding-bottom:10px")}>
+                    <span style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:rgba(251,248,244,.75)")}>
+                      Beanery · Pune
+                    </span>
+                    <a className="hv13" href="#top" onClick={goExp} style={st("font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:500;color:#FBF8F4;padding-bottom:8px;border-bottom:1px solid rgba(251,248,244,.6);white-space:nowrap")}>
+                      Explore what’s happening →
+                    </a>
+                  </div>
+                </div>
+              </section>
+              <section data-home-trim="" style={st("padding:120px 40px;background:#5E2B17;color:#FBF8F4")}>
+                <div style={st("max-width:1560px;margin:0 auto")}>
+                  <div data-reveal="0" style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#B78765;font-weight:500")}>
+                    From the room
+                  </div>
+                  <div style={st("display:grid;grid-template-columns:repeat(3,1fr);gap:56px;margin-top:56px")}>
+                    {testimonials.map((t, i) => (
+                      <figure key={i} data-reveal="60" style={st("border-top:1px solid rgba(251,248,244,.22);padding-top:30px")}>
+                        <blockquote style={st("font-family:'Cormorant Garamond',Georgia,serif;font-size:26px;line-height:1.48;font-style:italic;font-weight:300;margin:0")}>
+                          {"“"}{t.quote}{"”"}
+                        </blockquote>
+                        <figcaption style={st("margin-top:26px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:rgba(251,248,244,.62)")}>
+                          {t.who}{" · "}{t.meta}
+                        </figcaption>
+                      </figure>
+                    ))}
+                  </div>
+                </div>
+              </section>
+              <section data-home-trim="" style={st("padding:130px 40px;background:#EDD3B7")}>
+                <div style={st("max-width:1560px;margin:0 auto")}>
+                  <div data-reveal="0" style={st("display:flex;justify-content:space-between;align-items:flex-end;gap:36px;flex-wrap:wrap;padding-bottom:26px;border-bottom:1px solid rgba(94,43,23,.14)")}>
+                    <div>
+                      <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
+                        Beanery Journal
+                      </div>
+                      <h2 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(34px,4vw,58px);line-height:1.04;letter-spacing:-.02em;margin-top:18px")}>
+                        Notes on coffee, food
+                        <br />
+                        and the work behind both
+                      </h2>
+                    </div>
+                    <a className="hv9" href="#top" onClick={goJournal} style={st("font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:500;padding-bottom:8px;border-bottom:1px solid #5E2B17;white-space:nowrap")}>
+                      Read the journal →
+                    </a>
+                  </div>
+                  <div style={st("display:grid;grid-template-columns:repeat(3,1fr);gap:30px;margin-top:52px")}>
+                    {journal.map((a, i) => (
+                      <a key={i} href="#top" onClick={goJournal} data-reveal="60" style={st("display:block;cursor:pointer")}>
+                        <div style={st("overflow:hidden;background:#EFE3D8;aspect-ratio:16/11")}>
+                          <div className="hv10" style={st("width:100%;height:100%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)")}>
+                            <ImageSlot id={a.slot} placeholder={a.shot} />
+                          </div>
+                        </div>
+                        <div style={st("display:flex;gap:14px;align-items:center;margin-top:20px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#A35730")}>
+                          {a.cat}{" "}
+                          <span style={st("width:16px;height:1px;background:rgba(94,43,23,.25);display:block")} />
+                          {" "}
+                          <span style={st("color:#96755C")}>{a.date}</span>
+                        </div>
+                        <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:25px;line-height:1.2;margin-top:12px")}>
+                          {a.title}
+                        </h3>
+                        <p style={st("font-size:14px;line-height:1.75;color:#6E4A34;margin-top:10px")}>{a.dek}</p>
+                        <div style={st("font-size:11px;color:#96755C;margin-top:14px")}>{a.read}{" read"}</div>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </section>
+              <section data-home-trim="" style={st("padding:0 0 130px;background:#EDD3B7")}>
+                <div style={st("max-width:1560px;margin:0 auto;padding:0 40px")}>
+                  <div data-reveal="0" style={st("display:flex;justify-content:space-between;align-items:baseline;gap:30px;flex-wrap:wrap;padding-bottom:22px;border-bottom:1px solid rgba(94,43,23,.14)")}>
+                    <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
+                      @beanery.pune
+                    </div>
+                    <div style={st("font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#96755C")}>
+                      Follow Beanery
+                    </div>
+                  </div>
+                  <div data-reveal="40" style={st("display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:26px")}>
+                    <div style={st("overflow:hidden;aspect-ratio:1/1;background:#EFE3D8")}>
+                      <div className="hv14" style={st("width:100%;height:100%;transition:transform 1.2s cubic-bezier(.2,.7,.2,1)")}>
+                        <ImageSlot id="ig-1" placeholder="Square: cortado and cake fork on marble" />
+                      </div>
+                    </div>
+                    <div style={st("overflow:hidden;aspect-ratio:1/1;background:#DFCBB9")}>
+                      <div className="hv14" style={st("width:100%;height:100%;transition:transform 1.2s cubic-bezier(.2,.7,.2,1)")}>
+                        <ImageSlot id="ig-2" placeholder="Square: window seat, west light, half-finished plate" />
+                      </div>
+                    </div>
+                    <div style={st("overflow:hidden;aspect-ratio:1/1;background:#EFE3D8")}>
+                      <div className="hv14" style={st("width:100%;height:100%;transition:transform 1.2s cubic-bezier(.2,.7,.2,1)")}>
+                        <ImageSlot id="ig-3" placeholder="Square: croissants racked, laminated layers visible" />
+                      </div>
+                    </div>
+                    <div style={st("overflow:hidden;aspect-ratio:1/1;background:#DFCBB9")}>
+                      <div className="hv14" style={st("width:100%;height:100%;transition:transform 1.2s cubic-bezier(.2,.7,.2,1)")}>
+                        <ImageSlot id="ig-4" placeholder="Square: cold brew over clear ice, condensation" />
+                      </div>
+                    </div>
+                    <div style={st("overflow:hidden;aspect-ratio:1/1;background:#EFE3D8")}>
+                      <div className="hv14" style={st("width:100%;height:100%;transition:transform 1.2s cubic-bezier(.2,.7,.2,1)")}>
+                        <ImageSlot id="ig-5" placeholder="Square: plated pasta, tongs, dark ceramic, overhead" />
+                      </div>
+                    </div>
+                    <div style={st("overflow:hidden;aspect-ratio:1/1;background:#DFCBB9")}>
+                      <div className="hv14" style={st("width:100%;height:100%;transition:transform 1.2s cubic-bezier(.2,.7,.2,1)")}>
+                        <ImageSlot id="ig-6" placeholder="Square: the team at the end of service, candid" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <section style={st("background:#EFE3D8;display:grid;grid-template-columns:1.1fr 1fr;align-items:stretch")}>
+                <div style={st("padding:120px 40px;max-width:840px;margin-left:auto")}>
+                  <div data-reveal="0" style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
+                    Visit Beanery
+                  </div>
+                  <h2 data-reveal="50" style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(34px,4.2vw,60px);line-height:1.03;letter-spacing:-.02em;margin-top:20px")}>
+                    Find Beanery on
+                    <br />
+                    Senapati Bapat Road
+                  </h2>
+                  <div data-reveal="110" style={st("display:grid;grid-template-columns:1fr 1fr;gap:36px;margin-top:46px")}>
+                    <div>
+                      <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#96755C;padding-bottom:12px;border-bottom:1px solid rgba(94,43,23,.18)")}>
+                        Address
+                      </div>
+                      <p style={st("font-size:15px;line-height:1.75;margin-top:14px")}>
+                        Beanery Coffee · Kitchen
+                        <br />
+                        <Lines text={copy.visit.address} />
+                      </p>
+                    </div>
+                    <div>
+                      <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#96755C;padding-bottom:12px;border-bottom:1px solid rgba(94,43,23,.18)")}>
+                        Hours
+                      </div>
+                      <div style={st("margin-top:14px;font-size:14.5px;line-height:1.9")}>
+                        <div style={st("display:flex;justify-content:space-between;gap:14px")}>
+                          <span>Mon – Thu</span>
+                          <span style={st("color:#6E4A34")}>8:00 – 23:00</span>
+                        </div>
+                        <div style={st("display:flex;justify-content:space-between;gap:14px")}>
+                          <span>Fri – Sun</span>
+                          <span style={st("color:#6E4A34")}>8:00 – 23:30</span>
+                        </div>
+                        <div style={st("display:flex;justify-content:space-between;gap:14px")}>
+                          <span>Kitchen</span>
+                          <span style={st("color:#6E4A34")}>until 22:30</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div data-reveal="160" style={st("display:flex;gap:14px;margin-top:46px;flex-wrap:wrap")}>
+                    <button className="hv2" onClick={openReserve} style={st("font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:500;color:#FBF8F4;background:#5E2B17;border:none;padding:19px 34px;cursor:pointer;transition:background .35s ease")}>
+                      Reserve a table
+                    </button>
+                    <a className="hv15" href="tel:+919860934080" style={st("font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:500;color:#5E2B17;border:1px solid rgba(94,43,23,.3);padding:19px 34px;transition:all .35s ease")}>
+                      +91 98609 34080
+                    </a>
+                  </div>
+                </div>
+                <div style={st("position:relative;overflow:hidden;background:#DFCBB9;min-height:600px")}>
+                  <LocalityMap />
+                  <div style={st("position:absolute;left:32px;top:32px;background:#EDD3B7;padding:16px 20px;pointer-events:none")}>
+                    <div style={st("font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730")}>
+                      Beanery · Pune
+                    </div>
+                    <div style={st("font-family:'Playfair Display',Georgia,serif;font-size:17px;margin-top:6px")}>
+                      Senapati Bapat Road
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <section style={st("background:#B78765;color:#5E2B17;padding:110px 40px")}>
+                <div style={st("max-width:1560px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-end;gap:48px;flex-wrap:wrap")}>
+                  <div>
+                    <div data-reveal="0" style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:rgba(94,43,23,.72);font-weight:500")}>
+                      Plan a visit
+                    </div>
+                    <h2 data-reveal="50" style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(38px,5.6vw,86px);line-height:.98;letter-spacing:-.025em;margin-top:20px")}>
+                      Save a seat.
+                      <br />
+                      Stay a while.
+                    </h2>
+                  </div>
+                  <div data-reveal="110" style={st("display:flex;gap:14px;flex-wrap:wrap")}>
+                    <button className="hv2" onClick={openReserve} style={st("font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:500;color:#FBF8F4;background:#5E2B17;border:none;padding:21px 38px;cursor:pointer;transition:all .35s ease")}>
+                      Reserve a table
+                    </button>
+                    <button className="hv16" onClick={openOrder} style={st("font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:500;color:#5E2B17;background:transparent;border:1px solid rgba(94,43,23,.5);padding:21px 38px;cursor:pointer;transition:all .35s ease")}>
+                      Order online
+                    </button>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </>
+        )}
+        {isCoffee && (
+          <>
+            <div>
+              <section data-flower-section="" style={st("padding:146px 40px 0;background:#EDD3B7")}>
+                <PaperFlower variant="coffee" />
+                <div style={st("max-width:1560px;margin:0 auto")}>
+                  <div style={st("display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap;padding-bottom:24px;border-bottom:1px solid rgba(94,43,23,.14)")}>
+                    <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
+                      {copy.coffee.eyebrowLeft}
+                    </div>
+                    <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#96755C")}>
+                      {copy.coffee.eyebrowRight}
+                    </div>
+                  </div>
+                  <div style={st("display:grid;grid-template-columns:1.35fr 1fr;gap:64px;align-items:end;margin-top:52px")}>
+                    <h1 data-reveal="0" style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(44px,7vw,124px);line-height:.93;letter-spacing:-.03em")}>
+                      {copy.coffee.titleLine1}
+                      <br />
+                      {copy.coffee.titleLine2}
+                      <br />
+                      <span style={st("font-style:italic;color:#A35730")}>{copy.coffee.titleLine3}</span>
+                    </h1>
+                    <p data-reveal="80" style={st("font-size:16px;line-height:1.8;color:#6E4A34;max-width:44ch;padding-bottom:14px")}>
+                      {copy.coffee.intro}
+                    </p>
+                  </div>
+                  <div data-reveal="140" style={st("margin-top:64px;overflow:hidden;height:62vh;min-height:430px;background:#EFE3D8")}>
+                    <div className="hv6" style={st("width:100%;height:100%;transition:transform 1.6s cubic-bezier(.2,.7,.2,1)")}>
+                      <ImageSlot id="coffee-hero" priority placeholder="Full-width: cupping table mid-session - bowls, spoons, green and roasted lots, hands (wide editorial crop)" />
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <section style={st("padding:120px 40px;background:#EDD3B7")}>
+                <div style={st("max-width:1560px;margin:0 auto")}>
+                  <div data-reveal="0" style={st("display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap;padding-bottom:26px;border-bottom:1px solid rgba(94,43,23,.14)")}>
+                    <div>
+                      <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
+                        Current coffees
+                      </div>
+                      <h2 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(32px,3.8vw,54px);line-height:1.04;margin-top:16px")}>
+                        On the bar now
+                      </h2>
+                    </div>
+                    <div style={st("display:flex;gap:8px;flex-wrap:wrap")}>
+                      {beans.map((b, i) => (
+                        <button key={i} onClick={b.pick} style={st(b.style)}>{b.origin}</button>
+                      ))}
+                    </div>
+                  </div>
+                  <div data-reveal="60" style={st("display:grid;grid-template-columns:0.85fr 1fr 0.9fr;gap:0;margin-top:48px;border:1px solid rgba(94,43,23,.16);background:#EDD3B7")}>
+                    <div style={st("overflow:hidden;background:#DFCBB9;min-height:520px")}>
+                      <div className="hv10" style={st("width:100%;height:100%;transition:transform 1.5s cubic-bezier(.2,.7,.2,1)")}>
+                        <ImageSlot id={bean.slot} placeholder={bean.shot} />
+                      </div>
+                    </div>
+                    <div style={st("padding:46px 42px;border-right:1px solid rgba(94,43,23,.16)")}>
+                      <div style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#A35730")}>
+                        Origin
+                      </div>
+                      <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(30px,3.2vw,44px);line-height:1.05;margin-top:12px")}>
+                        {bean.origin}
+                      </h3>
+                      <div style={st("font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:21px;color:#6E4A34;margin-top:8px")}>
+                        {bean.farm}
+                      </div>
+                      <div style={st("margin-top:34px")}>
+                        <div style={st("display:flex;justify-content:space-between;padding:14px 0;border-top:1px solid rgba(94,43,23,.14);font-size:13.5px")}>
+                          <span style={st("font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#96755C")}>
+                            Altitude
+                          </span>
+                          <span>{bean.alt}</span>
+                        </div>
+                        <div style={st("display:flex;justify-content:space-between;padding:14px 0;border-top:1px solid rgba(94,43,23,.14);font-size:13.5px;gap:20px")}>
+                          <span style={st("font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#96755C;white-space:nowrap")}>
+                            Process
+                          </span>
+                          <span style={st("text-align:right")}>{bean.process}</span>
+                        </div>
+                        <div style={st("display:flex;justify-content:space-between;padding:14px 0;border-top:1px solid rgba(94,43,23,.14);font-size:13.5px")}>
+                          <span style={st("font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#96755C")}>
+                            Varietal
+                          </span>
+                          <span>{bean.varietal}</span>
+                        </div>
+                        <div style={st("display:flex;justify-content:space-between;padding:14px 0;border-top:1px solid rgba(94,43,23,.14);border-bottom:1px solid rgba(94,43,23,.14);font-size:13.5px")}>
+                          <span style={st("font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#96755C")}>
+                            Roast
+                          </span>
+                          <span>{bean.roast}</span>
+                        </div>
+                      </div>
+                      <div style={st("display:flex;gap:8px;flex-wrap:wrap;margin-top:26px")}>
+                        {bean.notes.map((n, i) => (
+                          <span key={i} style={st("font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#A35730;border:1px solid rgba(163,87,48,.4);padding:8px 12px")}>
+                            {n}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    <div style={st("padding:46px 42px;background:#EFE3D8")}>
+                      <div style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#96755C")}>
+                        Taste profile
+                      </div>
+                      <div style={st("margin-top:30px")}>
+                        {beanProfile.map((p, i) => (
+                          <div key={i} style={st("margin-bottom:24px")}>
+                            <div style={st("display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px")}>
+                              <span style={st("font-size:11.5px;letter-spacing:.1em;text-transform:uppercase")}>
+                                {p.label}
+                              </span>
+                              <span style={st("font-family:'Playfair Display',Georgia,serif;font-size:15px;color:#96755C")}>
+                                {p.num}
+                              </span>
+                            </div>
+                            <div style={st("height:2px;background:rgba(94,43,23,.14);position:relative")}>
+                              <div style={st(p.barStyle)} />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <p style={st("font-size:12.5px;line-height:1.7;color:#96755C;margin-top:30px;padding-top:18px;border-top:1px solid rgba(94,43,23,.14)")}>
+                        A simple in-house tasting guide to help you compare coffees at a glance. Profiles are revisited whenever a new lot lands.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <section style={st("padding:120px 0;background:#5E2B17;color:#FBF8F4")}>
+                <div style={st("max-width:1560px;margin:0 auto;padding:0 40px")}>
+                  <div data-reveal="0" style={st("display:flex;justify-content:space-between;align-items:flex-end;gap:36px;flex-wrap:wrap;padding-bottom:26px;border-bottom:1px solid rgba(251,248,244,.2)")}>
+                    <div>
+                      <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#B78765;font-weight:500")}>
+                        Ways to brew
+                      </div>
+                      <h2 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(32px,3.8vw,54px);line-height:1.04;margin-top:16px")}>
+                        Choose your brew
+                      </h2>
+                    </div>
+                    <div style={st("display:flex;gap:8px")}>
+                      <button className="hv11" onClick={railBrewPrev} aria-label="Previous" style={st("width:48px;height:48px;border:1px solid rgba(251,248,244,.3);background:transparent;color:#FBF8F4;cursor:pointer;font-size:16px;transition:all .3s ease")}>
+                        ←
+                      </button>
+                      <button className="hv11" onClick={railBrewNext} aria-label="Next" style={st("width:48px;height:48px;border:1px solid rgba(251,248,244,.3);background:transparent;color:#FBF8F4;cursor:pointer;font-size:16px;transition:all .3s ease")}>
+                        →
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div data-reveal="60" data-rail="" ref={railRefBrew} style={st("display:flex;gap:24px;overflow-x:auto;scroll-snap-type:x mandatory;padding:48px 40px 14px;max-width:1640px;margin:0 auto")}>
+                  {brews.map((b, i) => (
+                    <div key={i} style={st("flex:0 0 400px;scroll-snap-align:start;border:1px solid rgba(251,248,244,.2)")}>
+                      <div style={st("overflow:hidden;aspect-ratio:4/3;background:#71351C")}>
+                        <div className="hv12" style={st("width:100%;height:100%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)")}>
+                          <ImageSlot id={b.slot} placeholder={b.shot} />
+                        </div>
+                      </div>
+                      <div style={st("padding:30px 28px 34px")}>
+                        <div style={st("display:flex;justify-content:space-between;align-items:baseline;gap:16px")}>
+                          <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:28px")}>
+                            {b.name}
+                          </h3>
+                          {showPrices && (
+                            <>
+                              <span style={st("font-size:14px;color:#B78765")}>{b.price}</span>
+                            </>
+                          )}
+                        </div>
+                        <div style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(251,248,244,.55);margin-top:8px")}>
+                          {b.kicker}
+                        </div>
+                        <p style={st("font-size:13.5px;line-height:1.75;color:rgba(251,248,244,.66);margin-top:16px")}>
+                          {b.copy}
+                        </p>
+                        <div style={st("margin-top:22px;padding-top:16px;border-top:1px solid rgba(251,248,244,.18)")}>
+                          {b.spec.map((s, i) => (
+                            <div key={i} style={st("font-size:12.5px;color:rgba(251,248,244,.8);padding:5px 0")}>
+                              {s}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+              <section style={st("padding:120px 40px;background:#EDD3B7")}>
+                <div style={st("max-width:1560px;margin:0 auto;display:grid;grid-template-columns:1fr 1.15fr;gap:76px;align-items:start")}>
+                  <div>
+                    <div data-reveal="0" style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
+                      Beyond the classics
+                    </div>
+                    <h2 data-reveal="50" style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(30px,3.4vw,48px);line-height:1.05;margin-top:18px")}>
+                      More from
+                      <br />
+                      the bar
+                    </h2>
+                    <p data-reveal="100" style={st("font-size:15px;line-height:1.8;color:#6E4A34;margin-top:22px;max-width:42ch")}>
+                      Coffee is the centre of the bar, not the limit of it. Seasonal drinks, tea, matcha, drinking chocolate and cold favourites are built with the same attention to balance and ingredients.
+                    </p>
+                    <div data-reveal="150" style={st("overflow:hidden;margin-top:40px;aspect-ratio:4/5;background:#EFE3D8")}>
+                      <div className="hv7" style={st("width:100%;height:100%;transition:transform 1.5s cubic-bezier(.2,.7,.2,1)")}>
+                        <ImageSlot id="bev-hero" placeholder="Seasonal drink on marble - saffron latte in glass, cardamom and linen props, cinematic light (portrait)" />
+                      </div>
+                    </div>
+                  </div>
+                  <div data-reveal="80">
+                    <div style={st("display:flex;justify-content:space-between;align-items:baseline;padding-bottom:14px;border-bottom:1px solid rgba(94,43,23,.18)")}>
+                      <span style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#96755C")}>
+                        Drink
+                      </span>
+                      {showPrices && (
+                        <>
+                          <span style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#96755C")}>
+                            Price
+                          </span>
+                        </>
+                      )}
+                    </div>
+                    <div style={st("display:flex;justify-content:space-between;gap:24px;padding:22px 0;border-bottom:1px solid rgba(94,43,23,.1)")}>
+                      <div>
+                        <div style={st("font-size:16px")}>Lychee Cold Brew</div>
+                        <div style={st("font-size:12.5px;color:#96755C;margin-top:5px")}>
+                          18-hour steep, lychee, cane · house signature
+                        </div>
+                      </div>
+                      {showPrices && (
+                        <>
+                          <div style={st("font-size:14px;color:#6E4A34;white-space:nowrap")}>₹280</div>
+                        </>
+                      )}
+                    </div>
+                    <div style={st("display:flex;justify-content:space-between;gap:24px;padding:22px 0;border-bottom:1px solid rgba(94,43,23,.1)")}>
+                      <div>
+                        <div style={st("font-size:16px")}>Saffron Cardamom Latte</div>
+                        <div style={st("font-size:12.5px;color:#96755C;margin-top:5px")}>
+                          Kashmiri saffron, green cardamom · winter only
+                        </div>
+                      </div>
+                      {showPrices && (
+                        <>
+                          <div style={st("font-size:14px;color:#6E4A34;white-space:nowrap")}>₹300</div>
+                        </>
+                      )}
+                    </div>
+                    <div style={st("display:flex;justify-content:space-between;gap:24px;padding:22px 0;border-bottom:1px solid rgba(94,43,23,.1)")}>
+                      <div>
+                        <div style={st("font-size:16px")}>Darjeeling First Flush</div>
+                        <div style={st("font-size:12.5px;color:#96755C;margin-top:5px")}>
+                          Single estate, brewed in glass, 3 minutes
+                        </div>
+                      </div>
+                      {showPrices && (
+                        <>
+                          <div style={st("font-size:14px;color:#6E4A34;white-space:nowrap")}>₹260</div>
+                        </>
+                      )}
+                    </div>
+                    <div style={st("display:flex;justify-content:space-between;gap:24px;padding:22px 0;border-bottom:1px solid rgba(94,43,23,.1)")}>
+                      <div>
+                        <div style={st("display:flex;align-items:center;gap:10px")}>
+                          <span style={st("font-size:16px")}>Ceremonial Matcha</span>
+                          <span style={st("width:7px;height:7px;background:#6B8F5A;display:block")} />
+                        </div>
+                        <div style={st("font-size:12.5px;color:#96755C;margin-top:5px")}>
+                          First-harvest Uji, whisked, milk on the side
+                        </div>
+                      </div>
+                      {showPrices && (
+                        <>
+                          <div style={st("font-size:14px;color:#6E4A34;white-space:nowrap")}>₹320</div>
+                        </>
+                      )}
+                    </div>
+                    <div style={st("display:flex;justify-content:space-between;gap:24px;padding:22px 0;border-bottom:1px solid rgba(94,43,23,.1)")}>
+                      <div>
+                        <div style={st("font-size:16px")}>Drinking Chocolate</div>
+                        <div style={st("font-size:12.5px;color:#96755C;margin-top:5px")}>
+                          70% single-origin, whole milk, no sugar added
+                        </div>
+                      </div>
+                      {showPrices && (
+                        <>
+                          <div style={st("font-size:14px;color:#6E4A34;white-space:nowrap")}>₹290</div>
+                        </>
+                      )}
+                    </div>
+                    <div style={st("display:flex;justify-content:space-between;gap:24px;padding:22px 0;border-bottom:1px solid rgba(94,43,23,.1)")}>
+                      <div>
+                        <div style={st("font-size:16px")}>Espresso Tonic</div>
+                        <div style={st("font-size:12.5px;color:#96755C;margin-top:5px")}>
+                          Doppio, tonic, orange peel · summer list
+                        </div>
+                      </div>
+                      {showPrices && (
+                        <>
+                          <div style={st("font-size:14px;color:#6E4A34;white-space:nowrap")}>₹270</div>
+                        </>
+                      )}
+                    </div>
+                    <div style={st("display:flex;justify-content:space-between;gap:24px;padding:22px 0")}>
+                      <div>
+                        <div style={st("font-size:16px")}>Filter Flight</div>
+                        <div style={st("font-size:12.5px;color:#96755C;margin-top:5px")}>
+                          Three origins, 60 ml each, tasting card included
+                        </div>
+                      </div>
+                      {showPrices && (
+                        <>
+                          <div style={st("font-size:14px;color:#6E4A34;white-space:nowrap")}>₹480</div>
+                        </>
+                      )}
+                    </div>
+                    <div style={st("margin-top:44px;padding:34px 32px;background:#EFE3D8")}>
+                      <div style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#A35730")}>
+                        New to the bar?
+                      </div>
+                      <p style={st("font-family:'Cormorant Garamond',Georgia,serif;font-size:22px;line-height:1.55;font-style:italic;margin-top:14px")}>
+                        Start with the filter flight. Three coffees side by side make it easy to taste what changes from one origin to the next, and to find the style you like.
+                      </p>
+                      <div style={st("font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#96755C;margin-top:18px")}>
+                        Ask the bar team
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </>
+        )}
+        {isFood && <PracticalFoodMenu openOrder={openMenuOrder} openReserve={openReserve} />}
+        {false && (
+          <>
+            <div>
+              <section style={st("padding:146px 40px 0;background:#EDD3B7")}>
+                <div style={st("max-width:1560px;margin:0 auto")}>
+                  <div style={st("display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap;padding-bottom:24px;border-bottom:1px solid rgba(94,43,23,.14)")}>
+                    <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
+                      Food
+                    </div>
+                    <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#96755C")}>
+                      Sourdough · Pasta · Plates · Dessert
+                    </div>
+                  </div>
+                  <h1 data-reveal="0" style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(44px,7.4vw,132px);line-height:.92;letter-spacing:-.03em;margin-top:52px")}>
+                    A small menu
+                    <br />
+                    <span style={st("font-style:italic;color:#A35730")}>with a lot to come back for.</span>
+                  </h1>
+                  <div data-reveal="80" style={st("display:grid;grid-template-columns:1fr 1fr 1fr;gap:34px;margin-top:52px;padding-top:30px;border-top:1px solid rgba(94,43,23,.14)")}>
+                    <p style={st("font-size:15px;line-height:1.8;color:#6E4A34")}>
+                      Beanery’s kitchen is built for the all-day table: fresh bakes in the morning, sandwiches and pasta through lunch, and plates and dessert into the evening.
+                    </p>
+                    <p style={st("font-size:15px;line-height:1.8;color:#6E4A34")}>
+                      The menu takes cues from European café food, but the standard is ours: familiar dishes, good ingredients, careful technique and no unnecessary theatre.
+                    </p>
+                    <p style={st("font-size:15px;line-height:1.8;color:#6E4A34")}>
+                      Bread is slow-fermented and baked fresh. The board stays focused so every dish gets the attention it deserves.
+                    </p>
+                  </div>
+                  <div data-reveal="140" style={st("margin-top:60px;display:grid;grid-template-columns:1.6fr 1fr;gap:18px;align-items:end")}>
+                    <div style={st("overflow:hidden;height:58vh;min-height:400px;background:#EFE3D8")}>
+                      <div className="hv6" style={st("width:100%;height:100%;transition:transform 1.6s cubic-bezier(.2,.7,.2,1)")}>
+                        <ImageSlot id="food-hero-1" placeholder="Table presentation: a full spread - plated pasta, shared boards, glassware, linen, hands reaching (wide)" />
+                      </div>
+                    </div>
+                    <div style={st("overflow:hidden;height:42vh;min-height:300px;background:#DFCBB9")}>
+                      <div className="hv7" style={st("width:100%;height:100%;transition:transform 1.6s cubic-bezier(.2,.7,.2,1)")}>
+                        <ImageSlot id="food-hero-2" placeholder="Chef detail: tweezers finishing a plate, sauce spooned, motion at the pass" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <section style={st("padding:120px 40px;background:#EDD3B7")}>
+                <div style={st("max-width:1560px;margin:0 auto")}>
+                  <div data-reveal="0" style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500;padding-bottom:26px;border-bottom:1px solid rgba(94,43,23,.14)")}>
+                    What shapes the menu
+                  </div>
+                  <div style={st("display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:0;border-bottom:1px solid rgba(94,43,23,.14)")}>
+                    <div data-reveal="40" style={st("padding:40px 32px 44px 0;border-right:1px solid rgba(94,43,23,.14)")}>
+                      <div style={st("font-family:'Playfair Display',Georgia,serif;font-size:15px;letter-spacing:.24em;color:#AF6E43")}>
+                        01
+                      </div>
+                      <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:30px;margin-top:18px")}>
+                        Italy
+                      </h3>
+                      <p style={st("font-size:14px;line-height:1.75;color:#6E4A34;margin-top:14px")}>
+                        Pasta cooked to order, good olive oil, and the confidence to keep a dish simple. Aglio olio, cacio e pepe and an occasional Sunday ragù.
+                      </p>
+                    </div>
+                    <div data-reveal="90" style={st("padding:40px 32px 44px;border-right:1px solid rgba(94,43,23,.14)")}>
+                      <div style={st("font-family:'Playfair Display',Georgia,serif;font-size:15px;letter-spacing:.24em;color:#AF6E43")}>
+                        02
+                      </div>
+                      <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:30px;margin-top:18px")}>
+                        France
+                      </h3>
+                      <p style={st("font-size:14px;line-height:1.75;color:#6E4A34;margin-top:14px")}>
+                        The bakery side of Beanery: laminated pastry, croque monsieur, cultured butter and the kind of seasoning that makes simple food memorable.
+                      </p>
+                    </div>
+                    <div data-reveal="140" style={st("padding:40px 32px 44px;border-right:1px solid rgba(94,43,23,.14)")}>
+                      <div style={st("font-family:'Playfair Display',Georgia,serif;font-size:15px;letter-spacing:.24em;color:#AF6E43")}>
+                        03
+                      </div>
+                      <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:30px;margin-top:18px")}>
+                        Spain
+                      </h3>
+                      <p style={st("font-size:14px;line-height:1.75;color:#6E4A34;margin-top:14px")}>
+                        Small plates, good bread and a Basque cheesecake that earned a permanent place on the menu. Tortilla, pan con tomate and olives keep returning too.
+                      </p>
+                    </div>
+                    <div data-reveal="190" style={st("padding:40px 0 44px 32px")}>
+                      <div style={st("font-family:'Playfair Display',Georgia,serif;font-size:15px;letter-spacing:.24em;color:#AF6E43")}>
+                        04
+                      </div>
+                      <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:30px;margin-top:18px")}>
+                        Wider Europe
+                      </h3>
+                      <p style={st("font-size:14px;line-height:1.75;color:#6E4A34;margin-top:14px")}>
+                        From Viennese cakes to Lisbon custard tarts and open sandwiches - references travel. Only dishes that feel right for Beanery stay.
+                      </p>
+                    </div>
+                  </div>
+                  <div data-reveal="40" style={st("margin-top:80px;background:#2E5D36;color:#FBF8F4;display:grid;grid-template-columns:1fr 1.35fr;align-items:stretch")}>
+                    <div style={st("padding:56px 48px")}>
+                      <div style={st("display:flex;align-items:center;gap:12px")}>
+                        <span style={st("width:34px;height:1px;background:#A7B88F;display:block")} />
+                        <span style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A7B88F;font-weight:500")}>
+                          Closer to home
+                        </span>
+                      </div>
+                      <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(28px,3.2vw,46px);line-height:1.05;margin-top:20px")}>
+                        Seasonal produce,
+                        <br />
+                        sourced around Pune
+                      </h3>
+                      <p style={st("font-size:15px;line-height:1.8;color:rgba(251,248,244,.82);margin-top:20px;max-width:38ch")}>
+                        Produce is sourced through the week from growers around Pune and used with as little waste as possible: trim becomes stock, surplus becomes staff lunch, and coffee grounds go back to the herb boxes.
+                      </p>
+                    </div>
+                    <div style={st("display:grid;grid-template-columns:1fr 1fr 1fr;border-left:1px solid rgba(251,248,244,.22)")}>
+                      <div style={st("padding:48px 26px;border-right:1px solid rgba(251,248,244,.22)")}>
+                        <div style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#A7B88F")}>
+                          Vegetarian
+                        </div>
+                        <div style={st("font-family:'Playfair Display',Georgia,serif;font-size:38px;margin-top:16px")}>
+                          14
+                        </div>
+                        <p style={st("font-size:13px;line-height:1.7;color:rgba(251,248,244,.72);margin-top:10px")}>
+                          of 22 dishes on the board are vegetarian, with clear menu markers.
+                        </p>
+                      </div>
+                      <div style={st("padding:48px 26px;border-right:1px solid rgba(251,248,244,.22)")}>
+                        <div style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#A7B88F")}>
+                          Sourced within
+                        </div>
+                        <div style={st("font-family:'Playfair Display',Georgia,serif;font-size:38px;margin-top:16px")}>
+                          40 km
+                        </div>
+                        <p style={st("font-size:13px;line-height:1.7;color:rgba(251,248,244,.72);margin-top:10px")}>
+                          For key produce including greens, tomatoes, herbs and dairy.
+                        </p>
+                      </div>
+                      <div style={st("padding:48px 26px")}>
+                        <div style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#A7B88F")}>
+                          Waste approach
+                        </div>
+                        <div style={st("font-family:'Playfair Display',Georgia,serif;font-size:38px;margin-top:16px")}>
+                          Use more
+                        </div>
+                        <p style={st("font-size:13px;line-height:1.7;color:rgba(251,248,244,.72);margin-top:10px")}>
+                          Trim to stock, bread to crumb, coffee grounds to the herb boxes.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <section style={st("padding:0 40px 120px;background:#EDD3B7")}>
+                <div style={st("max-width:1560px;margin:0 auto")}>
+                  <div data-reveal="0" style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500;margin-bottom:30px")}>
+                    Beanery favourite
+                  </div>
+                  <div data-reveal="40" style={st("border:1px solid rgba(94,43,23,.16);display:grid;grid-template-columns:1.05fr 1fr")}>
+                    <div style={st("overflow:hidden;min-height:640px;background:#DFCBB9")}>
+                      <div className="hv7" style={st("width:100%;height:100%;transition:transform 1.6s cubic-bezier(.2,.7,.2,1)")}>
+                        <ImageSlot id="dishstory-1" placeholder="Hero dish: aglio olio plated restaurant-style - nested strands, chilli oil, parsley oil dots, dark ceramic on linen (portrait, full-bleed)" />
+                      </div>
+                    </div>
+                    <div style={st("padding:54px 48px")}>
+                      <div style={st("display:flex;justify-content:space-between;align-items:baseline;gap:20px")}>
+                        <div style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#A35730")}>
+                          Italy · Most ordered
+                        </div>
+                        {showPrices && (
+                          <>
+                            <div style={st("font-size:14px;color:#6E4A34")}>₹420</div>
+                          </>
+                        )}
+                      </div>
+                      <h2 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(34px,3.8vw,54px);line-height:1.02;margin-top:16px")}>
+                        Aglio Olio
+                      </h2>
+                      <p style={st("font-family:'Cormorant Garamond',Georgia,serif;font-size:23px;line-height:1.55;font-style:italic;color:#6E4A34;margin-top:16px")}>
+                        Simple on paper. Precise on the plate.
+                      </p>
+                      <div style={st("margin-top:36px")}>
+                        <div style={st("padding:20px 0;border-top:1px solid rgba(94,43,23,.14)")}>
+                          <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#96755C")}>
+                            Inspiration
+                          </div>
+                          <p style={st("font-size:14.5px;line-height:1.75;margin-top:9px")}>
+                            Inspired by the kind of late-night Roman pasta where technique matters more than garnish: watch the garlic, build the emulsion, serve it hot.
+                          </p>
+                        </div>
+                        <div style={st("padding:20px 0;border-top:1px solid rgba(94,43,23,.14)")}>
+                          <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#2E5D36")}>
+                            Ingredients
+                          </div>
+                          <p style={st("font-size:14.5px;line-height:1.75;margin-top:9px")}>
+                            Bronze-cut spaghetti, olive oil, garlic, dried chilli, flat-leaf parsley and sea salt.
+                          </p>
+                        </div>
+                        <div style={st("padding:20px 0;border-top:1px solid rgba(94,43,23,.14)")}>
+                          <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#96755C")}>
+                            Technique
+                          </div>
+                          <p style={st("font-size:14.5px;line-height:1.75;margin-top:9px")}>
+                            Thin-sliced garlic is warmed slowly in olive oil until just golden, then emulsified with pasta water so the sauce coats every strand.
+                          </p>
+                        </div>
+                        <div style={st("padding:20px 0;border-top:1px solid rgba(94,43,23,.14)")}>
+                          <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#96755C")}>
+                            Flavour notes
+                          </div>
+                          <div style={st("display:flex;gap:8px;flex-wrap:wrap;margin-top:12px")}>
+                            <span style={st("font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#2E5D36;border:1px solid rgba(46,93,54,.45);padding:8px 12px")}>
+                              Vegetarian
+                            </span>
+                            <span style={st("font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#A35730;border:1px solid rgba(163,87,48,.4);padding:8px 12px")}>
+                              Sweet garlic
+                            </span>
+                            <span style={st("font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#A35730;border:1px solid rgba(163,87,48,.4);padding:8px 12px")}>
+                              Green olive oil
+                            </span>
+                            <span style={st("font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#A35730;border:1px solid rgba(163,87,48,.4);padding:8px 12px")}>
+                              Warm chilli
+                            </span>
+                          </div>
+                        </div>
+                        <div style={st("padding:20px 0;border-top:1px solid rgba(94,43,23,.14);border-bottom:1px solid rgba(94,43,23,.14);display:flex;justify-content:space-between;gap:20px;align-items:baseline")}>
+                          <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#96755C")}>
+                            Pairing
+                          </div>
+                          <div style={st("font-size:14.5px;text-align:right")}>Lychee Cold Brew</div>
+                        </div>
+                      </div>
+                      <div style={st("margin-top:30px;padding:28px 26px;background:#EFE3D8")}>
+                        <div style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#A35730")}>
+                          Kitchen note
+                        </div>
+                        <p style={st("font-family:'Cormorant Garamond',Georgia,serif;font-size:21px;line-height:1.55;font-style:italic;margin-top:12px")}>
+                          The garlic should perfume the oil, not overpower it. The best version tastes balanced first and garlicky second.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <section style={st("padding:0 40px 130px;background:#EDD3B7")}>
+                <div style={st("max-width:1560px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px")}>
+                  <div data-reveal="0">
+                    <div style={st("overflow:hidden;aspect-ratio:5/4;background:#EFE3D8")}>
+                      <div className="hv7" style={st("width:100%;height:100%;transition:transform 1.5s cubic-bezier(.2,.7,.2,1)")}>
+                        <ImageSlot id="bakery-1" placeholder="Bakery: levain loaves cooling on racks, scored crust, flour and morning light" />
+                      </div>
+                    </div>
+                    <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(28px,3vw,42px);line-height:1.06;margin-top:30px")}>
+                      Bakery & sourdough
+                    </h3>
+                    <p style={st("font-size:15px;line-height:1.8;color:#6E4A34;margin-top:16px;max-width:44ch")}>
+                      Our bread starts with a slow-fermented levain and is baked fresh for the day. Loaves, croissants and focaccia move from the bakery into the menu, and when they are gone, they are gone.
+                    </p>
+                    <div style={st("margin-top:26px")}>
+                      <div style={st("display:flex;justify-content:space-between;gap:20px;padding:16px 0;border-top:1px solid rgba(94,43,23,.14);font-size:14.5px")}>
+                        <span>Country levain, whole loaf</span>
+                        {showPrices && (
+                          <>
+                            <span style={st("color:#6E4A34")}>₹340</span>
+                          </>
+                        )}
+                      </div>
+                      <div style={st("display:flex;justify-content:space-between;gap:20px;padding:16px 0;border-top:1px solid rgba(94,43,23,.14);font-size:14.5px")}>
+                        <span>Almond croissant</span>
+                        {showPrices && (
+                          <>
+                            <span style={st("color:#6E4A34")}>₹260</span>
+                          </>
+                        )}
+                      </div>
+                      <div style={st("display:flex;justify-content:space-between;gap:20px;padding:16px 0;border-top:1px solid rgba(94,43,23,.14);border-bottom:1px solid rgba(94,43,23,.14);font-size:14.5px")}>
+                        <span>Focaccia, rosemary & sea salt</span>
+                        {showPrices && (
+                          <>
+                            <span style={st("color:#6E4A34")}>₹220</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <div data-reveal="80">
+                    <div style={st("overflow:hidden;aspect-ratio:5/4;background:#DFCBB9")}>
+                      <div className="hv7" style={st("width:100%;height:100%;transition:transform 1.5s cubic-bezier(.2,.7,.2,1)")}>
+                        <ImageSlot id="dessert-1" placeholder="Dessert presentation: Basque cheesecake, tarts and tiramisu plated for the case, overhead" />
+                      </div>
+                    </div>
+                    <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(28px,3vw,42px);line-height:1.06;margin-top:30px")}>
+                      Desserts
+                    </h3>
+                    <p style={st("font-size:15px;line-height:1.8;color:#6E4A34;margin-top:16px;max-width:44ch")}>
+                      The dessert case stays intentionally small. The Basque is the constant; the rest rotates with the season, the produce and whatever the kitchen is excited about.
+                    </p>
+                    <div style={st("margin-top:26px")}>
+                      <div style={st("display:flex;justify-content:space-between;gap:20px;padding:16px 0;border-top:1px solid rgba(94,43,23,.14);font-size:14.5px")}>
+                        <span>Burnt Basque cheesecake</span>
+                        {showPrices && (
+                          <>
+                            <span style={st("color:#6E4A34")}>₹320</span>
+                          </>
+                        )}
+                      </div>
+                      <div style={st("display:flex;justify-content:space-between;gap:20px;padding:16px 0;border-top:1px solid rgba(94,43,23,.14);font-size:14.5px")}>
+                        <span>Tiramisu, our espresso</span>
+                        {showPrices && (
+                          <>
+                            <span style={st("color:#6E4A34")}>₹340</span>
+                          </>
+                        )}
+                      </div>
+                      <div style={st("display:flex;justify-content:space-between;gap:20px;padding:16px 0;border-top:1px solid rgba(94,43,23,.14);border-bottom:1px solid rgba(94,43,23,.14);font-size:14.5px")}>
+                        <span>Pastel de nata, two pieces</span>
+                        {showPrices && (
+                          <>
+                            <span style={st("color:#6E4A34")}>₹240</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </>
+        )}
+        {isStory && (
+          <StoryPage copy={copy.story} flower={<PaperFlower variant="story" />} openReserve={openReserve} goCoffee={goCoffee} goFood={goFood} goVisit={goVisit} />
+        )}
+        {isExp && (
+          <>
+            <div>
+              <section style={st("padding:146px 40px 0;background:#EDD3B7")}>
+                <div style={st("max-width:1560px;margin:0 auto")}>
+                  <div style={st("display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap;padding-bottom:24px;border-bottom:1px solid rgba(94,43,23,.14)")}>
+                    <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
+                      {copy.experiences.eyebrowLeft}
+                    </div>
+                    <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#96755C")}>
+                      {copy.experiences.eyebrowRight}
+                    </div>
+                  </div>
+                  <h1 data-reveal="0" style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(44px,7vw,124px);line-height:.93;letter-spacing:-.03em;margin-top:52px")}>
+                    {copy.experiences.titleLine1}
+                    <br />
+                    {copy.experiences.titleLine2}
+                    <br />
+                    <span style={st("font-style:italic;color:#A35730")}>{copy.experiences.titleLine3}</span>
+                  </h1>
+                </div>
+              </section>
+              <section style={st("padding:80px 0 40px;background:#EDD3B7")}>
+                <div style={st("max-width:1560px;margin:0 auto;padding:0 40px")}>
+                  <div data-reveal="0" style={st("background:#A35730;color:#FBF8F4;display:grid;grid-template-columns:1fr 1fr;align-items:stretch")}>
+                    <div style={st("padding:64px 56px")}>
+                      <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:rgba(251,248,244,.75)")}>
+                        Seasonal · Long Table
+                      </div>
+                      <h2 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(32px,3.8vw,56px);line-height:1.02;margin-top:18px")}>
+                        Long Table
+                        <br />
+                        Sunday Brunch
+                      </h2>
+                      <p style={st("font-size:15px;line-height:1.8;color:rgba(251,248,244,.85);margin-top:20px;max-width:40ch")}>
+                        Twenty seats around one table, a four-course menu and a coffee flight woven through the meal. A slower Sunday, the Beanery way.
+                      </p>
+                      <div style={st("display:flex;gap:36px;margin-top:34px;padding-top:22px;border-top:1px solid rgba(251,248,244,.35);flex-wrap:wrap")}>
+                        <div>
+                          <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(251,248,244,.7)")}>
+                            Next date
+                          </div>
+                          <div style={st("font-family:'Playfair Display',Georgia,serif;font-size:22px;margin-top:7px")}>
+                            14 Sept
+                          </div>
+                        </div>
+                        <div>
+                          <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(251,248,244,.7)")}>
+                            Seats left
+                          </div>
+                          <div style={st("font-family:'Playfair Display',Georgia,serif;font-size:22px;margin-top:7px")}>
+                            6
+                          </div>
+                        </div>
+                        <div>
+                          <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(251,248,244,.7)")}>
+                            Per guest
+                          </div>
+                          <div style={st("font-family:'Playfair Display',Georgia,serif;font-size:22px;margin-top:7px")}>
+                            ₹1,850
+                          </div>
+                        </div>
+                      </div>
+                      <button className="hv8" onClick={openReserve} style={st("margin-top:38px;font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:500;color:#5E2B17;background:#EDD3B7;border:none;padding:19px 34px;cursor:pointer;transition:all .35s ease")}>
+                        Book a seat
+                      </button>
+                    </div>
+                    <div style={st("overflow:hidden;min-height:440px")}>
+                      <div className="hv7" style={st("width:100%;height:100%;transition:transform 1.6s cubic-bezier(.2,.7,.2,1)")}>
+                        <ImageSlot id="exp-banner" priority placeholder="Long communal table set for brunch, linen, dishes being passed (full-bleed)" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <section style={st("padding:80px 0 120px;background:#EDD3B7")}>
+                <div style={st("max-width:1560px;margin:0 auto;padding:0 40px")}>
+                  <div data-reveal="0" style={st("display:flex;justify-content:space-between;align-items:flex-end;gap:30px;padding-bottom:24px;border-bottom:1px solid rgba(94,43,23,.14)")}>
+                    <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
+                      More at Beanery
+                    </div>
+                    <div style={st("display:flex;gap:8px")}>
+                      <button className="hv8" onClick={railExpPrev} aria-label="Previous" style={st("width:48px;height:48px;border:1px solid rgba(94,43,23,.25);background:transparent;color:#5E2B17;cursor:pointer;font-size:16px;transition:all .3s ease")}>
+                        ←
+                      </button>
+                      <button className="hv8" onClick={railExpNext} aria-label="Next" style={st("width:48px;height:48px;border:1px solid rgba(94,43,23,.25);background:transparent;color:#5E2B17;cursor:pointer;font-size:16px;transition:all .3s ease")}>
+                        →
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div data-reveal="60" data-rail="" ref={railRefExp} style={st("display:flex;gap:28px;overflow-x:auto;scroll-snap-type:x mandatory;padding:52px 40px 32px;max-width:1640px;margin:0 auto")}>
+                  <div style={st("flex:0 0 380px;scroll-snap-align:start;background:#EDD3B7;border:1px solid rgba(94,43,23,.09);padding:24px;display:flex;flex-direction:column;justify-content:space-between")}>
+                    <div>
+                      <div style={st("overflow:hidden;aspect-ratio:1/1;background:#EFE3D8")}>
+                        <div className="hv12" style={st("width:100%;height:100%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)")}>
+                          <ImageSlot id="exp-1" placeholder="Coffee workshop: guests at the bar with scales and V60s" />
+                        </div>
+                      </div>
+                      <div style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;margin-top:22px")}>
+                        Saturdays · 10 AM
+                      </div>
+                      <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:24px;line-height:1.2;margin-top:10px")}>
+                        Home Brewing Workshop
+                      </h3>
+                      <p style={st("font-size:13.5px;line-height:1.75;color:#6E4A34;margin-top:12px")}>
+                        A practical two-hour session on grind, water, ratio and repeatable recipes, plus a take-home brew guide and 250 g of coffee.
+                      </p>
+                    </div>
+                    <div style={st("font-size:13px;color:#96755C;margin-top:20px;padding-top:14px;border-top:1px solid rgba(94,43,23,.08)")}>₹1,400 · 8 seats</div>
+                  </div>
+                  <div style={st("flex:0 0 380px;scroll-snap-align:start;background:#EDD3B7;border:1px solid rgba(94,43,23,.09);padding:24px;display:flex;flex-direction:column;justify-content:space-between")}>
+                    <div>
+                      <div style={st("overflow:hidden;aspect-ratio:1/1;background:#DFCBB9")}>
+                        <div className="hv12" style={st("width:100%;height:100%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)")}>
+                          <ImageSlot id="exp-2" placeholder="Cupping table with bowls and spoons, guests slurping" />
+                        </div>
+                      </div>
+                      <div style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;margin-top:22px")}>
+                        Last Friday · 6 PM
+                      </div>
+                      <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:24px;line-height:1.2;margin-top:10px")}>
+                        Coffee Tasting: Four Origins
+                      </h3>
+                      <p style={st("font-size:13.5px;line-height:1.75;color:#6E4A34;margin-top:12px")}>
+                        Taste four coffees side by side and learn how origin, process and roast change what lands in the cup.
+                      </p>
+                    </div>
+                    <div style={st("font-size:13px;color:#96755C;margin-top:20px;padding-top:14px;border-top:1px solid rgba(94,43,23,.08)")}>₹1,100 · 12 seats</div>
+                  </div>
+                  <div style={st("flex:0 0 380px;scroll-snap-align:start;background:#EDD3B7;border:1px solid rgba(94,43,23,.09);padding:24px;display:flex;flex-direction:column;justify-content:space-between")}>
+                    <div>
+                      <div style={st("overflow:hidden;aspect-ratio:1/1;background:#EFE3D8")}>
+                        <div className="hv12" style={st("width:100%;height:100%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)")}>
+                          <ImageSlot id="exp-3" placeholder="Private gathering: the room set for an evening event, candles" />
+                        </div>
+                      </div>
+                      <div style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;margin-top:22px")}>
+                        By arrangement
+                      </div>
+                      <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:24px;line-height:1.2;margin-top:10px")}>
+                        Private Evenings
+                      </h3>
+                      <p style={st("font-size:13.5px;line-height:1.75;color:#6E4A34;margin-top:12px")}>
+                        Beanery after hours, with a set menu built for your group and the coffee bar open through the evening.
+                      </p>
+                    </div>
+                    <div style={st("font-size:13px;color:#96755C;margin-top:20px;padding-top:14px;border-top:1px solid rgba(94,43,23,.08)")}>From ₹28,000 · up to 40</div>
+                  </div>
+                  <div style={st("flex:0 0 380px;scroll-snap-align:start;background:#EDD3B7;border:1px solid rgba(94,43,23,.09);padding:24px;display:flex;flex-direction:column;justify-content:space-between")}>
+                    <div>
+                      <div style={st("overflow:hidden;aspect-ratio:1/1;background:#DFCBB9")}>
+                        <div className="hv12" style={st("width:100%;height:100%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)")}>
+                          <ImageSlot id="exp-4" placeholder="Baking class: hands shaping dough on a floured counter" />
+                        </div>
+                      </div>
+                      <div style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;margin-top:22px")}>
+                        Monthly · Sunday
+                      </div>
+                      <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:24px;line-height:1.2;margin-top:10px")}>
+                        Sourdough Workshop
+                      </h3>
+                      <p style={st("font-size:13.5px;line-height:1.75;color:#6E4A34;margin-top:12px")}>
+                        Learn the rhythm behind our loaves: shaping, scoring, baking and tasting, then take home a loaf and levain to keep going.
+                      </p>
+                    </div>
+                    <div style={st("font-size:13px;color:#96755C;margin-top:20px;padding-top:14px;border-top:1px solid rgba(94,43,23,.08)")}>₹1,600 · 10 seats</div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </>
+        )}
+        {isJournal && (
+          <>
+            <div>
+              <section style={st("padding:146px 40px 0;background:#EDD3B7")}>
+                <div style={st("max-width:1560px;margin:0 auto")}>
+                  <div style={st("display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap;padding-bottom:24px;border-bottom:1px solid rgba(94,43,23,.14)")}>
+                    <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
+                      {copy.journal.eyebrowLeft}
+                    </div>
+                    <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#96755C")}>
+                      {copy.journal.eyebrowRight}
+                    </div>
+                  </div>
+                  <h1 data-reveal="0" style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(44px,7vw,124px);line-height:.93;letter-spacing:-.03em;margin-top:52px")}>
+                    {copy.journal.titleLine1}
+                    <br />
+                    <span style={st("font-style:italic;color:#A35730")}>{copy.journal.titleLine2}</span>
+                  </h1>
+                </div>
+              </section>
+              <section style={st("padding:80px 40px 120px;background:#EDD3B7")}>
+                <div style={st("max-width:1560px;margin:0 auto")}>
+                  <a href="#top" data-reveal="0" style={st("display:grid;grid-template-columns:1.25fr 1fr;gap:56px;align-items:center;padding-bottom:56px;border-bottom:1px solid rgba(94,43,23,.14);cursor:pointer")}>
+                    <div style={st("overflow:hidden;aspect-ratio:16/10;background:#EFE3D8")}>
+                      <div className="hv7" style={st("width:100%;height:100%;transition:transform 1.5s cubic-bezier(.2,.7,.2,1)")}>
+                        <ImageSlot id="journal-lead" priority placeholder="Lead story image: roastery drum, beans mid-roast, warm smoke (wide)" />
+                      </div>
+                    </div>
+                    <div>
+                      <div style={st("display:flex;gap:14px;align-items:center;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#A35730")}>
+                        {"Behind the scenes "}
+                        <span style={st("width:16px;height:1px;background:rgba(94,43,23,.25);display:block")} />
+                        {" "}
+                        <span style={st("color:#96755C")}>September 2026</span>
+                      </div>
+                      <h2 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(30px,3.6vw,52px);line-height:1.06;margin-top:16px")}>
+                        Why we’re learning to roast
+                      </h2>
+                      <p style={st("font-size:15.5px;line-height:1.8;color:#6E4A34;margin-top:18px;max-width:46ch")}>
+                        A 12 kg drum, a small unit in Bhosari and weeks of trial batches. Notes from the work of learning what roasting could mean for Beanery.
+                      </p>
+                      <div style={st("font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:#96755C;margin-top:22px")}>
+                        11 min read
+                      </div>
+                    </div>
+                  </a>
+                  <div style={st("display:grid;grid-template-columns:repeat(3,1fr);gap:30px;margin-top:56px")}>
+                    {journal.map((a, i) => (
+                      <a key={i} href="#top" data-reveal="60" style={st("display:block;cursor:pointer")}>
+                        <div style={st("overflow:hidden;background:#EFE3D8;aspect-ratio:16/11")}>
+                          <div className="hv10" style={st("width:100%;height:100%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)")}>
+                            <ImageSlot id={a.slot} placeholder={a.shot} />
+                          </div>
+                        </div>
+                        <div style={st("display:flex;gap:14px;align-items:center;margin-top:20px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#A35730")}>
+                          {a.cat}{" "}
+                          <span style={st("width:16px;height:1px;background:rgba(94,43,23,.25);display:block")} />
+                          {" "}
+                          <span style={st("color:#96755C")}>{a.date}</span>
+                        </div>
+                        <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:25px;line-height:1.2;margin-top:12px")}>
+                          {a.title}
+                        </h3>
+                        <p style={st("font-size:14px;line-height:1.75;color:#6E4A34;margin-top:10px")}>{a.dek}</p>
+                        <div style={st("font-size:11px;color:#96755C;margin-top:14px")}>{a.read}{" read"}</div>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </section>
+            </div>
+          </>
+        )}
+        {isVisit && (
+          <>
+            <div>
+              <section data-flower-section="" style={st("padding:146px 40px 0;background:#EDD3B7")}>
+                <PaperFlower variant="visit" />
+                <div style={st("max-width:1560px;margin:0 auto")}>
+                  <div style={st("display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap;padding-bottom:24px;border-bottom:1px solid rgba(94,43,23,.14)")}>
+                    <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
+                      {copy.visit.eyebrowLeft}
+                    </div>
+                    <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#96755C")}>
+                      {copy.visit.eyebrowRight}
+                    </div>
+                  </div>
+                  <h1 data-reveal="0" style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(44px,7vw,124px);line-height:.93;letter-spacing:-.03em;margin-top:52px")}>
+                    {copy.visit.titleLine1}
+                    <br />
+                    <span style={st("font-style:italic;color:#A35730")}>{copy.visit.titleLine2}</span>
+                  </h1>
+                  <div data-reveal="80" style={st("display:grid;grid-template-columns:repeat(4,1fr);gap:32px;margin-top:60px;padding-top:32px;border-top:1px solid rgba(94,43,23,.14)")}>
+                    <div>
+                      <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#96755C")}>
+                        Address
+                      </div>
+                      <p style={st("font-size:14.5px;line-height:1.75;margin-top:14px")}>
+                        <Lines text={copy.visit.address} />
+                      </p>
+                    </div>
+                    <div>
+                      <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#96755C")}>
+                        Hours
+                      </div>
+                      <p style={st("font-size:14.5px;line-height:1.75;margin-top:14px")}>
+                        <Lines text={copy.visit.hours} />
+                      </p>
+                    </div>
+                    <div>
+                      <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#96755C")}>
+                        Contact
+                      </div>
+                      <p style={st("font-size:14.5px;line-height:1.75;margin-top:14px")}>
+                        <Lines text={copy.visit.contact} />
+                      </p>
+                    </div>
+                    <div>
+                      <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#2E5D36")}>
+                        Good to know
+                      </div>
+                      <p style={st("font-size:14.5px;line-height:1.75;margin-top:14px")}>
+                        <Lines text={copy.visit.goodToKnow} />
+                      </p>
+                    </div>
+                  </div>
+                  <div data-reveal="140" style={st("margin-top:60px;overflow:hidden;height:56vh;min-height:400px;background:#DFCBB9;position:relative")}>
+                    <LocalityMap />
+                    <div style={st("position:absolute;left:32px;bottom:32px;background:#EDD3B7;padding:20px 24px;pointer-events:none")}>
+                      <div style={st("font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730")}>
+                        In the neighbourhood
+                      </div>
+                      <div style={st("font-family:'Playfair Display',Georgia,serif;font-size:19px;margin-top:6px")}>
+                        Senapati Bapat Road · Gokhalenagar
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <section style={st("padding:120px 40px;background:#EDD3B7")}>
+                <div style={st("max-width:1560px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid rgba(94,43,23,.16)")}>
+                  <div data-reveal="0" style={st("padding:56px 48px;border-right:1px solid rgba(94,43,23,.16)")}>
+                    <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
+                      Plan your visit
+                    </div>
+                    <h2 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(28px,3.2vw,44px);line-height:1.05;margin-top:16px")}>
+                      Reserve a table
+                    </h2>
+                    <p style={st("font-size:14.5px;line-height:1.8;color:#6E4A34;margin-top:16px;max-width:40ch")}>
+                      Plan ahead for two to twelve guests, or walk in and we’ll do our best to find you a table. For larger groups, call us and we’ll help shape the visit.
+                    </p>
+                    <div style={st("display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:32px")}>
+                      <div>
+                        <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#96755C;margin-bottom:9px")}>
+                          Date
+                        </div>
+                        <div style={st("border:1px solid rgba(94,43,23,.22);padding:14px 16px;font-size:14px;color:#6E4A34")}>
+                          14 September 2026
+                        </div>
+                      </div>
+                      <div>
+                        <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#96755C;margin-bottom:9px")}>
+                          Time
+                        </div>
+                        <div style={st("border:1px solid rgba(94,43,23,.22);padding:14px 16px;font-size:14px;color:#6E4A34")}>
+                          4:30 PM
+                        </div>
+                      </div>
+                      <div>
+                        <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#96755C;margin-bottom:9px")}>
+                          Guests
+                        </div>
+                        <div style={st("border:1px solid rgba(94,43,23,.22);padding:14px 16px;font-size:14px;color:#6E4A34")}>
+                          2
+                        </div>
+                      </div>
+                      <div>
+                        <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#96755C;margin-bottom:9px")}>
+                          Seating
+                        </div>
+                        <div style={st("border:1px solid rgba(94,43,23,.22);padding:14px 16px;font-size:14px;color:#6E4A34")}>
+                          Window
+                        </div>
+                      </div>
+                    </div>
+                    <button className="hv2" onClick={openReserve} style={st("margin-top:28px;width:100%;text-align:left;font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:500;color:#FBF8F4;background:#5E2B17;border:none;padding:19px 26px;cursor:pointer;transition:background .35s ease")}>
+                      Check a table
+                    </button>
+                  </div>
+                  <div data-reveal="60" style={st("padding:56px 48px;background:#EFE3D8")}>
+                    <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
+                      Beanery to go
+                    </div>
+                    <h2 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(28px,3.2vw,44px);line-height:1.05;margin-top:16px")}>
+                      Coffee, food and beans to go
+                    </h2>
+                    <p style={st("font-size:14.5px;line-height:1.8;color:#6E4A34;margin-top:16px;max-width:40ch")}>
+                      Order coffee, food and baked goods for collection or local delivery, and take a bag of coffee home for later.
+                    </p>
+                    <div style={st("margin-top:32px")}>
+                      <div style={st("display:flex;justify-content:space-between;padding:16px 0;border-top:1px solid rgba(94,43,23,.16);font-size:14.5px")}>
+                        <span>Collection</span>
+                        <span style={st("color:#6E4A34")}>From the bar</span>
+                      </div>
+                      <div style={st("display:flex;justify-content:space-between;padding:16px 0;border-top:1px solid rgba(94,43,23,.16);font-size:14.5px")}>
+                        <span>Delivery</span>
+                        <span style={st("color:#6E4A34")}>Local delivery</span>
+                      </div>
+                      <div style={st("display:flex;justify-content:space-between;padding:16px 0;border-top:1px solid rgba(94,43,23,.16);border-bottom:1px solid rgba(94,43,23,.16);font-size:14.5px")}>
+                        <span>Coffee beans</span>
+                        <span style={st("color:#6E4A34")}>Available for home brewing</span>
+                      </div>
+                    </div>
+                    <div style={st("display:flex;gap:12px;margin-top:28px;flex-wrap:wrap")}>
+                      <button className="hv2" onClick={openOrder} style={st("font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:500;color:#FBF8F4;background:#5E2B17;border:none;padding:19px 30px;cursor:pointer;transition:background .35s ease")}>
+                        Order online
+                      </button>
+                      <a className="hv15" href="tel:+919860934080" style={st("font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:500;border:1px solid rgba(94,43,23,.3);padding:19px 30px;transition:all .3s ease")}>
+                        Call Beanery
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </>
+        )}
+      </div>
+      <footer style={st("background:#5E2B17;color:#FBF8F4;padding:110px 40px 44px")}>
+        <div style={st("max-width:1560px;margin:0 auto")}>
+          <div style={st("display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:48px;padding-bottom:56px;border-bottom:1px solid rgba(251,248,244,.2)")}>
+            <div>
+              <Img src={logoLight} alt="Beanery: Coffee · Kitchen" style={st("width:360px;max-width:100%;height:auto;display:block")} />
+              <div style={st("font-size:9px;letter-spacing:.42em;color:rgba(251,248,244,.55);margin-top:16px;padding-left:.42em")}>
+                PUNE, INDIA
+              </div>
+              <p style={st("font-family:'Cormorant Garamond',Georgia,serif;font-size:23px;line-height:1.5;font-style:italic;color:rgba(251,248,244,.8);margin-top:32px;max-width:26ch")}>
+                Coffee worth knowing. Food worth staying for.
+              </p>
+              <div style={st("margin-top:34px;padding-top:20px;border-top:1px solid rgba(251,248,244,.2);max-width:380px")}>
+                <div style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(251,248,244,.5)")}>
+                  Locations
+                </div>
+                <div style={st("display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;font-size:13.5px;color:rgba(251,248,244,.85)")}>
+                  <span>Pune</span>
+                  <span style={st("color:rgba(251,248,244,.4)")}>Mumbai, coming soon</span>
+                  <span style={st("color:rgba(251,248,244,.4)")}>Bengaluru, coming soon</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(251,248,244,.5)")}>
+                Explore
+              </div>
+              <div style={st("display:flex;flex-direction:column;gap:12px;margin-top:20px;font-size:14px")}>
+                <a className="hv17" href="#top" onClick={goStory} style={st("color:rgba(251,248,244,.85)")}>
+                  Our Story
+                </a>
+                <a className="hv17" href="#top" onClick={goCoffee} style={st("color:rgba(251,248,244,.85)")}>
+                  Coffee
+                </a>
+                <a className="hv17" href="#top" onClick={goFood} style={st("color:rgba(251,248,244,.85)")}>Menu</a>
+                <a className="hv17" href="#top" onClick={goExp} style={st("color:rgba(251,248,244,.85)")}>
+                  Events
+                </a>
+                <a className="hv17" href="#top" onClick={goJournal} style={st("color:rgba(251,248,244,.85)")}>
+                  Journal
+                </a>
+              </div>
+            </div>
+            <div>
+              <div style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(251,248,244,.5)")}>
+                Visit
+              </div>
+              <div style={st("font-size:14px;line-height:1.9;color:rgba(251,248,244,.85);margin-top:20px")}>
+                <Lines text={copy.visit.address} />
+                <br />
+                <br />
+                Daily from 8:00
+                <br />
+                +91 98609 34080
+              </div>
+            </div>
+            <div>
+              <div style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(251,248,244,.5)")}>
+                Follow
+              </div>
+              <div style={st("display:flex;flex-direction:column;gap:12px;margin-top:20px;font-size:14px")}>
+                <a className="hv17" href={site.instagramUrl} target="_blank" rel="noopener noreferrer" style={st("color:rgba(251,248,244,.85)")}>Instagram ↗</a>
+                <a className="hv17" href={site.mapsUrl} target="_blank" rel="noopener noreferrer" style={st("color:rgba(251,248,244,.85)")}>Google Maps ↗</a>
+                <a className="hv17" href="tel:+919860934080" style={st("color:rgba(251,248,244,.85)")}>Call Beanery</a>
+              </div>
+              <button className="hv3" onClick={openReserve} style={st("margin-top:28px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:500;color:#5E2B17;background:#EDD3B7;border:none;padding:15px 24px;cursor:pointer;transition:all .3s ease")}>
+                Reserve
+              </button>
+            </div>
+          </div>
+          <div style={st("display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-top:26px;font-size:11px;letter-spacing:.1em;color:rgba(251,248,244,.45)")}>
+            <span>© 2026 Beanery</span>
+            <span>Privacy · Terms · Accessibility</span>
+            {/* Staff door to the content admin. "The Pass" is the counter where
+                finished plates leave the kitchen - an insider word, so it reads
+                as staff-only without announcing itself to guests. */}
+            <a
+              className="hv17"
+              href="/admin.html"
+              style={st("color:rgba(251,248,244,.4);font-size:10px;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;transition:color .3s ease")}
+              title="Staff content admin"
+            >
+              The Pass
+            </a>
+          </div>
+        </div>
+      </footer>
+      </>
+    );
+  }
+}
