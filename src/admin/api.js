@@ -7,7 +7,11 @@ async function request(path, options = {}) {
   const url = path.startsWith('http') ? path : `${API_BASE}${path}`;
   const res = await fetch(url, { credentials: 'include', ...options });
 
-  if (res.status === 401) {
+  // A 401 from login means the submitted credentials were rejected; preserve
+  // that server message. Treat 401s on authenticated requests as expired
+  // sessions so the editor can return to the sign-in screen.
+  const isSignIn = path === '/api/auth/login' || path === '/api/auth/google';
+  if (res.status === 401 && !isSignIn) {
     const err = new Error('Your session has expired. Please sign in again.');
     err.unauthorised = true;
     throw err;
