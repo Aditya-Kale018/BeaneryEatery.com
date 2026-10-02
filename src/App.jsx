@@ -461,7 +461,6 @@ export default class App extends React.Component {
       showPrices, signature, site, testimonials,
     } = this.renderVals();
     const faceImage = this.context.images?.['face-relief'] || faceRelief;
-    const mirrorHeroPreview = new URLSearchParams(window.location.search).get('hero') === 'mirror';
 
     return (
       <>
@@ -579,12 +578,10 @@ export default class App extends React.Component {
                       </button>
                     </div>
                   </div>
-                  <div data-reveal="200" style={st(`display:grid;grid-template-columns:${mirrorHeroPreview ? '.9fr 1fr 1fr' : '1.5fr 1fr 1fr'};gap:18px;align-items:end`)}>
-                    <div style={st(mirrorHeroPreview ? "overflow:hidden;height:60vh;min-height:420px;width:min(100%,36vh);justify-self:center;background:#EFE3D8" : "overflow:hidden;height:60vh;min-height:420px;background:#EFE3D8")}>
+                  <div data-reveal="200" style={st("display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:18px;align-items:end")}>
+                    <div style={st("overflow:hidden;height:60vh;min-height:420px;background:#EFE3D8")}>
                       <div className="hv7" style={st("width:100%;height:100%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)")}>
-                        {mirrorHeroPreview
-                          ? <ImageSlot id="home-mirror" priority fit="contain" alt="Beanery's arched mirror reflecting the face relief" />
-                          : <ImageSlot id="hero-grid-1" priority placeholder="Wide: the dining room in warm daylight - banquette, glassware, marble counter, a table set for lunch" />}
+                        <ImageSlot id="hero-grid-1" priority placeholder="Wide: the dining room in warm daylight - banquette, glassware, marble counter, a table set for lunch" />
                       </div>
                     </div>
                     <div style={st("overflow:hidden;height:44vh;min-height:320px;background:#DFCBB9")}>

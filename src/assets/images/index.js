@@ -71,13 +71,11 @@ import img_story_hero from './story-hero.webp';
 import img_story_preview from './story-preview.webp';
 import img_founder_kamlesh from './kamlesh-kale.jpg';
 import img_face_relief from '../brand/beanery-face-relief-v1.webp';
-import img_mirror_hero from './mirror-hero.png';
 
 const at = (src, x = 0, y = 0, s = 1) => ({ src, s, x, y });
 
 export const SLOTS = {
   'face-relief': at(img_face_relief),
-  'home-mirror': at(img_mirror_hero),
   'bakery-1': at(img_bakery_1),
   'bean-col': at(img_bean_col),
   'bean-eth': at(img_bean_eth),
