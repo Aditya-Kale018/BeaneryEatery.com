@@ -10,7 +10,7 @@ export default function LocalityMap() {
       <iframe
         title="Interactive map showing Beanery on Senapati Bapat Road, Pune"
         src={MAP_URL}
-        loading="lazy"
+        loading="eager"
         referrerPolicy="no-referrer-when-downgrade"
         style={st('position:absolute;inset:0;width:100%;height:100%;display:block;border:0;filter:grayscale(.8) sepia(.25) saturate(.82) contrast(.92) brightness(1.04)')}
       />
