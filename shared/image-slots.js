@@ -12,6 +12,15 @@
 
 export const SLOT_GROUPS = [
   {
+    page: 'Sitewide',
+    sections: [
+      {
+        name: 'Beanery face relief',
+        slots: [['face-relief', 'Beanery face relief', 'The plaster face artwork used in the opening sequence, coffee feature and home story section']],
+      },
+    ],
+  },
+  {
     page: 'Home',
     sections: [
       {
