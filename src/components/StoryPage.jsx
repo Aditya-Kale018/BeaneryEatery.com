@@ -87,9 +87,24 @@ export default function StoryPage({ copy, flower, openReserve, goCoffee, goFood,
         <div className="story-section-label"><span>03 / The story, every day</span><span>Coffee · Kitchen · Company</span></div>
         <div className="story-everyday-heading" data-reveal="0"><h2 id="story-everyday-title">The little things<br /><em>make it Beanery.</em></h2><p>A founder’s journey gives a café its beginning. What happens around its tables gives it a life of its own.</p></div>
         <div className="story-details">
-          <article><span className="story-label">01 / In the cup</span><h3>Where it all began.</h3><p>Coffee runs through our story, from Kamlesh’s first role as a barista to the cups we serve today. It is a good place to begin your visit, too.</p><a className="story-text-link" href="#/coffee" onClick={goCoffee}>Explore our coffee <span aria-hidden="true">↗</span></a></article>
-          <article><span className="story-label">02 / At the table</span><h3>Something to linger over.</h3><p>There is room for more than a coffee break here. From breakfast to a meal shared with friends, the kitchen gives you another reason to settle in.</p><a className="story-text-link" href="#/food" onClick={goFood}>Explore the food <span aria-hidden="true">↗</span></a></article>
-          <article><span className="story-label">03 / In good company</span><h3>A place that becomes yours.</h3><p>The catch-ups, the conversations, the table you return to. Your everyday moments are the part of Beanery’s story we look forward to most.</p><a className="story-text-link" href="https://www.linkedin.com/company/beanery-cafe-eatery/about/" target="_blank" rel="noopener noreferrer">Follow our journey <span aria-hidden="true">↗</span></a></article>
+          <article>
+            <span className="story-detail-number" aria-hidden="true">01</span>
+            <div className="story-detail-heading"><span className="story-label">In the cup</span><h3>Where it all began.</h3></div>
+            <p>Coffee runs through our story, from Kamlesh’s first role as a barista to the cups we serve today. It is a good place to begin your visit, too.</p>
+            <a className="story-text-link" href="#/coffee" onClick={goCoffee}>Explore our coffee <span aria-hidden="true">↗</span></a>
+          </article>
+          <article>
+            <span className="story-detail-number" aria-hidden="true">02</span>
+            <div className="story-detail-heading"><span className="story-label">At the table</span><h3>Something to linger over.</h3></div>
+            <p>There is room for more than a coffee break here. From breakfast to a meal shared with friends, the kitchen gives you another reason to settle in.</p>
+            <a className="story-text-link" href="#/food" onClick={goFood}>Explore the food <span aria-hidden="true">↗</span></a>
+          </article>
+          <article>
+            <span className="story-detail-number" aria-hidden="true">03</span>
+            <div className="story-detail-heading"><span className="story-label">In good company</span><h3>A place that becomes yours.</h3></div>
+            <p>The catch-ups, the conversations, the table you return to. Your everyday moments are the part of Beanery’s story we look forward to most.</p>
+            <a className="story-text-link" href="https://www.linkedin.com/company/beanery-cafe-eatery/about/" target="_blank" rel="noopener noreferrer">Follow our journey <span aria-hidden="true">↗</span></a>
+          </article>
         </div>
       </section>
 

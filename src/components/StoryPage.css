@@ -59,11 +59,14 @@
 .story-everyday{padding-top:0}
 .story-everyday-heading{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:end;margin-bottom:48px}
 .story-everyday-heading>p{max-width:42ch;font-size:16px;line-height:1.8;color:var(--story-muted)}
-.story-details{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:48px}
-.story-details article{border-top:1px solid var(--story-line);padding-top:26px;display:flex;flex-direction:column;align-items:start}
-.story-details h3{font-size:clamp(24px,2.1vw,32px);line-height:1.3;margin-top:18px}
-.story-details p{font-size:14px;line-height:1.85;color:var(--story-muted);margin:18px 0;max-width:43ch}
-.story-details .story-text-link{margin-top:auto}
+.story-details{display:grid;grid-template-columns:1fr;border-top:1px solid var(--story-line)}
+.story-details article{position:relative;display:grid;grid-template-columns:58px minmax(210px,.85fr) minmax(260px,1.35fr) auto;align-items:center;gap:clamp(18px,3vw,42px);padding:23px 18px;border-bottom:1px solid var(--story-line);transition:background .3s ease,padding .3s ease}
+.story-details article:hover{padding-inline:24px;background:rgba(250,246,240,.64)}
+.story-detail-number{font-family:'Cormorant Garamond',Georgia,serif;font-size:34px;font-style:italic;line-height:1;color:var(--story-accent)}
+.story-detail-heading .story-label{font-size:9px;letter-spacing:.14em}
+.story-details h3{font-size:clamp(22px,2vw,29px);line-height:1.2;margin-top:7px}
+.story-details p{font-size:13px;line-height:1.75;color:var(--story-muted);max-width:48ch}
+.story-details .story-text-link{margin:0;white-space:nowrap}
 .beanery-story .story-invitation{position:relative;isolation:isolate;overflow:hidden;display:grid;grid-template-columns:1.15fr .85fr;align-items:center;gap:clamp(36px,8vw,120px);padding:clamp(76px,9vw,128px) max(var(--beanery-page-gutter),calc((100vw - 1464px)/2));background:#F3E7D9;text-align:left}
 .story-invitation::before,.story-invitation::after{content:'';position:absolute;z-index:-1;right:-8vw;top:50%;border:1px solid rgba(154,93,59,.14);border-radius:50%;transform:translateY(-50%);pointer-events:none}
 .story-invitation::before{width:min(42vw,620px);aspect-ratio:1}
@@ -85,7 +88,7 @@
   .story-founder-layout>figure{max-width:520px;width:100%}.story-founder-copy>p:not(.story-label){font-size:15px}
   .story-journey{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:34px;margin-top:48px}.story-journey li:nth-child(n+3){border-top:1px solid var(--story-line)}
   .story-room-photo{aspect-ratio:5/4}.story-place-layout>figure{max-width:600px;width:100%}
-  .story-everyday{padding-top:0}.story-details{grid-template-columns:1fr;gap:32px}.story-details p{max-width:62ch}.story-details .story-text-link{margin-top:0}
+  .story-everyday{padding-top:0}.story-details{grid-template-columns:1fr;gap:0}.story-details article{grid-template-columns:42px 1fr;gap:12px 18px;padding:22px 8px;align-items:start}.story-details article:hover{padding-inline:12px}.story-detail-number{grid-row:1 / span 3;font-size:29px}.story-details p,.story-details .story-text-link{grid-column:2}.story-details p{max-width:62ch}.story-details .story-text-link{justify-self:start;margin-top:0}
   .story-interlude{padding-block:55px}.story-everyday-heading{gap:24px}
   .beanery-story .story-invitation{grid-template-columns:1fr;gap:34px;padding-block:64px;text-align:left}
   .story-invitation h2{font-size:clamp(54px,13vw,78px);margin-top:17px}
