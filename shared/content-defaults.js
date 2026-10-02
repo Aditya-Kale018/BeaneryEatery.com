@@ -144,6 +144,10 @@ export const DEFAULT_CONTENT = {
     ],
   },
 
+  // Journal posts are authored from the content admin. Keep the shipped list
+  // empty until the Beanery team publishes its first story.
+  journal: [],
+
   /**
    * Slot id -> uploaded image URL. Empty by design: an entry here overrides the
    * photograph bundled for that slot, and removing the entry restores it.

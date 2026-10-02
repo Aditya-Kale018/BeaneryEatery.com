@@ -4,6 +4,7 @@ import StoryPage from './components/StoryPage';
 import HospitalityHome from './components/HospitalityHome';
 import CafeModules from './components/CafeModules';
 import EventEnquiry from './components/EventEnquiry';
+import './components/Journal.css';
 import LocalityMap from './components/LocalityMap';
 import logoDark from './assets/brand/beanery-logo-dark.png';
 import logoLight from './assets/brand/beanery-logo-light.png';
@@ -16,6 +17,10 @@ import './styles/global.css';
 import './styles/hover.css';
 import './styles/motion.css';
 
+function formatJournalDate(value) {
+  const date = new Date(`${value}T12:00:00`);
+  return Number.isNaN(date.valueOf()) ? value : date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+}
 
 
 
@@ -368,8 +373,6 @@ export default class App extends React.Component {
     { kicker: 'Seasonal', name: 'Saffron Cardamom Latte', copy: 'A seasonal cup with Kashmiri saffron, green cardamom and whole milk.', slot: 'sig-6', shot: 'Saffron latte, threads on foam, ceramic cup, warm tones' },
   ];
 
-  journal = [];
-
   testimonials = [];
 
   renderVals() {
@@ -377,6 +380,9 @@ export default class App extends React.Component {
     const content = this.context;
     const site = content.site;
     const copy = content.pages;
+    const journal = Array.isArray(content.journal)
+      ? content.journal.filter((entry) => entry.title && entry.category && entry.date && entry.dek && entry.body && entry.image)
+      : [];
     const mk = (arr) => arr.map(([key, label]) => ({
       key, label, go: this.go(key), active: page === key ? '1' : '0',
       style: page === key ? 'font-size:12px;letter-spacing:.11em;text-transform:uppercase;font-weight:500;color:#A35730;cursor:pointer' : 'font-size:12px;letter-spacing:.11em;text-transform:uppercase;font-weight:500;color:#5E2B17;cursor:pointer',
@@ -413,7 +419,7 @@ export default class App extends React.Component {
       isFood: page === 'food', isExp: page === 'experiences', isJournal: page === 'journal',
       isVisit: page === 'visit',
       signature: this.signature.slice(0, 4),
-      journal: this.journal,
+      journal,
       testimonials: this.testimonials,
       brews: this.brews.slice(0, 4),
       showPrices: this.props.showPrices !== false,
@@ -1204,25 +1210,12 @@ export default class App extends React.Component {
                       Read the journal →
                     </a>
                   </div>
-                  <div style={st("display:grid;grid-template-columns:repeat(3,1fr);gap:30px;margin-top:52px")}>
-                    {journal.map((a, i) => (
-                      <a key={i} href="#top" onClick={goJournal} data-reveal="60" style={st("display:block;cursor:pointer")}>
-                        <div style={st("overflow:hidden;background:#EFE3D8;aspect-ratio:16/11")}>
-                          <div className="hv10" style={st("width:100%;height:100%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)")}>
-                            <ImageSlot id={a.slot} placeholder={a.shot} />
-                          </div>
-                        </div>
-                        <div style={st("display:flex;gap:14px;align-items:center;margin-top:20px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#A35730")}>
-                          {a.cat}{" "}
-                          <span style={st("width:16px;height:1px;background:rgba(94,43,23,.25);display:block")} />
-                          {" "}
-                          <span style={st("color:#96755C")}>{a.date}</span>
-                        </div>
-                        <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:25px;line-height:1.2;margin-top:12px")}>
-                          {a.title}
-                        </h3>
-                        <p style={st("font-size:14px;line-height:1.75;color:#6E4A34;margin-top:10px")}>{a.dek}</p>
-                        <div style={st("font-size:11px;color:#96755C;margin-top:14px")}>{a.read}{" read"}</div>
+                  <div style={st(journal.length ? "display:grid;grid-template-columns:repeat(3,1fr);gap:30px;margin-top:52px" : "display:none")}>
+                    {journal.slice(0, 3).map((a) => (
+                      <a key={a.id} href="#top" onClick={goJournal} data-reveal="60" className="journal-home-card">
+                        <div className="journal-home-card__image"><img src={a.image} alt={a.title} loading="lazy" /></div>
+                        <div className="journal-home-card__meta">{a.category}<span />{formatJournalDate(a.date)}</div>
+                        <h3>{a.title}</h3><p>{a.dek}</p>
                       </a>
                     ))}
                   </div>
@@ -2058,37 +2051,15 @@ export default class App extends React.Component {
                   </h1>
                 </div>
               </section>
-              <section style={st("padding:80px 40px 120px;background:#EED7BF")}>
-                <div style={st("max-width:1560px;margin:0 auto")}>
-                  <a href="#top" data-reveal="0" style={st("display:grid;grid-template-columns:1.25fr 1fr;gap:56px;align-items:center;padding-bottom:56px;border-bottom:1px solid rgba(94,43,23,.14);cursor:pointer")}>
-                    <div>
-                      <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#A35730")}>From the Beanery team</div>
-                      <h2 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(30px,3.6vw,52px);line-height:1.06;margin-top:16px")}>Notes are taking shape.</h2>
-                      <p style={st("font-size:15.5px;line-height:1.8;color:#6E4A34;margin-top:18px;max-width:46ch")}>We’re gathering stories about the coffee, food and people that make Beanery. Check back for notes from behind the counter.</p>
-                    </div>
-                  </a>
-                  <div style={st("display:grid;grid-template-columns:repeat(3,1fr);gap:30px;margin-top:56px")}>
-                    {journal.map((a, i) => (
-                      <a key={i} href="#top" data-reveal="60" style={st("display:block;cursor:pointer")}>
-                        <div style={st("overflow:hidden;background:#EFE3D8;aspect-ratio:16/11")}>
-                          <div className="hv10" style={st("width:100%;height:100%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)")}>
-                            <ImageSlot id={a.slot} placeholder={a.shot} />
-                          </div>
-                        </div>
-                        <div style={st("display:flex;gap:14px;align-items:center;margin-top:20px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#A35730")}>
-                          {a.cat}{" "}
-                          <span style={st("width:16px;height:1px;background:rgba(94,43,23,.25);display:block")} />
-                          {" "}
-                          <span style={st("color:#96755C")}>{a.date}</span>
-                        </div>
-                        <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:25px;line-height:1.2;margin-top:12px")}>
-                          {a.title}
-                        </h3>
-                        <p style={st("font-size:14px;line-height:1.75;color:#6E4A34;margin-top:10px")}>{a.dek}</p>
-                        <div style={st("font-size:11px;color:#96755C;margin-top:14px")}>{a.read}{" read"}</div>
-                      </a>
-                    ))}
-                  </div>
+              <section className="journal-page-content">
+                <div className="journal-page-content__inner">
+                  {journal.length === 0 ? <div className="journal-empty"><span>✳</span><p className="hospitality-label">From the Beanery team</p><h2>Notes are taking shape.</h2><p>We’re gathering stories about the coffee, food and people that make Beanery. Check back for notes from behind the counter.</p></div> : <>
+                    {journal[0] ? <article className="journal-feature">
+                      <div className="journal-feature__image"><img src={journal[0].image} alt={journal[0].title} /></div>
+                      <div className="journal-feature__copy"><p className="journal-card__meta">{journal[0].category}<span />{formatJournalDate(journal[0].date)}<span />{journal[0].read} read</p><h2>{journal[0].title}</h2><p className="journal-feature__dek">{journal[0].dek}</p><div className="journal-article-body">{journal[0].body.split(/\n\s*\n/).map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div></div>
+                    </article> : null}
+                    {journal.length > 1 ? <div className="journal-card-grid">{journal.slice(1).map((entry) => <article className="journal-card" key={entry.id}><div className="journal-card__image"><img src={entry.image} alt={entry.title} loading="lazy" /></div><div className="journal-card__copy"><p className="journal-card__meta">{entry.category}<span />{formatJournalDate(entry.date)}</p><h2>{entry.title}</h2><p className="journal-card__dek">{entry.dek}</p><details className="journal-card__story"><summary>Read the story <span>{entry.read} read</span></summary><div className="journal-article-body">{entry.body.split(/\n\s*\n/).map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div></details></div></article>)}</div> : null}
+                  </>}
                 </div>
               </section>
             </div>

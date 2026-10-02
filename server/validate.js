@@ -70,6 +70,24 @@ function images(raw, uploadUrls) {
   return out;
 }
 
+function journalEntries(raw, uploadUrls) {
+  if (!Array.isArray(raw)) return [];
+  return raw.slice(0, 100).map((entry, index) => {
+    const id = slug(entry?.id, `journal-${index + 1}`);
+    const image = typeof entry?.image === 'string' && uploadUrls.has(entry.image) ? entry.image : '';
+    return {
+      id,
+      title: text(entry?.title).trim().slice(0, 180),
+      category: text(entry?.category).trim().slice(0, 60),
+      date: text(entry?.date).trim().slice(0, 40),
+      read: text(entry?.read).trim().slice(0, 30),
+      dek: text(entry?.dek).trim().slice(0, 500),
+      body: text(entry?.body).trim().slice(0, MAX_TEXT),
+      image,
+    };
+  });
+}
+
 export function normaliseContent(input, current, uploadUrls) {
   const base = current ?? DEFAULT_CONTENT;
   const groups = Array.isArray(input?.menu?.groups) ? input.menu.groups : base.menu.groups;
@@ -99,6 +117,7 @@ export function normaliseContent(input, current, uploadUrls) {
       }),
       groups: groups.map(menuGroup).filter((g) => g.title),
     },
+    journal: journalEntries(input?.journal ?? base.journal, uploadUrls),
     images: images(input?.images, uploadUrls),
   };
 }

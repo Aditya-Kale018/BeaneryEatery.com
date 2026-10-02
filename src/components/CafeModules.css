@@ -222,7 +222,7 @@
   position:relative;
   max-width:none;
   padding-top:32px;
-  padding-bottom:116px;
+  padding-bottom:52px;
   background:linear-gradient(180deg,#EED7BF 0%,#F1E6D8 100%);
 }
 .cafe-experiences__modules .cafe-module-grid--detailed{
@@ -346,7 +346,7 @@
   background:#5E2B17;color:#FBF8F4;
 }
 @media(max-width:760px){
-  .cafe-experiences__modules{padding-top:18px;padding-bottom:76px;}
+  .cafe-experiences__modules{padding-top:18px;padding-bottom:42px;}
   .cafe-experiences__modules .cafe-module-grid--detailed{
     grid-template-columns:1fr;
     gap:18px;

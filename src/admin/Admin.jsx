@@ -718,8 +718,77 @@ function EventsTab({ events, onRefresh }) {
   );
 }
 
+const emptyJournalEntry = () => ({
+  id: crypto.randomUUID(), title: '', category: 'Coffee', date: new Date().toISOString().slice(0, 10),
+  read: '4 min', dek: '', body: '', image: '',
+});
+
+function JournalTab({ content, update, uploads, refreshUploads, onError }) {
+  const [activeId, setActiveId] = React.useState('');
+  const [busy, setBusy] = React.useState(false);
+  const entries = content.journal || [];
+  const active = entries.find((entry) => entry.id === activeId);
+
+  function patchEntry(id, patch) {
+    update((draft) => { draft.journal = (draft.journal || []).map((entry) => entry.id === id ? { ...entry, ...patch } : entry); });
+  }
+
+  async function uploadCover(file) {
+    if (!active || !file) return;
+    setBusy(true);
+    try {
+      const uploaded = await api.uploadImage(file);
+      await refreshUploads();
+      patchEntry(active.id, { image: uploaded.url });
+    } catch (err) { onError(err); }
+    finally { setBusy(false); }
+  }
+
+  return (
+    <div className="stack journal-admin">
+      <section className="card journal-admin__intro">
+        <div><p className="tag">The Beanery journal</p><h2 className="section__title">Stories worth staying for</h2><p className="field__hint">Create and publish editorial notes for the Journal page. Every published story also appears in the journal feature on Home.</p></div>
+        <button className="btn btn--primary" onClick={() => { const entry = emptyJournalEntry(); update((draft) => { draft.journal = [entry, ...(draft.journal || [])]; }); setActiveId(entry.id); }}>＋ Add journal</button>
+      </section>
+
+      {entries.length === 0 ? <section className="card"><p className="empty">No journal stories yet. Add a story to begin building the page.</p></section> : (
+        <div className="journal-admin__layout">
+          <nav className="card journal-admin__list" aria-label="Journal entries">
+            {entries.map((entry) => <button key={entry.id} className={`journal-admin__item${entry.id === activeId ? ' is-active' : ''}`} onClick={() => setActiveId(entry.id)}>
+              {entry.image ? <img src={entry.image} alt="" /> : <span className="journal-admin__thumb">✳</span>}
+              <span><small>{entry.category || 'Draft story'}</small><strong>{entry.title || 'Untitled story'}</strong><small>{entry.date}</small></span>
+            </button>)}
+          </nav>
+          {active ? <section className="card journal-admin__editor">
+            <div className="journal-admin__editorhead"><div><p className="tag">Story details</p><h2 className="section__title">{active.title || 'New journal entry'}</h2></div><button className="btn btn--danger" onClick={() => { if (!confirm('Delete this journal story?')) return; update((draft) => { draft.journal = (draft.journal || []).filter((entry) => entry.id !== active.id); }); setActiveId(''); }}>Delete</button></div>
+            <div className="journal-admin__fields">
+              <Field label="Story title" value={active.title} maxLength={180} onChange={(value) => patchEntry(active.id, { title: value })} />
+              <div className="journal-admin__row">
+                <label className="field"><span className="field__label">Category</span><select className="field__input" value={active.category} onChange={(e) => patchEntry(active.id, { category: e.target.value })}>{['Coffee', 'Food', 'People', 'Behind the scenes', 'Gatherings', 'News'].map((value) => <option key={value}>{value}</option>)}</select></label>
+                <Field label="Publish date" type="date" value={active.date} onChange={(value) => patchEntry(active.id, { date: value })} />
+                <Field label="Reading time" value={active.read} maxLength={30} placeholder="4 min" onChange={(value) => patchEntry(active.id, { read: value })} />
+              </div>
+              <Field label="Short introduction" value={active.dek} multiline rows={3} maxLength={500} hint="A concise preview shown on the journal card." onChange={(value) => patchEntry(active.id, { dek: value })} />
+              <Field label="Full story" value={active.body} multiline rows={10} maxLength={4000} hint="Write the article text. Use blank lines between paragraphs." onChange={(value) => patchEntry(active.id, { body: value })} />
+              <div className="journal-admin__cover">
+                <div><span className="field__label">Cover photograph</span><p className="field__hint">Choose an existing upload or add a new image. A cover is required before publishing.</p>
+                  <select className="field__input" value={active.image} onChange={(e) => patchEntry(active.id, { image: e.target.value })}><option value="">Choose a photograph…</option>{uploads.map((file) => <option key={file.id} value={file.url}>{file.name}</option>)}</select>
+                  <label className="btn btn--ghost journal-admin__upload">{busy ? 'Uploading…' : 'Upload cover'}<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={busy} onChange={(e) => uploadCover(e.target.files?.[0])} /></label>
+                </div>
+                <div className="journal-admin__preview">{active.image ? <img src={active.image} alt="Selected journal cover" /> : <span>Cover preview</span>}</div>
+              </div>
+              <p className="field__hint">Press “Save changes” below to publish this story on the live site. Stories missing required information will not be published.</p>
+            </div>
+          </section> : <section className="card journal-admin__empty"><p>Select a story to edit, or add a new journal entry.</p></section>}
+        </div>
+      )}
+    </div>
+  );
+}
+
 const TABS = [
   ['events', 'Incoming events'],
+  ['journal', 'Journal'],
   ['pages', 'Pages'],
   ['menu', 'Menu'],
   ['images', 'Images'],
@@ -856,6 +925,7 @@ function Editor({ user, onSignedOut }) {
 
       <main className="admin__body">
         {tab === 'events' ? <EventsTab events={events} onRefresh={refreshEvents} /> : null}
+        {tab === 'journal' ? <JournalTab {...shared} uploads={uploads} refreshUploads={refreshUploads} onError={handleError} /> : null}
         {tab === 'pages' ? <PagesTab {...shared} /> : null}
         {tab === 'menu' ? <MenuTab {...shared} /> : null}
         {tab === 'images' ? (
