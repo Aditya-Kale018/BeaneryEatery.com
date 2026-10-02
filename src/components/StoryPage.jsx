@@ -39,7 +39,11 @@ export default function StoryPage({ copy, flower, openReserve, goCoffee, goFood,
           <figure data-reveal="0">
             <div className="story-portrait"><ImageSlot id="founder-kamlesh" alt="Kamlesh Kale, founder of Beanery Cafe & Eatery" /></div>
             <figcaption className="story-founder-signature"><span>Kamlesh Kale</span><span>Founder, Beanery Cafe & Eatery</span></figcaption>
-            <a className="story-text-link" href="https://www.linkedin.com/in/kamlesh-kale-50b207424/" target="_blank" rel="noopener noreferrer">Meet Kamlesh on LinkedIn <span aria-hidden="true">↗</span></a>
+            <a className="story-linkedin-button" href="https://www.linkedin.com/in/kamlesh-kale-50b207424/" target="_blank" rel="noopener noreferrer">
+              <span className="story-linkedin-mark" aria-hidden="true">in</span>
+              <span>Meet Kamlesh on LinkedIn</span>
+              <span className="story-linkedin-arrow" aria-hidden="true">↗</span>
+            </a>
           </figure>
           <div className="story-founder-copy" data-reveal="100">
             <p className="story-label">A life in cafés</p>

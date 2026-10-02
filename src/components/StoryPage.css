@@ -26,6 +26,10 @@
 .story-text-link{display:inline-flex;align-items:center;gap:24px;min-height:44px;margin-top:18px;padding-block:10px;border-bottom:1px solid var(--story-line);color:var(--story-ink);font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;transition:color .2s,border-color .2s}
 .story-text-link:hover{color:var(--story-accent);border-color:var(--story-accent)}
 .story-text-link span{font-size:19px}
+.story-linkedin-button{display:inline-flex;align-items:center;gap:12px;min-height:48px;margin-top:22px;padding:7px 15px 7px 8px;border:1px solid rgba(94,43,23,.18);background:#5E2B17;color:#FBF8F4;font-size:10px;font-weight:500;letter-spacing:.09em;text-transform:uppercase;transition:background .25s ease,transform .25s ease,border-color .25s ease}
+.story-linkedin-button:hover{background:#75402A;border-color:#75402A;transform:translateY(-2px)}
+.story-linkedin-mark{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#EED7BF;color:#5E2B17;font:bold 15px/1 Arial,sans-serif;letter-spacing:-.08em;text-transform:none}
+.story-linkedin-arrow{margin-left:4px;font-size:18px;line-height:1}
 .story-journey{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));list-style:none;padding:0;margin:76px 0 0;border-top:1px solid var(--story-line);gap:32px}
 .story-journey li{position:relative;padding-top:28px}
 .story-journey li::before{content:'';position:absolute;top:-4px;left:0;width:7px;height:7px;border-radius:50%;background:var(--story-accent)}
