@@ -26,6 +26,7 @@ export const SLOT_GROUPS = [
       {
         name: 'Hero',
         slots: [
+          ['home-mirror', 'Hero — mirror study', 'Beanery’s arched mirror reflecting the face relief; used in the reversible home hero preview'],
           ['hero-grid-1', 'Hero — large left', 'The dining room in warm daylight: banquette, glassware, marble counter, guests mid-meal'],
           ['hero-grid-2', 'Hero — middle', 'Espresso extraction into a warm cup, crema forming, barista hands'],
           ['hero-grid-3', 'Hero — right', "Chef's hands finishing a dish with sauce and oil, overhead, dark ceramic"],
