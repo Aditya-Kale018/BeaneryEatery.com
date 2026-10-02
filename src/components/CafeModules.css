@@ -357,3 +357,63 @@
   .cafe-experiences__modules .cafe-module__copy button,
   .cafe-experiences__modules .cafe-module__copy a{padding-top:18px;}
 }
+
+/* Gathering actions: give the four module links a clear, inviting button shape. */
+.cafe-module .cafe-module__copy button,
+.cafe-module .cafe-module__copy a{
+  display:inline-flex;
+  width:min(100%,260px);
+  min-width:0;
+  min-height:48px;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  margin-top:22px;
+  padding:6px 8px 6px 18px;
+  border:1px solid rgba(94,43,23,.16);
+  border-radius:999px;
+  background:rgba(239,227,216,.72);
+  color:#5E2B17;
+  cursor:pointer;
+  font:500 9px/1.3 Archivo,system-ui,sans-serif;
+  letter-spacing:.12em;
+  text-align:left;
+  text-decoration:none;
+  text-transform:uppercase;
+  transition:background .25s ease,color .25s ease,border-color .25s ease,transform .25s ease,box-shadow .25s ease;
+}
+.cafe-module .cafe-module__copy button span,
+.cafe-module .cafe-module__copy a span{
+  display:grid;
+  flex:0 0 32px;
+  width:32px;
+  height:32px;
+  place-items:center;
+  border:1px solid rgba(94,43,23,.18);
+  border-radius:50%;
+  background:rgba(255,252,248,.72);
+  color:#5E2B17;
+  font:18px/1 Georgia,serif;
+  transition:transform .25s ease,background .25s ease,color .25s ease,border-color .25s ease;
+}
+.cafe-module .cafe-module__copy button:hover,
+.cafe-module .cafe-module__copy a:hover{
+  transform:translateY(-2px);
+  border-color:#5E2B17;
+  background:#5E2B17;
+  color:#FBF8F4;
+  box-shadow:0 8px 20px rgba(94,43,23,.14);
+}
+.cafe-module .cafe-module__copy button:hover span,
+.cafe-module .cafe-module__copy a:hover span{
+  transform:translateX(2px);
+  border-color:rgba(255,248,239,.35);
+  background:#FBF8F4;
+  color:#5E2B17;
+}
+.cafe-experiences__modules .cafe-module .cafe-module__copy button,
+.cafe-experiences__modules .cafe-module .cafe-module__copy a{margin-top:auto;}
+@media(max-width:560px){
+  .cafe-module .cafe-module__copy button,
+  .cafe-module .cafe-module__copy a{width:100%;min-height:46px;padding-left:15px;font-size:8.5px;letter-spacing:.1em;}
+}
