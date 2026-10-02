@@ -94,10 +94,14 @@ export default function StoryPage({ copy, flower, openReserve, goCoffee, goFood,
       </section>
 
       <section className="story-invitation" aria-labelledby="story-invitation-title">
-        <p className="story-label">The next chapter is yours</p>
-        <h2 id="story-invitation-title">Pull up <em>a chair.</em></h2>
-        <p>You know a little of our story.<br />We’d love to be part of yours.</p>
-        <div className="story-actions"><button type="button" className="hv2 cafe-green-button" onClick={openReserve} style={{ fontSize: 11, letterSpacing: ".14em", textTransform: "uppercase", fontWeight: 500, color: "#FBF8F4", background: "#5E2B17", border: "none", padding: "13px 22px", cursor: "pointer", transition: "background .3s ease" }}>Reserve a table</button><a className="story-text-link" href="#/visit" onClick={goVisit}>Visit Beanery <span aria-hidden="true">↗</span></a></div>
+        <div className="story-invitation__headline">
+          <p className="story-label">The next chapter is yours</p>
+          <h2 id="story-invitation-title">Pull up <em>a chair.</em></h2>
+        </div>
+        <div className="story-invitation__actions">
+          <p>You know a little of our story.<br />We’d love to be part of yours.</p>
+          <div className="story-actions"><button type="button" className="hv2 cafe-green-button" onClick={openReserve} style={{ fontSize: 11, letterSpacing: ".14em", textTransform: "uppercase", fontWeight: 500, color: "#FBF8F4", background: "#5E2B17", border: "none", padding: "13px 22px", cursor: "pointer", transition: "background .3s ease" }}>Reserve a table</button><a className="story-text-link" href="#/visit" onClick={goVisit}>Visit Beanery <span aria-hidden="true">↗</span></a></div>
+        </div>
       </section>
     </main>
   );
