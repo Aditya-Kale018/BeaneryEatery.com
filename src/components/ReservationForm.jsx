@@ -96,7 +96,7 @@ function validate(v) {
     e.time = 'We are closed then. Please choose another time.';
   }
 
-  if (v.guests === '13+') e.guests = 'For thirteen or more, call the café and we will arrange it properly.';
+  if (v.partySize === '13+') e.partySize = 'For a party of thirteen or more, call the café and we will arrange it properly.';
 
   return e;
 }
@@ -113,7 +113,7 @@ export default function ReservationForm({ onClose, initial }) {
     name: '', phone: '', email: '',
     date: initial?.date || today,
     time: initial?.time || '',
-    guests: initial?.guests || '2',
+    partySize: initial?.partySize || '2',
     seating: initial?.seating || SEATING[0],
     occasion: OCCASIONS[0],
     notes: '',
@@ -143,7 +143,7 @@ export default function ReservationForm({ onClose, initial }) {
   const slots = slotsFor(v.date);
   const { kitchenClose } = v.date ? service(v.date) : { kitchenClose: Infinity };
   const barOnly = v.time && Number(v.time) > kitchenClose;
-  const bigParty = v.guests === '13+';
+  const bigParty = v.partySize === '13+';
 
   async function submit(e) {
     e.preventDefault();
@@ -167,7 +167,7 @@ export default function ReservationForm({ onClose, initial }) {
       ['Reference', confirmed.ref],
       ['Name', confirmed.name.trim()],
       ['When', `${prettyDate(confirmed.date)}, ${label12(Number(confirmed.time))}`],
-      ['Guests', confirmed.guests === '1' ? '1 guest' : `${confirmed.guests} guests`],
+      ['Party size', confirmed.partySize === '1' ? '1 person' : `${confirmed.partySize} people`],
       ['Seating', confirmed.seating],
     ];
     if (confirmed.occasion !== OCCASIONS[0]) rows.push(['Occasion', confirmed.occasion]);
@@ -311,19 +311,19 @@ export default function ReservationForm({ onClose, initial }) {
         </div>
 
         <div style={st('position:relative')}>
-          <div style={st(LABEL)}>Guests</div>
+          <div style={st(LABEL)}>Party size</div>
           <select
-            name="guests" value={v.guests} onChange={set('guests')} onBlur={blur('guests')}
-            aria-invalid={!!errors.guests}
-            style={st(selectStyle(errors.guests))}
+            name="partySize" value={v.partySize} onChange={set('partySize')} onBlur={blur('partySize')}
+            aria-invalid={!!errors.partySize}
+            style={st(selectStyle(errors.partySize))}
           >
             {Array.from({ length: 12 }, (_, i) => String(i + 1)).map((n) => (
-              <option key={n} value={n}>{n === '1' ? '1 guest' : `${n} guests`}</option>
+              <option key={n} value={n}>{n === '1' ? '1 person' : `${n} people`}</option>
             ))}
-            <option value="13+">13 or more</option>
+            <option value="13+">13 or more people</option>
           </select>
           <Chevron />
-          <Err k="guests" />
+          <Err k="partySize" />
         </div>
 
         <div style={st('position:relative')}>

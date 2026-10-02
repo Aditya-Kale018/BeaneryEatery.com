@@ -274,7 +274,7 @@ textarea.input { min-height: 90px; resize: vertical; }
 
 *{box-sizing:border-box}
 html{width:100%;max-width:100%;overflow-x:hidden;scroll-behavior:smooth;scrollbar-width:none;-ms-overflow-style:none}
-body{width:100%;max-width:100%;margin:0;overflow-x:hidden;overscroll-behavior-x:none;background:#EDD3B7;color:#35261F;font-family:Archivo,system-ui,sans-serif;-webkit-font-smoothing:antialiased;text-wrap:pretty}
+body{width:100%;max-width:100%;margin:0;overflow-x:hidden;overscroll-behavior-x:none;background:#EED7BF;color:#35261F;font-family:Archivo,system-ui,sans-serif;-webkit-font-smoothing:antialiased;text-wrap:pretty}
 #root,[data-page-enter],main,section,footer{max-width:100%;min-width:0}
 a{color:#35261F;text-decoration:none;transition:color .3s ease}
 a:hover{color:#9A5D3B}
@@ -301,7 +301,7 @@ section > [data-rail]{padding-left:var(--beanery-page-gutter)!important;padding-
 
 /* Practical food menu: editorial enough for the brand, fast enough to scan
    at the table. Live pricing stays with the ordering provider. */
-.menu-page{background:#EDD3B7;color:#35261F;padding-bottom:110px}
+.menu-page{background:#EED7BF;color:#35261F;padding-bottom:110px}
 .menu-hero{max-width:1560px;margin:0 auto;padding:154px var(--beanery-page-gutter) 72px}
 .menu-hero__eyebrow{display:flex;justify-content:space-between;gap:24px;padding-bottom:22px;border-bottom:1px solid rgba(53,38,31,.16);color:#897466;font-size:10px;font-weight:500;letter-spacing:.19em;text-transform:uppercase}
 .menu-hero__grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr);gap:clamp(44px,7vw,110px);align-items:end;padding-top:48px}
@@ -314,7 +314,7 @@ section > [data-rail]{padding-left:var(--beanery-page-gutter)!important;padding-
 .menu-actions button:hover{background:#9A5D3B;border-color:#9A5D3B}
 .menu-actions .menu-actions__quiet{background:transparent;color:#35261F}
 .menu-actions .menu-actions__quiet:hover{background:#E8DDCE;border-color:#35261F}
-.menu-jump{position:relative;z-index:2;display:flex;gap:0;overflow-x:auto;width:100%;padding:0 var(--beanery-page-gutter);background:#EDD3B7;border-block:1px solid rgba(53,38,31,.15);scrollbar-width:none}
+.menu-jump{position:relative;z-index:2;display:flex;gap:0;overflow-x:auto;width:100%;padding:0 var(--beanery-page-gutter);background:#EED7BF;border-block:1px solid rgba(53,38,31,.15);scrollbar-width:none}
 .menu-jump::-webkit-scrollbar{display:none}
 .menu-route{animation:none!important;transform:none!important}
 .menu-jump button{flex:1;min-width:max-content;padding:18px clamp(18px,2.5vw,40px);border:0;border-right:1px solid rgba(53,38,31,.12);background:transparent;color:#35261F;cursor:pointer;font-size:10px;font-weight:600;letter-spacing:.14em;text-align:center;text-transform:uppercase}

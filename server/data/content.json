@@ -15,7 +15,7 @@
       "home": {
         "label": "Home",
         "eyebrowLeft": "Est. 2025 · Pune, India",
-        "eyebrowRight": "Coffee · Kitchen · All day",
+        "eyebrowRight": "Coffee · Kitchen · Gatherings",
         "titleLine1": "Made for coffee.",
         "titleLine2": "Built for the whole day.",
         "intro": "From traceable coffees and precise brews to sourdough, pasta and dessert, Beanery is built around the things we want to return to, made with care, served without fuss."
@@ -38,13 +38,13 @@
         "intro": ""
       },
       "experiences": {
-        "label": "Experiences",
-        "eyebrowLeft": "Experiences",
-        "eyebrowRight": "Brunches · Workshops · Tastings · Private events",
-        "titleLine1": "More ways to",
-        "titleLine2": "spend time at",
-        "titleLine3": "Beanery.",
-        "intro": ""
+        "label": "Spaces",
+        "eyebrowLeft": "Beanery spaces",
+        "eyebrowRight": "Private lounge · Rooftop · Team gatherings",
+        "titleLine1": "A place for",
+        "titleLine2": "every reason to",
+        "titleLine3": "come together.",
+        "intro": "Choose a setting for the way you want to gather at Beanery."
       },
       "journal": {
         "label": "Journal",

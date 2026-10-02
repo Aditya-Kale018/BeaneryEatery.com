@@ -1,5 +1,5 @@
 /* The story uses the same paper, espresso, terracotta and serif type as the site. */
-.beanery-story{--story-ink:#35261F;--story-muted:#705B4E;--story-accent:#9A5D3B;--story-line:rgba(53,38,31,.2);--story-paper:#EDD3B7;background:var(--story-paper);color:var(--story-ink)}
+.beanery-story{--story-ink:#35261F;--story-muted:#705B4E;--story-accent:#9A5D3B;--story-line:rgba(53,38,31,.2);--story-paper:#EED7BF;background:var(--story-paper);color:var(--story-ink)}
 .beanery-story h1,.beanery-story h2,.beanery-story h3{font-family:'Playfair Display',Georgia,serif;font-weight:400}
 .beanery-story em{font-family:'Cormorant Garamond',Georgia,serif;font-weight:400;color:var(--story-accent)}
 .story-hero,.story-section{max-width:1560px;margin-inline:auto;padding-inline:var(--beanery-page-gutter)}

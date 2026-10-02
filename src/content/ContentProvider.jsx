@@ -35,8 +35,8 @@ export function ContentProvider({ children }) {
         if (loaded) {
           // The local CMS can retain the original starter copy after a design
           // update. Keep owner-edited content, but replace that identifiable
-          // legacy Experiences seed with the current Events page defaults.
-          const legacyEvents = loaded.pages?.experiences?.label === 'Experiences';
+          // legacy Experiences seed with the current Spaces page defaults.
+          const legacyEvents = ['Experiences', 'Events'].includes(loaded.pages?.experiences?.label);
           setContent(legacyEvents
             ? { ...loaded, pages: { ...loaded.pages, experiences: DEFAULT_CONTENT.pages.experiences } }
             : loaded);

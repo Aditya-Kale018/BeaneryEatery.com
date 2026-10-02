@@ -26,7 +26,7 @@ export const DEFAULT_CONTENT = {
     home: {
       label: 'Home',
       eyebrowLeft: 'Established 2025 · Pune, India',
-      eyebrowRight: 'Coffee · Kitchen · All day',
+      eyebrowRight: 'Coffee · Kitchen · Gatherings',
       titleLine1: 'Made for coffee.',
       titleLine2: 'Built for the whole day.',
       intro:
@@ -52,13 +52,13 @@ export const DEFAULT_CONTENT = {
         'From a barista at Barista Café to the founder of Beanery, Kamlesh Kale’s journey has unfolded one café chapter at a time. This is the story of how a career in coffee became a place for all of us to gather.',
     },
     experiences: {
-      label: 'Events',
-      eyebrowLeft: 'Events',
-      eyebrowRight: 'Brunches · Celebrations · Corporate gatherings',
-      titleLine1: 'Make it a',
-      titleLine2: 'moment.',
-      titleLine3: '',
-      intro: 'From slow weekend brunches to rooftop celebrations and focused corporate gatherings, Beanery gives every occasion its own space.',
+      label: 'Spaces',
+      eyebrowLeft: 'Beanery spaces',
+      eyebrowRight: 'Private lounge · Rooftop · Team gatherings',
+      titleLine1: 'A place for',
+      titleLine2: 'every reason to',
+      titleLine3: 'come together.',
+      intro: 'Choose a setting for the way you want to gather at Beanery.',
     },
     journal: {
       label: 'Journal',

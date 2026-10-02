@@ -2,6 +2,7 @@ import React from 'react';
 import ImageSlot from './components/ImageSlot';
 import StoryPage from './components/StoryPage';
 import HospitalityHome from './components/HospitalityHome';
+import CafeModules from './components/CafeModules';
 import LocalityMap from './components/LocalityMap';
 import logoDark from './assets/brand/beanery-logo-dark.png';
 import logoLight from './assets/brand/beanery-logo-light.png';
@@ -154,9 +155,9 @@ export default class App extends React.Component {
   };
 
   dayparts = [
-    { key: 'Morning', hours: '08:00 to 11:30', title: 'First cups, fresh bakes', copy: 'The day starts with a dialled-in bar, warm pastry and the kind of coffee you can make a ritual of. Quick at the counter or slow at the table. Both work.', slot: 'part-morning', shot: 'Morning: sunlight across the counter, espresso being pulled, croissants on a tray, one guest standing' },
-    { key: 'Afternoon', hours: '11:30 - 18:00', title: 'Lunch, filters, a little more time', copy: 'Pasta, sourdough sandwiches and filter coffees take over the table. Come for lunch, stay for a meeting, or make a second cup part of the plan.', slot: 'part-afternoon', shot: 'Afternoon: two guests at a window table mid-conversation, plated pasta and a carafe, west light' },
-    { key: 'Evening', hours: '18:00 to close', title: 'Coffee still on. Plates for the table.', copy: 'The room settles into the evening with plates to share, dessert to linger over and the espresso machine still on. Beanery does not change character after dark - it simply slows down.', slot: 'part-evening', shot: 'Evening: low warm light, shared plates and glassware on marble, candle, guests in soft focus' },
+    { key: 'Morning', hours: '08:00 to 11:30', title: 'First cups, fresh bakes', copy: 'The day starts with a dialled-in bar, warm pastry and the kind of coffee you can make a ritual of. Quick at the counter or slow at the table. Both work.', slot: 'part-morning', shot: 'Morning: sunlight across the counter, espresso being pulled, croissants on a tray' },
+    { key: 'Afternoon', hours: '11:30 - 18:00', title: 'Lunch, filters, a little more time', copy: 'Pasta, sourdough sandwiches and filter coffees take over the table. Come for lunch, stay for a meeting, or make a second cup part of the plan.', slot: 'part-afternoon', shot: 'Afternoon: a window table, plated pasta and a carafe in the west light' },
+    { key: 'Evening', hours: '18:00 to close', title: 'Coffee still on. Plates for the table.', copy: 'The room settles into the evening with plates to share, dessert to linger over and the espresso machine still on. Beanery does not change character after dark - it simply slows down.', slot: 'part-evening', shot: 'Evening: low warm light, shared plates and glassware on marble, a candle' },
   ];
 
   pillars = [
@@ -169,7 +170,7 @@ export default class App extends React.Component {
 
   pages = [
     ['home', 'Home'], ['story', 'Our Story'], ['coffee', 'Coffee'],
-    ['food', 'Menu'], ['experiences', 'Events'], ['journal', 'Journal'], ['visit', 'Visit Us'],
+    ['food', 'Menu'], ['experiences', 'Spaces'], ['journal', 'Journal'], ['visit', 'Visit Us'],
   ];
 
   go(page) {
@@ -185,7 +186,7 @@ export default class App extends React.Component {
     this.onScroll = () => {
       const n = this.navRef; if (!n) return;
       const s = window.scrollY > 40;
-      n.style.background = s ? '#EDD3B7' : 'rgba(237,211,183,0)';
+      n.style.background = s ? '#EED7BF' : 'rgba(238,215,191,0)';
       n.style.boxShadow = s ? '0 1px 0 rgba(53,38,31,.12)' : 'none';
       n.style.backdropFilter = s ? 'blur(18px) saturate(1.15)' : 'none';
       n.style.padding = s ? '14px 40px' : '26px 40px';
@@ -522,7 +523,7 @@ export default class App extends React.Component {
       </div>
       {menuOpen && (
         <>
-          <div data-overlay="menu" style={st("position:fixed;inset:0;z-index:150;background:#EDD3B7;display:flex;flex-direction:column;padding:26px 24px 40px")}>
+          <div data-overlay="menu" style={st("position:fixed;inset:0;z-index:150;background:#EED7BF;display:flex;flex-direction:column;padding:26px 24px 40px")}>
             <div style={st("display:flex;justify-content:space-between;align-items:center")}>
               <Img src={logoDark} alt="Beanery: Coffee · Kitchen" style={st("width:136px;height:auto;display:block")} />
               <button onClick={closeMenu} aria-label="Close menu" style={st("background:transparent;border:none;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#96755C;cursor:pointer")}>
@@ -554,7 +555,7 @@ export default class App extends React.Component {
         {isHome && (
           <>
             <div>
-              <section data-home-hero="" data-flower-section="" style={st("padding:146px 40px 0;background:#EDD3B7;position:relative;overflow:hidden;isolation:isolate")}>
+              <section data-home-hero="" data-flower-section="" style={st("padding:146px 40px 0;background:#EED7BF;position:relative;overflow:hidden;isolation:isolate")}>
                 <PaperFlower variant="hero" />
                 <div style={st("max-width:1560px;margin:0 auto")}>
                   <div style={st("display:flex;justify-content:space-between;align-items:flex-end;gap:40px;flex-wrap:wrap;padding-bottom:26px;border-bottom:1px solid rgba(94,43,23,.14)")}>
@@ -586,7 +587,7 @@ export default class App extends React.Component {
                   <div data-reveal="200" style={st("display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:18px;align-items:end")}>
                     <div style={st("overflow:hidden;height:60vh;min-height:420px;background:#EFE3D8")}>
                       <div className="hv7" style={st("width:100%;height:100%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)")}>
-                        <ImageSlot id="hero-grid-1" priority placeholder="Wide: the dining room in warm daylight - banquette, glassware, marble counter, guests mid-meal" />
+                        <ImageSlot id="hero-grid-1" priority placeholder="Wide: the dining room in warm daylight - banquette, glassware, marble counter, a table set for lunch" />
                       </div>
                     </div>
                     <div style={st("overflow:hidden;height:44vh;min-height:320px;background:#DFCBB9")}>
@@ -602,8 +603,8 @@ export default class App extends React.Component {
                   </div>
                 </div>
               </section>
-              <HospitalityHome openReserve={openReserve} goFood={goFood} goExp={goExp} goVisit={goVisit} />
-              <section data-home-trim="" style={st("padding:140px 40px 120px;background:#EDD3B7")}>
+              <HospitalityHome openReserve={openReserve} goFood={goFood} />
+              <section data-home-trim="" style={st("padding:140px 40px 120px;background:#EED7BF")}>
                 <div style={st("max-width:1560px;margin:0 auto")}>
                   <div data-reveal="0" style={st("display:flex;align-items:baseline;gap:18px;padding-bottom:26px;border-bottom:1px solid rgba(94,43,23,.14)")}>
                     <span style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
@@ -629,7 +630,7 @@ export default class App extends React.Component {
                   </div>
                 </div>
               </section>
-              <section data-home-trim="" style={st("padding:0 40px 130px;background:#EDD3B7")}>
+              <section data-home-trim="" style={st("padding:0 40px 130px;background:#EED7BF")}>
                 <div style={st("max-width:1560px;margin:0 auto")}>
                   <div data-reveal="0" style={st("display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap;padding-bottom:24px;border-bottom:1px solid rgba(94,43,23,.14)")}>
                     <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
@@ -712,7 +713,7 @@ export default class App extends React.Component {
                   </div>
                 </div>
               </section>
-              <section style={st("padding:130px 40px;background:#EDD3B7")}>
+              <section style={st("padding:130px 40px;background:#EED7BF")}>
                 <div style={st("max-width:1560px;margin:0 auto")}>
                   <div data-reveal="0" style={st("display:flex;justify-content:space-between;align-items:flex-end;gap:36px;flex-wrap:wrap;padding-bottom:28px;border-bottom:1px solid rgba(94,43,23,.14)")}>
                     <div>
@@ -848,7 +849,7 @@ export default class App extends React.Component {
                   ))}
                 </div>
               </section>
-              <section data-home-story="" style={st("display:grid;grid-template-columns:1fr 1fr;min-height:88vh;background:#EDD3B7")}>
+              <section data-home-story="" style={st("display:grid;grid-template-columns:1fr 1fr;min-height:88vh;background:#EED7BF")}>
                 <div data-sculpture-copy="" style={st("padding:130px 40px;max-width:820px;margin-right:auto;display:flex;flex-direction:column;justify-content:center;order:2;position:relative;overflow:hidden")}>
                   <div data-face-signature="" aria-hidden="true">
                     <Img src={faceRelief} alt="" />
@@ -879,7 +880,7 @@ export default class App extends React.Component {
                   </div>
                 </div>
               </section>
-              <section data-home-trim="" style={st("padding:0 0 0;background:#EDD3B7")}>
+              <section data-home-trim="" style={st("padding:0 0 0;background:#EED7BF")}>
                 <div style={st("max-width:1560px;margin:0 auto;padding:0 40px")}>
                   <div style={st("height:1px;background:rgba(94,43,23,.14)")} />
                 </div>
@@ -1044,7 +1045,7 @@ export default class App extends React.Component {
                         </button>
                       ))}
                     </div>
-                    <div data-reveal="100" style={st("display:grid;grid-template-columns:1fr 1fr;gap:0;background:#EDD3B7")}>
+                    <div data-reveal="100" style={st("display:grid;grid-template-columns:1fr 1fr;gap:0;background:#EED7BF")}>
                       <div style={st("overflow:hidden;background:#DFCBB9;min-height:460px")}>
                         <div className="hv10" style={st("width:100%;height:100%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)")}>
                           <ImageSlot id={cup.slot} placeholder={cup.shot} />
@@ -1072,7 +1073,7 @@ export default class App extends React.Component {
                   </div>
                 </div>
               </section>
-              <section data-home-trim="" style={st("padding:120px 0;background:#EDD3B7")}>
+              <section data-home-trim="" style={st("padding:120px 0;background:#EED7BF")}>
                 <div style={st("max-width:1560px;margin:0 auto;padding:0 40px")}>
                   <div data-reveal="0" style={st("display:grid;grid-template-columns:1fr auto;gap:40px;align-items:end;padding-bottom:28px;border-bottom:1px solid rgba(94,43,23,.14)")}>
                     <h2 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(30px,3.4vw,50px);line-height:1.05;letter-spacing:-.02em")}>
@@ -1106,7 +1107,7 @@ export default class App extends React.Component {
                   </div>
                 </div>
               </section>
-              <section style={st("padding:130px 40px;background:#EDD3B7")}>
+              <section style={st("padding:130px 40px;background:#EED7BF")}>
                 <div style={st("max-width:1560px;margin:0 auto")}>
                   <div data-reveal="0" style={st("display:flex;justify-content:space-between;align-items:flex-end;gap:36px;flex-wrap:wrap;padding-bottom:26px;border-bottom:1px solid rgba(94,43,23,.14)")}>
                     <div>
@@ -1192,7 +1193,7 @@ export default class App extends React.Component {
                   </div>
                 </div>
               </section>
-              <section data-home-trim="" style={st("padding:130px 40px;background:#EDD3B7")}>
+              <section data-home-trim="" style={st("padding:130px 40px;background:#EED7BF")}>
                 <div style={st("max-width:1560px;margin:0 auto")}>
                   <div data-reveal="0" style={st("display:flex;justify-content:space-between;align-items:flex-end;gap:36px;flex-wrap:wrap;padding-bottom:26px;border-bottom:1px solid rgba(94,43,23,.14)")}>
                     <div>
@@ -1233,7 +1234,7 @@ export default class App extends React.Component {
                   </div>
                 </div>
               </section>
-              <section data-home-trim="" style={st("padding:0 0 130px;background:#EDD3B7")}>
+              <section data-home-trim="" style={st("padding:0 0 130px;background:#EED7BF")}>
                 <div style={st("max-width:1560px;margin:0 auto;padding:0 40px")}>
                   <div data-reveal="0" style={st("display:flex;justify-content:space-between;align-items:baseline;gap:30px;flex-wrap:wrap;padding-bottom:22px;border-bottom:1px solid rgba(94,43,23,.14)")}>
                     <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
@@ -1329,7 +1330,7 @@ export default class App extends React.Component {
                 </div>
                 <div style={st("position:relative;overflow:hidden;background:#DFCBB9;min-height:600px")}>
                   <LocalityMap />
-                  <div style={st("position:absolute;left:32px;top:32px;background:#EDD3B7;padding:16px 20px;pointer-events:none")}>
+                  <div style={st("position:absolute;left:32px;top:32px;background:#EED7BF;padding:16px 20px;pointer-events:none")}>
                     <div style={st("font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730")}>
                       Beanery · Pune
                     </div>
@@ -1367,7 +1368,7 @@ export default class App extends React.Component {
         {isCoffee && (
           <>
             <div>
-              <section data-flower-section="" style={st("padding:146px 40px 0;background:#EDD3B7")}>
+              <section data-flower-section="" style={st("padding:146px 40px 0;background:#EED7BF")}>
                 <PaperFlower variant="coffee" />
                 <div style={st("max-width:1560px;margin:0 auto")}>
                   <div style={st("display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap;padding-bottom:24px;border-bottom:1px solid rgba(94,43,23,.14)")}>
@@ -1397,7 +1398,7 @@ export default class App extends React.Component {
                   </div>
                 </div>
               </section>
-              <section style={st("padding:120px 40px;background:#EDD3B7")}>
+              <section style={st("padding:120px 40px;background:#EED7BF")}>
                 <div style={st("max-width:1560px;margin:0 auto")}>
                   <div data-reveal="0" style={st("display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap;padding-bottom:26px;border-bottom:1px solid rgba(94,43,23,.14)")}>
                     <div>
@@ -1414,7 +1415,7 @@ export default class App extends React.Component {
                       ))}
                     </div>
                   </div>
-                  <div data-reveal="60" style={st("display:grid;grid-template-columns:0.85fr 1fr 0.9fr;gap:0;margin-top:48px;border:1px solid rgba(94,43,23,.16);background:#EDD3B7")}>
+                  <div data-reveal="60" style={st("display:grid;grid-template-columns:0.85fr 1fr 0.9fr;gap:0;margin-top:48px;border:1px solid rgba(94,43,23,.16);background:#EED7BF")}>
                     <div style={st("overflow:hidden;background:#DFCBB9;min-height:520px")}>
                       <div className="hv10" style={st("width:100%;height:100%;transition:transform 1.5s cubic-bezier(.2,.7,.2,1)")}>
                         <ImageSlot id={bean.slot} placeholder={bean.shot} />
@@ -1550,7 +1551,7 @@ export default class App extends React.Component {
                   ))}
                 </div>
               </section>
-              <section style={st("padding:120px 40px;background:#EDD3B7")}>
+              <section style={st("padding:120px 40px;background:#EED7BF")}>
                 <div style={st("max-width:1560px;margin:0 auto;display:grid;grid-template-columns:1fr 1.15fr;gap:76px;align-items:start")}>
                   <div>
                     <div data-reveal="0" style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
@@ -1698,7 +1699,7 @@ export default class App extends React.Component {
         {false && (
           <>
             <div>
-              <section style={st("padding:146px 40px 0;background:#EDD3B7")}>
+              <section style={st("padding:146px 40px 0;background:#EED7BF")}>
                 <div style={st("max-width:1560px;margin:0 auto")}>
                   <div style={st("display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap;padding-bottom:24px;border-bottom:1px solid rgba(94,43,23,.14)")}>
                     <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
@@ -1738,7 +1739,7 @@ export default class App extends React.Component {
                   </div>
                 </div>
               </section>
-              <section style={st("padding:120px 40px;background:#EDD3B7")}>
+              <section style={st("padding:120px 40px;background:#EED7BF")}>
                 <div style={st("max-width:1560px;margin:0 auto")}>
                   <div data-reveal="0" style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500;padding-bottom:26px;border-bottom:1px solid rgba(94,43,23,.14)")}>
                     What shapes the menu
@@ -1844,7 +1845,7 @@ export default class App extends React.Component {
                   </div>
                 </div>
               </section>
-              <section style={st("padding:0 40px 120px;background:#EDD3B7")}>
+              <section style={st("padding:0 40px 120px;background:#EED7BF")}>
                 <div style={st("max-width:1560px;margin:0 auto")}>
                   <div data-reveal="0" style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500;margin-bottom:30px")}>
                     Beanery favourite
@@ -1935,7 +1936,7 @@ export default class App extends React.Component {
                   </div>
                 </div>
               </section>
-              <section style={st("padding:0 40px 130px;background:#EDD3B7")}>
+              <section style={st("padding:0 40px 130px;background:#EED7BF")}>
                 <div style={st("max-width:1560px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px")}>
                   <div data-reveal="0">
                     <div style={st("overflow:hidden;aspect-ratio:5/4;background:#EFE3D8")}>
@@ -2024,182 +2025,34 @@ export default class App extends React.Component {
           <StoryPage copy={copy.story} flower={<PaperFlower variant="story" />} openReserve={openReserve} goCoffee={goCoffee} goFood={goFood} goVisit={goVisit} />
         )}
         {isExp && (
-          <>
-            <div>
-              <section style={st("padding:146px 40px 0;background:#EDD3B7")}>
-                <div style={st("max-width:1560px;margin:0 auto")}>
-                  <div style={st("display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap;padding-bottom:24px;border-bottom:1px solid rgba(94,43,23,.14)")}>
-                    <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
-                      {copy.experiences.eyebrowLeft}
-                    </div>
-                    <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#96755C")}>
-                      {copy.experiences.eyebrowRight}
-                    </div>
-                  </div>
-                  <h1 data-reveal="0" style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(44px,7vw,124px);line-height:.93;letter-spacing:-.03em;margin-top:52px")}>
-                    {copy.experiences.titleLine1}
-                    <br />
-                    {copy.experiences.titleLine2}
-                    <br />
-                    <span style={st("font-style:italic;color:#A35730")}>{copy.experiences.titleLine3}</span>
-                  </h1>
-                </div>
-              </section>
-              <section style={st("padding:80px 0 40px;background:#EDD3B7")}>
-                <div style={st("max-width:1560px;margin:0 auto;padding:0 40px")}>
-                  <div data-reveal="0" style={st("background:#A35730;color:#FBF8F4;display:grid;grid-template-columns:1fr 1fr;align-items:stretch")}>
-                    <div style={st("padding:64px 56px")}>
-                      <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:rgba(251,248,244,.75)")}>
-                        Seasonal · Long Table
-                      </div>
-                      <h2 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(32px,3.8vw,56px);line-height:1.02;margin-top:18px")}>
-                        Long Table
-                        <br />
-                        Sunday Brunch
-                      </h2>
-                      <p style={st("font-size:15px;line-height:1.8;color:rgba(251,248,244,.85);margin-top:20px;max-width:40ch")}>
-                        Twenty seats around one table, a four-course menu and a coffee flight woven through the meal. A slower Sunday, the Beanery way.
-                      </p>
-                      <div style={st("display:flex;gap:36px;margin-top:34px;padding-top:22px;border-top:1px solid rgba(251,248,244,.35);flex-wrap:wrap")}>
-                        <div>
-                          <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(251,248,244,.7)")}>
-                            Next date
-                          </div>
-                          <div style={st("font-family:'Playfair Display',Georgia,serif;font-size:22px;margin-top:7px")}>
-                            14 Sept
-                          </div>
-                        </div>
-                        <div>
-                          <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(251,248,244,.7)")}>
-                            Seats left
-                          </div>
-                          <div style={st("font-family:'Playfair Display',Georgia,serif;font-size:22px;margin-top:7px")}>
-                            6
-                          </div>
-                        </div>
-                        <div>
-                          <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(251,248,244,.7)")}>
-                            Per guest
-                          </div>
-                          <div style={st("font-family:'Playfair Display',Georgia,serif;font-size:22px;margin-top:7px")}>
-                            ₹1,850
-                          </div>
-                        </div>
-                      </div>
-                      <button className="hv8" onClick={openReserve} style={st("margin-top:38px;font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:500;color:#5E2B17;background:#EDD3B7;border:none;padding:19px 34px;cursor:pointer;transition:all .35s ease")}>
-                        Book a seat
-                      </button>
-                    </div>
-                    <div style={st("overflow:hidden;min-height:440px")}>
-                      <div className="hv7" style={st("width:100%;height:100%;transition:transform 1.6s cubic-bezier(.2,.7,.2,1)")}>
-                        <ImageSlot id="exp-banner" priority placeholder="Long communal table set for brunch, linen, dishes being passed (full-bleed)" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </section>
-              <section style={st("padding:80px 0 120px;background:#EDD3B7")}>
-                <div style={st("max-width:1560px;margin:0 auto;padding:0 40px")}>
-                  <div data-reveal="0" style={st("display:flex;justify-content:space-between;align-items:flex-end;gap:30px;padding-bottom:24px;border-bottom:1px solid rgba(94,43,23,.14)")}>
-                    <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
-                      More at Beanery
-                    </div>
-                    <div style={st("display:flex;gap:8px")}>
-                      <button className="hv8" onClick={railExpPrev} aria-label="Previous" style={st("width:48px;height:48px;border:1px solid rgba(94,43,23,.25);background:transparent;color:#5E2B17;cursor:pointer;font-size:16px;transition:all .3s ease")}>
-                        ←
-                      </button>
-                      <button className="hv8" onClick={railExpNext} aria-label="Next" style={st("width:48px;height:48px;border:1px solid rgba(94,43,23,.25);background:transparent;color:#5E2B17;cursor:pointer;font-size:16px;transition:all .3s ease")}>
-                        →
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div data-reveal="60" data-rail="" ref={railRefExp} style={st("display:flex;gap:28px;overflow-x:auto;scroll-snap-type:x mandatory;padding:52px 40px 32px;max-width:1640px;margin:0 auto")}>
-                  <div style={st("flex:0 0 380px;scroll-snap-align:start;background:#EDD3B7;border:1px solid rgba(94,43,23,.09);padding:24px;display:flex;flex-direction:column;justify-content:space-between")}>
-                    <div>
-                      <div style={st("overflow:hidden;aspect-ratio:1/1;background:#EFE3D8")}>
-                        <div className="hv12" style={st("width:100%;height:100%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)")}>
-                          <ImageSlot id="exp-1" placeholder="Coffee workshop: guests at the bar with scales and V60s" />
-                        </div>
-                      </div>
-                      <div style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;margin-top:22px")}>
-                        Saturdays · 10 AM
-                      </div>
-                      <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:24px;line-height:1.2;margin-top:10px")}>
-                        Home Brewing Workshop
-                      </h3>
-                      <p style={st("font-size:13.5px;line-height:1.75;color:#6E4A34;margin-top:12px")}>
-                        A practical two-hour session on grind, water, ratio and repeatable recipes, plus a take-home brew guide and 250 g of coffee.
-                      </p>
-                    </div>
-                    <div style={st("font-size:13px;color:#96755C;margin-top:20px;padding-top:14px;border-top:1px solid rgba(94,43,23,.08)")}>₹1,400 · 8 seats</div>
-                  </div>
-                  <div style={st("flex:0 0 380px;scroll-snap-align:start;background:#EDD3B7;border:1px solid rgba(94,43,23,.09);padding:24px;display:flex;flex-direction:column;justify-content:space-between")}>
-                    <div>
-                      <div style={st("overflow:hidden;aspect-ratio:1/1;background:#DFCBB9")}>
-                        <div className="hv12" style={st("width:100%;height:100%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)")}>
-                          <ImageSlot id="exp-2" placeholder="Cupping table with bowls and spoons, guests slurping" />
-                        </div>
-                      </div>
-                      <div style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;margin-top:22px")}>
-                        Last Friday · 6 PM
-                      </div>
-                      <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:24px;line-height:1.2;margin-top:10px")}>
-                        Coffee Tasting: Four Origins
-                      </h3>
-                      <p style={st("font-size:13.5px;line-height:1.75;color:#6E4A34;margin-top:12px")}>
-                        Taste four coffees side by side and learn how origin, process and roast change what lands in the cup.
-                      </p>
-                    </div>
-                    <div style={st("font-size:13px;color:#96755C;margin-top:20px;padding-top:14px;border-top:1px solid rgba(94,43,23,.08)")}>₹1,100 · 12 seats</div>
-                  </div>
-                  <div style={st("flex:0 0 380px;scroll-snap-align:start;background:#EDD3B7;border:1px solid rgba(94,43,23,.09);padding:24px;display:flex;flex-direction:column;justify-content:space-between")}>
-                    <div>
-                      <div style={st("overflow:hidden;aspect-ratio:1/1;background:#EFE3D8")}>
-                        <div className="hv12" style={st("width:100%;height:100%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)")}>
-                          <ImageSlot id="exp-3" placeholder="Private gathering: the room set for an evening event, candles" />
-                        </div>
-                      </div>
-                      <div style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;margin-top:22px")}>
-                        By arrangement
-                      </div>
-                      <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:24px;line-height:1.2;margin-top:10px")}>
-                        Private Evenings
-                      </h3>
-                      <p style={st("font-size:13.5px;line-height:1.75;color:#6E4A34;margin-top:12px")}>
-                        Beanery after hours, with a set menu built for your group and the coffee bar open through the evening.
-                      </p>
-                    </div>
-                    <div style={st("font-size:13px;color:#96755C;margin-top:20px;padding-top:14px;border-top:1px solid rgba(94,43,23,.08)")}>From ₹28,000 · up to 40</div>
-                  </div>
-                  <div style={st("flex:0 0 380px;scroll-snap-align:start;background:#EDD3B7;border:1px solid rgba(94,43,23,.09);padding:24px;display:flex;flex-direction:column;justify-content:space-between")}>
-                    <div>
-                      <div style={st("overflow:hidden;aspect-ratio:1/1;background:#DFCBB9")}>
-                        <div className="hv12" style={st("width:100%;height:100%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)")}>
-                          <ImageSlot id="exp-4" placeholder="Baking class: hands shaping dough on a floured counter" />
-                        </div>
-                      </div>
-                      <div style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;margin-top:22px")}>
-                        Monthly · Sunday
-                      </div>
-                      <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:24px;line-height:1.2;margin-top:10px")}>
-                        Sourdough Workshop
-                      </h3>
-                      <p style={st("font-size:13.5px;line-height:1.75;color:#6E4A34;margin-top:12px")}>
-                        Learn the rhythm behind our loaves: shaping, scoring, baking and tasting, then take home a loaf and levain to keep going.
-                      </p>
-                    </div>
-                    <div style={st("font-size:13px;color:#96755C;margin-top:20px;padding-top:14px;border-top:1px solid rgba(94,43,23,.08)")}>₹1,600 · 10 seats</div>
-                  </div>
-                </div>
-              </section>
-            </div>
-          </>
+          <main className="cafe-experiences">
+            <section className="cafe-experiences__hero" data-flower-section="">
+              <div className="cafe-experiences__eyebrow">
+                <span>{copy.experiences.eyebrowLeft}</span>
+                <span>{copy.experiences.eyebrowRight}</span>
+              </div>
+              <h1 data-reveal="0">
+                {copy.experiences.titleLine1}<br />
+                {copy.experiences.titleLine2}<br />
+                <em>{copy.experiences.titleLine3}</em>
+              </h1>
+              <p>Choose the setting that fits the way you want to spend time at Beanery.</p>
+            </section>
+            <section className="cafe-experiences__modules" aria-label="Beanery café modules">
+              <CafeModules goFood={goFood} detailed />
+            </section>
+            <section className="cafe-experiences__contact">
+              <p className="hospitality-label">A table, a room, a reason to gather</p>
+              <h2>Let’s make a plan<br /><em>that feels like Beanery.</em></h2>
+              <p>Tell us what you have in mind. We’ll help you choose the right setting.</p>
+              <button type="button" onClick={openReserve}>Plan your visit <span aria-hidden="true">→</span></button>
+            </section>
+          </main>
         )}
         {isJournal && (
           <>
             <div>
-              <section style={st("padding:146px 40px 0;background:#EDD3B7")}>
+              <section style={st("padding:146px 40px 0;background:#EED7BF")}>
                 <div style={st("max-width:1560px;margin:0 auto")}>
                   <div style={st("display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap;padding-bottom:24px;border-bottom:1px solid rgba(94,43,23,.14)")}>
                     <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
@@ -2216,7 +2069,7 @@ export default class App extends React.Component {
                   </h1>
                 </div>
               </section>
-              <section style={st("padding:80px 40px 120px;background:#EDD3B7")}>
+              <section style={st("padding:80px 40px 120px;background:#EED7BF")}>
                 <div style={st("max-width:1560px;margin:0 auto")}>
                   <a href="#top" data-reveal="0" style={st("display:grid;grid-template-columns:1.25fr 1fr;gap:56px;align-items:center;padding-bottom:56px;border-bottom:1px solid rgba(94,43,23,.14);cursor:pointer")}>
                     <div style={st("overflow:hidden;aspect-ratio:16/10;background:#EFE3D8")}>
@@ -2272,7 +2125,7 @@ export default class App extends React.Component {
         {isVisit && (
           <>
             <div>
-              <section data-flower-section="" style={st("padding:146px 40px 0;background:#EDD3B7")}>
+              <section data-flower-section="" style={st("padding:146px 40px 0;background:#EED7BF")}>
                 <PaperFlower variant="visit" />
                 <div style={st("max-width:1560px;margin:0 auto")}>
                   <div style={st("display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap;padding-bottom:24px;border-bottom:1px solid rgba(94,43,23,.14)")}>
@@ -2324,7 +2177,7 @@ export default class App extends React.Component {
                   </div>
                   <div data-reveal="140" style={st("margin-top:60px;overflow:hidden;height:56vh;min-height:400px;background:#DFCBB9;position:relative")}>
                     <LocalityMap />
-                    <div style={st("position:absolute;left:32px;bottom:32px;background:#EDD3B7;padding:20px 24px;pointer-events:none")}>
+                    <div style={st("position:absolute;left:32px;bottom:32px;background:#EED7BF;padding:20px 24px;pointer-events:none")}>
                       <div style={st("font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730")}>
                         In the neighbourhood
                       </div>
@@ -2335,7 +2188,7 @@ export default class App extends React.Component {
                   </div>
                 </div>
               </section>
-              <section style={st("padding:120px 40px;background:#EDD3B7")}>
+              <section style={st("padding:120px 40px;background:#EED7BF")}>
                 <div style={st("max-width:1560px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid rgba(94,43,23,.16)")}>
                   <div data-reveal="0" style={st("padding:56px 48px;border-right:1px solid rgba(94,43,23,.16)")}>
                     <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
@@ -2345,44 +2198,10 @@ export default class App extends React.Component {
                       Reserve a table
                     </h2>
                     <p style={st("font-size:14.5px;line-height:1.8;color:#6E4A34;margin-top:16px;max-width:40ch")}>
-                      Plan ahead for two to twelve guests, or walk in and we’ll do our best to find you a table. For larger groups, call us and we’ll help shape the visit.
+                      Reserve an everyday table, or talk with us about the Private Lounge, Rooftop Table or a team gathering. We’ll help you find the right setting.
                     </p>
-                    <div style={st("display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:32px")}>
-                      <div>
-                        <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#96755C;margin-bottom:9px")}>
-                          Date
-                        </div>
-                        <div style={st("border:1px solid rgba(94,43,23,.22);padding:14px 16px;font-size:14px;color:#6E4A34")}>
-                          14 September 2026
-                        </div>
-                      </div>
-                      <div>
-                        <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#96755C;margin-bottom:9px")}>
-                          Time
-                        </div>
-                        <div style={st("border:1px solid rgba(94,43,23,.22);padding:14px 16px;font-size:14px;color:#6E4A34")}>
-                          4:30 PM
-                        </div>
-                      </div>
-                      <div>
-                        <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#96755C;margin-bottom:9px")}>
-                          Guests
-                        </div>
-                        <div style={st("border:1px solid rgba(94,43,23,.22);padding:14px 16px;font-size:14px;color:#6E4A34")}>
-                          2
-                        </div>
-                      </div>
-                      <div>
-                        <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#96755C;margin-bottom:9px")}>
-                          Seating
-                        </div>
-                        <div style={st("border:1px solid rgba(94,43,23,.22);padding:14px 16px;font-size:14px;color:#6E4A34")}>
-                          Window
-                        </div>
-                      </div>
-                    </div>
                     <button className="hv2" onClick={openReserve} style={st("margin-top:28px;width:100%;text-align:left;font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:500;color:#FBF8F4;background:#5E2B17;border:none;padding:19px 26px;cursor:pointer;transition:background .35s ease")}>
-                      Check a table
+                      Make a reservation
                     </button>
                   </div>
                   <div data-reveal="60" style={st("padding:56px 48px;background:#EFE3D8")}>
@@ -2459,7 +2278,7 @@ export default class App extends React.Component {
                 </a>
                 <a className="hv17" href="#top" onClick={goFood} style={st("color:rgba(251,248,244,.85)")}>Menu</a>
                 <a className="hv17" href="#top" onClick={goExp} style={st("color:rgba(251,248,244,.85)")}>
-                  Events
+                  Spaces
                 </a>
                 <a className="hv17" href="#top" onClick={goJournal} style={st("color:rgba(251,248,244,.85)")}>
                   Journal
@@ -2488,7 +2307,7 @@ export default class App extends React.Component {
                 <a className="hv17" href={site.mapsUrl} target="_blank" rel="noopener noreferrer" style={st("color:rgba(251,248,244,.85)")}>Google Maps ↗</a>
                 <a className="hv17" href="tel:+919860934080" style={st("color:rgba(251,248,244,.85)")}>Call Beanery</a>
               </div>
-              <button className="hv3" onClick={openReserve} style={st("margin-top:28px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:500;color:#5E2B17;background:#EDD3B7;border:none;padding:15px 24px;cursor:pointer;transition:all .3s ease")}>
+              <button className="hv3" onClick={openReserve} style={st("margin-top:28px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:500;color:#5E2B17;background:#EED7BF;border:none;padding:15px 24px;cursor:pointer;transition:all .3s ease")}>
                 Reserve
               </button>
             </div>
