@@ -578,3 +578,30 @@ img[data-await-load]:not([data-settled]) { visibility: hidden; }
   .coffee-brew-section__body{padding:23px 21px 26px!important;}
   .coffee-brew-section__name{font-size:27px!important;}
 }
+
+/* Food-menu hero: soften the canvas and give its existing intro/actions a clear editorial anchor. */
+.menu-hero{
+  position:relative;
+  background-image:radial-gradient(ellipse at 82% 55%,rgba(255,250,244,.58),transparent 38%),linear-gradient(140deg,rgba(255,249,239,.22),transparent 58%);
+}
+.menu-hero__eyebrow{position:relative;border-bottom-color:rgba(53,38,31,.2);}
+.menu-hero__grid{position:relative;padding-top:60px;}
+.menu-hero h1{max-width:8ch;font-size:clamp(62px,8.2vw,132px);line-height:.88;}
+.menu-hero h1 em{display:inline-block;margin-top:8px;color:#87553A;}
+.menu-hero__aside{
+  position:relative;
+  padding:30px 30px 28px;
+  border:1px solid rgba(94,43,23,.12);
+  border-left:2px solid rgba(154,93,59,.62);
+  background:rgba(255,250,244,.38);
+  box-shadow:0 18px 48px rgba(94,43,23,.045);
+}
+.menu-hero__aside>p{max-width:42ch;color:#5F4A3D;}
+.menu-hero__aside .menu-actions{margin-top:23px;}
+@media(max-width:820px){
+  .menu-hero{background-image:radial-gradient(ellipse at 88% 30%,rgba(255,250,244,.55),transparent 35%);}
+  .menu-hero__grid{padding-top:38px;}
+  .menu-hero h1{font-size:clamp(52px,14vw,86px);}
+  .menu-hero__aside{padding:24px 21px 22px;}
+}
+.menu-hero h1{max-width:none;}
