@@ -12,7 +12,7 @@ export default function HospitalityHome({ goFood }) {
         <h2 id="home-modules-title">One café.<br /><em>Many ways to gather.</em></h2>
         <p>Come for coffee, stay for lunch, bring the team together, or make an evening of it on the rooftop. Find your Beanery.</p>
       </div>
-      <CafeModules goFood={goFood} />
+      <CafeModules goFood={goFood} variant="home" />
     </section>
   );
 }

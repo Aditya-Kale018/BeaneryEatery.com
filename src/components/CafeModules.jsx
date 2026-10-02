@@ -43,13 +43,14 @@ const modules = [
   },
 ];
 
-export default function CafeModules({ goFood, detailed = false }) {
+export default function CafeModules({ goFood, detailed = false, variant = 'standard' }) {
   return (
-    <div className={`cafe-module-grid${detailed ? ' cafe-module-grid--detailed' : ''}`}>
+    <div className={`cafe-module-grid${detailed ? ' cafe-module-grid--detailed' : ''}${variant === 'home' ? ' cafe-module-grid--home' : ''}`}>
       {modules.map((module, index) => (
-        <article className="cafe-module" key={module.name} data-reveal={index * 50}>
+        <article className={`cafe-module${variant === 'home' ? ' cafe-module--home' : ''}`} key={module.name} data-reveal={index * 50}>
           <div className="cafe-module__image">
             <ImageSlot id={module.image} alt={module.alt} priority={detailed && index === 0} />
+            {variant === 'home' ? <span className="cafe-module__index">0{index + 1}</span> : null}
           </div>
           <div className="cafe-module__copy">
             <span className="hospitality-label">{module.label}</span>
