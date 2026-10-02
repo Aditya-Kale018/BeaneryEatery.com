@@ -16,7 +16,43 @@ export const UPLOADS_DIR = path.join(DATA_DIR, 'uploads');
 const DATA_FILE = path.join(DATA_DIR, 'content.json');
 
 function emptyDb() {
-  return { admin: null, content: cloneDefaults(), uploads: [] };
+  return { admin: null, content: cloneDefaults(), uploads: [], events: [] };
+}
+
+export async function addEventEntry(entry) {
+  if (isDbConfigured()) {
+    await initDb();
+    const sql = getDb();
+    const rows = await sql`
+      INSERT INTO beanery_event_entries (id, name, phone, email, event_type, preferred_date, preferred_time, message, submitted_at)
+      VALUES (${entry.id}, ${entry.name}, ${entry.phone}, ${entry.email}, ${entry.eventType}, ${entry.preferredDate}, ${entry.preferredTime}, ${entry.message}, ${entry.submittedAt})
+      RETURNING id, name, phone, email, event_type, preferred_date, preferred_time, message, submitted_at
+    `;
+    return eventFromRow(rows[0]);
+  }
+  const db = loadFromFile();
+  db.events.unshift(entry);
+  saveToFile();
+  return entry;
+}
+
+function eventFromRow(row) {
+  return {
+    id: row.id, name: row.name, phone: row.phone, email: row.email,
+    eventType: row.event_type, preferredDate: row.preferred_date,
+    preferredTime: row.preferred_time, message: row.message,
+    submittedAt: row.submitted_at instanceof Date ? row.submitted_at.toISOString() : row.submitted_at,
+  };
+}
+
+export async function listEventEntries() {
+  if (isDbConfigured()) {
+    await initDb();
+    const sql = getDb();
+    const rows = await sql`SELECT id, name, phone, email, event_type, preferred_date, preferred_time, message, submitted_at FROM beanery_event_entries ORDER BY submitted_at DESC`;
+    return rows.map(eventFromRow);
+  }
+  return loadFromFile().events || [];
 }
 
 function ensureDirs() {

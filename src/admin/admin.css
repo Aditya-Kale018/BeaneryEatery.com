@@ -607,6 +607,15 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 1
 .slot__actions { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .slot__actions .btn { padding: 6px 12px; font-size: 11.5px; }
 .slot__actions .btn.is-busy { opacity: 0.6; pointer-events: none; }
+.event-entry__heading { display:flex; justify-content:space-between; align-items:flex-start; gap:18px; }
+.event-entry__heading h3 { margin-top:10px; font:500 20px/1.3 inherit; }
+.event-entry__heading time { color:var(--ink-muted); font-size:12px; }
+.event-entry__type { margin-top:16px; color:var(--accent); font-size:12px; font-weight:600; }
+.event-entry__contact { display:flex; flex-wrap:wrap; gap:18px; margin-top:14px; font-size:13px; }
+.event-entry__contact a { color:var(--ink); }
+.event-entry__contact span { color:var(--ink-muted); }
+.event-entry__message { margin-top:16px; padding-top:16px; border-top:1px solid var(--line); white-space:pre-wrap; line-height:1.65; }
+@media(max-width:600px) { .event-entry__heading { flex-direction:column; } }
 .slot__picker { font-size: 12px; }
 
 .tag {

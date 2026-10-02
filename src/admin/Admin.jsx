@@ -691,7 +691,35 @@ function LinksTab({ content, update }) {
 
 /* ------------------------------------------------------------------- shell -- */
 
+function EventsTab({ events, onRefresh }) {
+  return (
+    <div className="stack">
+      <section className="card">
+        <h2 className="section__title">Incoming event enquiries</h2>
+        <p className="field__hint">New requests from the public Events page appear here, newest first.</p>
+        <button className="btn" onClick={onRefresh}>Refresh enquiries</button>
+      </section>
+      {events.length === 0 ? <section className="card"><p className="empty">No event enquiries yet.</p></section> : events.map((event) => (
+        <article className="card event-entry" key={event.id}>
+          <div className="event-entry__heading">
+            <div><span className="tag">New enquiry</span><h3>{event.name}</h3></div>
+            <time>{new Date(event.submittedAt).toLocaleString()}</time>
+          </div>
+          <p className="event-entry__type">{event.eventType}</p>
+          <div className="event-entry__contact">
+            <a href={`tel:${event.phone}`}>{event.phone}</a>
+            {event.email ? <a href={`mailto:${event.email}`}>{event.email}</a> : <span>No email provided</span>}
+          </div>
+          {(event.preferredDate || event.preferredTime) ? <p><strong>Preferred timing:</strong> {[event.preferredDate, event.preferredTime].filter(Boolean).join(' · ')}</p> : <p><strong>Preferred timing:</strong> Flexible / not specified</p>}
+          <p className="event-entry__message">{event.message}</p>
+        </article>
+      ))}
+    </div>
+  );
+}
+
 const TABS = [
+  ['events', 'Incoming events'],
   ['pages', 'Pages'],
   ['menu', 'Menu'],
   ['images', 'Images'],
@@ -702,6 +730,7 @@ function Editor({ user, onSignedOut }) {
   const [content, setContent] = React.useState(null);
   const [saved, setSaved] = React.useState(null);
   const [uploads, setUploads] = React.useState([]);
+  const [events, setEvents] = React.useState([]);
   const [tab, setTab] = React.useState('pages');
   const [status, setStatus] = React.useState('');
   const [error, setError] = React.useState('');
@@ -720,6 +749,8 @@ function Editor({ user, onSignedOut }) {
     setError(err.message);
   }
 
+  const refreshEvents = React.useCallback(() => api.listEvents().then(setEvents).catch(handleError), []);
+
   React.useEffect(() => {
     api
       .getContent()
@@ -730,6 +761,12 @@ function Editor({ user, onSignedOut }) {
       .catch(handleError);
     refreshUploads();
   }, [refreshUploads]);
+
+  React.useEffect(() => {
+    refreshEvents();
+    const timer = window.setInterval(refreshEvents, 30000);
+    return () => window.clearInterval(timer);
+  }, [refreshEvents]);
 
   /** Apply a mutation to a draft copy - never mutate state in place. */
   const update = React.useCallback((mutate) => {
@@ -818,6 +855,7 @@ function Editor({ user, onSignedOut }) {
       {status ? <p className="notice notice--ok">{status}</p> : null}
 
       <main className="admin__body">
+        {tab === 'events' ? <EventsTab events={events} onRefresh={refreshEvents} /> : null}
         {tab === 'pages' ? <PagesTab {...shared} /> : null}
         {tab === 'menu' ? <MenuTab {...shared} /> : null}
         {tab === 'images' ? (

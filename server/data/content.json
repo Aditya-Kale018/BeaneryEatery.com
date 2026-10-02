@@ -14,7 +14,7 @@
     "pages": {
       "home": {
         "label": "Home",
-        "eyebrowLeft": "Est. 2025 · Pune, India",
+        "eyebrowLeft": "Pune, India",
         "eyebrowRight": "Coffee · Kitchen · Gatherings",
         "titleLine1": "Made for coffee.",
         "titleLine2": "Built for the whole day.",
@@ -32,19 +32,19 @@
       "story": {
         "label": "Our story",
         "eyebrowLeft": "Our story",
-        "eyebrowRight": "Established 2025 · Pune",
+        "eyebrowRight": "Senapati Bapat Road · Pune",
         "titleLine1": "Made from coffee.",
         "titleLine2": "Shaped by the room.",
         "intro": ""
       },
       "experiences": {
-        "label": "Spaces",
-        "eyebrowLeft": "Beanery spaces",
-        "eyebrowRight": "Private lounge · Rooftop · Team gatherings",
-        "titleLine1": "A place for",
-        "titleLine2": "every reason to",
-        "titleLine3": "come together.",
-        "intro": "Choose a setting for the way you want to gather at Beanery."
+        "label": "Events",
+        "eyebrowLeft": "Gather at Beanery",
+        "eyebrowRight": "Private lounge · Rooftop · Business gatherings",
+        "titleLine1": "Make room for",
+        "titleLine2": "something",
+        "titleLine3": "worth gathering for.",
+        "intro": "Tell us what you are planning. We’ll help you find the right setting at Beanery."
       },
       "journal": {
         "label": "Journal",

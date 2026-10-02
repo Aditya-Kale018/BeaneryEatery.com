@@ -58,6 +58,20 @@ export async function initDb() {
     );
   `;
 
+  await sql`
+    CREATE TABLE IF NOT EXISTS beanery_event_entries (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      phone TEXT NOT NULL,
+      email TEXT NOT NULL DEFAULT '',
+      event_type TEXT NOT NULL,
+      preferred_date TEXT NOT NULL DEFAULT '',
+      preferred_time TEXT NOT NULL DEFAULT '',
+      message TEXT NOT NULL,
+      submitted_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+  `;
+
   // Check if content is already seeded
   const contentRow = await sql`SELECT value FROM beanery_content WHERE key = 'main'`;
   if (contentRow.length === 0) {

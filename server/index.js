@@ -21,9 +21,11 @@ import {
 import {
   UPLOADS_DIR,
   addUpload,
+  addEventEntry,
   getAdmin,
   getContent,
   listUploads,
+  listEventEntries,
   removeUpload,
   setContent,
 } from './store.js';
@@ -69,6 +71,46 @@ app.use(
 
 app.use(express.json({ limit: '1mb' }));
 app.use(cookieParser());
+
+/* ------------------------------------------------------------ event enquiries -- */
+
+const EVENT_TYPES = new Set(['Private Lounge', 'Rooftop Table', 'Business Gathering', 'Celebration', 'Other']);
+const fieldText = (value, limit) => typeof value === 'string' ? value.trim().slice(0, limit) : '';
+
+app.post('/api/events', async (req, res) => {
+  const name = fieldText(req.body?.name, 100);
+  const phone = fieldText(req.body?.phone, 40);
+  const email = fieldText(req.body?.email, 160);
+  const eventType = fieldText(req.body?.eventType, 50);
+  const preferredDate = fieldText(req.body?.preferredDate, 10);
+  const preferredTime = fieldText(req.body?.preferredTime, 60);
+  const message = fieldText(req.body?.message, 2000);
+  if (!name || !phone || !EVENT_TYPES.has(eventType) || !message) {
+    res.status(400).json({ error: 'Please include your name, phone, event setting and a short note.' });
+    return;
+  }
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    res.status(400).json({ error: 'Please enter a valid email address.' });
+    return;
+  }
+  try {
+    const entry = await addEventEntry({
+      id: crypto.randomUUID(), name, phone, email, eventType, preferredDate,
+      preferredTime, message, submittedAt: new Date().toISOString(),
+    });
+    res.status(201).json({ ok: true, id: entry.id });
+  } catch (err) {
+    res.status(500).json({ error: 'We could not send your enquiry just now. Please try again.' });
+  }
+});
+
+app.get('/api/events', requireAuth, async (req, res) => {
+  try {
+    res.json(await listEventEntries());
+  } catch (err) {
+    res.status(500).json({ error: 'Could not load event enquiries.' });
+  }
+});
 
 /* ---------------------------------------------------------------- uploads -- */
 

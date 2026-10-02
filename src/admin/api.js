@@ -37,6 +37,7 @@ export const api = {
   saveContent: (content) => json('PUT', '/api/content', content),
 
   listUploads: () => request('/api/uploads'),
+  listEvents: () => request('/api/events'),
   deleteUpload: (id) => request(`/api/uploads/${id}`, { method: 'DELETE' }),
   uploadImage: (file) => {
     const form = new FormData();

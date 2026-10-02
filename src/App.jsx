@@ -3,6 +3,7 @@ import ImageSlot from './components/ImageSlot';
 import StoryPage from './components/StoryPage';
 import HospitalityHome from './components/HospitalityHome';
 import CafeModules from './components/CafeModules';
+import EventEnquiry from './components/EventEnquiry';
 import LocalityMap from './components/LocalityMap';
 import logoDark from './assets/brand/beanery-logo-dark.png';
 import logoLight from './assets/brand/beanery-logo-light.png';
@@ -170,7 +171,7 @@ export default class App extends React.Component {
 
   pages = [
     ['home', 'Home'], ['story', 'Our Story'], ['coffee', 'Coffee'],
-    ['food', 'Menu'], ['experiences', 'Spaces'], ['journal', 'Journal'], ['visit', 'Visit Us'],
+    ['food', 'Menu'], ['experiences', 'Events'], ['journal', 'Journal'], ['visit', 'Visit Us'],
   ];
 
   go(page) {
@@ -367,17 +368,9 @@ export default class App extends React.Component {
     { kicker: 'Seasonal', name: 'Saffron Cardamom Latte', copy: 'A seasonal cup with Kashmiri saffron, green cardamom and whole milk.', slot: 'sig-6', shot: 'Saffron latte, threads on foam, ceramic cup, warm tones' },
   ];
 
-  journal = [
-    { cat: 'Coffee', date: 'August 2026', title: 'How processing changes the cup', dek: 'The same Colombian coffee, three processing styles, and what changes when you taste them side by side.', read: '6 min', slot: 'j-1', shot: 'Cupping spoons and bowls on a dark table, overhead' },
-    { cat: 'Café Culture', date: 'July 2026', title: 'Why some coffees are better at the counter', dek: 'A note on quick espressos, standing counters and the rituals that make coffee part of the day.', read: '4 min', slot: 'j-2', shot: 'Standing bar counter, cups on saucers, motion blur of a barista' },
-    { cat: 'Kitchen', date: 'July 2026', title: 'What a slow ferment changes', dek: 'Our baker on timing, Pune humidity and the small decisions behind a better loaf.', read: '8 min', slot: 'j-3', shot: 'Baker hands shaping dough, flour, morning light' },
-  ];
+  journal = [];
 
-  testimonials = [
-    { quote: 'The only place in Pune where I’ll order a pour-over and a pasta in the same sitting and not feel silly about it.', who: 'Aditi R.', meta: 'Regular since 2023' },
-    { quote: 'I came for the cheesecake. I stayed because someone explained the Kenya to me for ten minutes and meant it.', who: 'Kabir M.', meta: 'Sunday brunch' },
-    { quote: 'It feels European without pretending to be somewhere else. The light at four in the afternoon is the reason I work here.', who: 'Sana D.', meta: 'Afternoon regular' },
-  ];
+  testimonials = [];
 
   renderVals() {
     const page = this.state.page;
@@ -2036,17 +2029,12 @@ export default class App extends React.Component {
                 {copy.experiences.titleLine2}<br />
                 <em>{copy.experiences.titleLine3}</em>
               </h1>
-              <p>Choose the setting that fits the way you want to spend time at Beanery.</p>
+              <p>From a private celebration to a considered business gathering, tell us what you have in mind and we’ll help find the right setting.</p>
             </section>
             <section className="cafe-experiences__modules" aria-label="Beanery café modules">
               <CafeModules goFood={goFood} detailed />
             </section>
-            <section className="cafe-experiences__contact">
-              <p className="hospitality-label">A table, a room, a reason to gather</p>
-              <h2>Let’s make a plan<br /><em>that feels like Beanery.</em></h2>
-              <p>Tell us what you have in mind. We’ll help you choose the right setting.</p>
-              <button type="button" onClick={openReserve}>Plan your visit <span aria-hidden="true">→</span></button>
-            </section>
+            <EventEnquiry />
           </main>
         )}
         {isJournal && (
@@ -2072,27 +2060,10 @@ export default class App extends React.Component {
               <section style={st("padding:80px 40px 120px;background:#EED7BF")}>
                 <div style={st("max-width:1560px;margin:0 auto")}>
                   <a href="#top" data-reveal="0" style={st("display:grid;grid-template-columns:1.25fr 1fr;gap:56px;align-items:center;padding-bottom:56px;border-bottom:1px solid rgba(94,43,23,.14);cursor:pointer")}>
-                    <div style={st("overflow:hidden;aspect-ratio:16/10;background:#EFE3D8")}>
-                      <div className="hv7" style={st("width:100%;height:100%;transition:transform 1.5s cubic-bezier(.2,.7,.2,1)")}>
-                        <ImageSlot id="journal-lead" priority placeholder="Lead story image: roastery drum, beans mid-roast, warm smoke (wide)" />
-                      </div>
-                    </div>
                     <div>
-                      <div style={st("display:flex;gap:14px;align-items:center;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#A35730")}>
-                        {"Behind the scenes "}
-                        <span style={st("width:16px;height:1px;background:rgba(94,43,23,.25);display:block")} />
-                        {" "}
-                        <span style={st("color:#96755C")}>September 2026</span>
-                      </div>
-                      <h2 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(30px,3.6vw,52px);line-height:1.06;margin-top:16px")}>
-                        Why we’re learning to roast
-                      </h2>
-                      <p style={st("font-size:15.5px;line-height:1.8;color:#6E4A34;margin-top:18px;max-width:46ch")}>
-                        A 12 kg drum, a small unit in Bhosari and weeks of trial batches. Notes from the work of learning what roasting could mean for Beanery.
-                      </p>
-                      <div style={st("font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:#96755C;margin-top:22px")}>
-                        11 min read
-                      </div>
+                      <div style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#A35730")}>From the Beanery team</div>
+                      <h2 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(30px,3.6vw,52px);line-height:1.06;margin-top:16px")}>Notes are taking shape.</h2>
+                      <p style={st("font-size:15.5px;line-height:1.8;color:#6E4A34;margin-top:18px;max-width:46ch")}>We’re gathering stories about the coffee, food and people that make Beanery. Check back for notes from behind the counter.</p>
                     </div>
                   </a>
                   <div style={st("display:grid;grid-template-columns:repeat(3,1fr);gap:30px;margin-top:56px")}>
@@ -2260,8 +2231,6 @@ export default class App extends React.Component {
                 </div>
                 <div style={st("display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;font-size:13.5px;color:rgba(251,248,244,.85)")}>
                   <span>Pune</span>
-                  <span style={st("color:rgba(251,248,244,.4)")}>Mumbai, coming soon</span>
-                  <span style={st("color:rgba(251,248,244,.4)")}>Bengaluru, coming soon</span>
                 </div>
               </div>
             </div>
@@ -2278,7 +2247,7 @@ export default class App extends React.Component {
                 </a>
                 <a className="hv17" href="#top" onClick={goFood} style={st("color:rgba(251,248,244,.85)")}>Menu</a>
                 <a className="hv17" href="#top" onClick={goExp} style={st("color:rgba(251,248,244,.85)")}>
-                  Spaces
+                  Events
                 </a>
                 <a className="hv17" href="#top" onClick={goJournal} style={st("color:rgba(251,248,244,.85)")}>
                   Journal
@@ -2313,7 +2282,7 @@ export default class App extends React.Component {
             </div>
           </div>
           <div style={st("display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-top:26px;font-size:11px;letter-spacing:.1em;color:rgba(251,248,244,.45)")}>
-            <span>© 2026 Beanery</span>
+            <span>© {new Date().getFullYear()} Beanery</span>
             <span>Privacy · Terms · Accessibility</span>
             {/* Staff door to the content admin. "The Pass" is the counter where
                 finished plates leave the kitchen - an insider word, so it reads
