@@ -1487,14 +1487,14 @@ export default class App extends React.Component {
                   </div>
                 </div>
               </section>
-              <section style={st("padding:120px 0;background:#5E2B17;color:#FBF8F4")}>
+              <section className="coffee-brew-section" style={st("padding:120px 0;background:#5E2B17;color:#FBF8F4")}>
                 <div style={st("max-width:1560px;margin:0 auto;padding:0 40px")}>
-                  <div data-reveal="0" style={st("display:flex;justify-content:space-between;align-items:flex-end;gap:36px;flex-wrap:wrap;padding-bottom:26px;border-bottom:1px solid rgba(251,248,244,.2)")}>
+                  <div className="coffee-brew-section__heading" data-reveal="0" style={st("display:flex;justify-content:space-between;align-items:flex-end;gap:36px;flex-wrap:wrap;padding-bottom:26px;border-bottom:1px solid rgba(251,248,244,.2)")}>
                     <div>
                       <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#B78765;font-weight:500")}>
                         Ways to brew
                       </div>
-                      <h2 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(32px,3.8vw,54px);line-height:1.04;margin-top:16px")}>
+                      <h2 className="coffee-brew-section__title" style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(32px,3.8vw,54px);line-height:1.04;margin-top:16px")}>
                         Choose your brew
                       </h2>
                     </div>
@@ -1508,17 +1508,17 @@ export default class App extends React.Component {
                     </div>
                   </div>
                 </div>
-                <div data-reveal="60" data-rail="" ref={railRefBrew} style={st("display:flex;gap:24px;overflow-x:auto;scroll-snap-type:x mandatory;padding:48px 40px 14px;max-width:1640px;margin:0 auto")}>
+                <div className="coffee-brew-section__rail" data-reveal="60" data-rail="" ref={railRefBrew} style={st("display:flex;gap:24px;overflow-x:auto;scroll-snap-type:x mandatory;padding:48px 40px 14px;max-width:1640px;margin:0 auto")}>
                   {brews.map((b, i) => (
-                    <div key={i} style={st("flex:0 0 400px;scroll-snap-align:start;border:1px solid rgba(251,248,244,.2)")}>
-                      <div style={st("overflow:hidden;aspect-ratio:4/3;background:#71351C")}>
+                    <div className="coffee-brew-section__card" key={i} style={st("flex:0 0 400px;scroll-snap-align:start;border:1px solid rgba(251,248,244,.2)")}>
+                      <div className="coffee-brew-section__image" style={st("overflow:hidden;aspect-ratio:4/3;background:#71351C")}>
                         <div className="hv12" style={st("width:100%;height:100%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)")}>
                           <ImageSlot id={b.slot} placeholder={b.shot} />
                         </div>
                       </div>
-                      <div style={st("padding:30px 28px 34px")}>
+                      <div className="coffee-brew-section__body" style={st("padding:30px 28px 34px")}>
                         <div style={st("display:flex;justify-content:space-between;align-items:baseline;gap:16px")}>
-                          <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:28px")}>
+                          <h3 className="coffee-brew-section__name" style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:28px")}>
                             {b.name}
                           </h3>
                           {showPrices && (
@@ -1545,13 +1545,13 @@ export default class App extends React.Component {
                   ))}
                 </div>
               </section>
-              <section style={st("padding:120px 40px;background:#EED7BF")}>
-                <div style={st("max-width:1560px;margin:0 auto;display:grid;grid-template-columns:1fr 1.15fr;gap:76px;align-items:start")}>
+              <section className="coffee-bar-feature" style={st("padding:120px 40px;background:#EED7BF")}>
+                <div className="coffee-bar-feature__layout" style={st("max-width:1560px;margin:0 auto;display:grid;grid-template-columns:1fr 1.15fr;gap:76px;align-items:start")}>
                   <div>
                     <div data-reveal="0" style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
                       Beyond the classics
                     </div>
-                    <h2 data-reveal="50" style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(30px,3.4vw,48px);line-height:1.05;margin-top:18px")}>
+                    <h2 className="coffee-bar-feature__title" data-reveal="50" style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(30px,3.4vw,48px);line-height:1.05;margin-top:18px")}>
                       More from
                       <br />
                       the bar
@@ -1559,13 +1559,13 @@ export default class App extends React.Component {
                     <p data-reveal="100" style={st("font-size:15px;line-height:1.8;color:#6E4A34;margin-top:22px;max-width:42ch")}>
                       Coffee is the centre of the bar, not the limit of it. Seasonal drinks, tea, matcha, drinking chocolate and cold favourites are built with the same attention to balance and ingredients.
                     </p>
-                    <div data-reveal="150" style={st("overflow:hidden;margin-top:40px;aspect-ratio:4/5;background:#EFE3D8")}>
+                    <div className="coffee-bar-feature__photo" data-reveal="150" style={st("overflow:hidden;margin-top:40px;aspect-ratio:4/5;background:#EFE3D8")}>
                       <div className="hv7" style={st("width:100%;height:100%;transition:transform 1.5s cubic-bezier(.2,.7,.2,1)")}>
                         <ImageSlot id="bev-hero" placeholder="Seasonal drink on marble - saffron latte in glass, cardamom and linen props, cinematic light (portrait)" />
                       </div>
                     </div>
                   </div>
-                  <div data-reveal="80">
+                  <div className="coffee-bar-feature__list" data-reveal="80">
                     <div style={st("display:flex;justify-content:space-between;align-items:baseline;padding-bottom:14px;border-bottom:1px solid rgba(94,43,23,.18)")}>
                       <span style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#96755C")}>
                         Drink
@@ -1578,7 +1578,7 @@ export default class App extends React.Component {
                         </>
                       )}
                     </div>
-                    <div style={st("display:flex;justify-content:space-between;gap:24px;padding:22px 0;border-bottom:1px solid rgba(94,43,23,.1)")}>
+                    <div className="coffee-bar-feature__item" style={st("display:flex;justify-content:space-between;gap:24px;padding:22px 0;border-bottom:1px solid rgba(94,43,23,.1)")}>
                       <div>
                         <div style={st("font-size:16px")}>Lychee Cold Brew</div>
                         <div style={st("font-size:12.5px;color:#96755C;margin-top:5px")}>
@@ -1591,7 +1591,7 @@ export default class App extends React.Component {
                         </>
                       )}
                     </div>
-                    <div style={st("display:flex;justify-content:space-between;gap:24px;padding:22px 0;border-bottom:1px solid rgba(94,43,23,.1)")}>
+                    <div className="coffee-bar-feature__item" style={st("display:flex;justify-content:space-between;gap:24px;padding:22px 0;border-bottom:1px solid rgba(94,43,23,.1)")}>
                       <div>
                         <div style={st("font-size:16px")}>Saffron Cardamom Latte</div>
                         <div style={st("font-size:12.5px;color:#96755C;margin-top:5px")}>
@@ -1604,7 +1604,7 @@ export default class App extends React.Component {
                         </>
                       )}
                     </div>
-                    <div style={st("display:flex;justify-content:space-between;gap:24px;padding:22px 0;border-bottom:1px solid rgba(94,43,23,.1)")}>
+                    <div className="coffee-bar-feature__item" style={st("display:flex;justify-content:space-between;gap:24px;padding:22px 0;border-bottom:1px solid rgba(94,43,23,.1)")}>
                       <div>
                         <div style={st("font-size:16px")}>Darjeeling First Flush</div>
                         <div style={st("font-size:12.5px;color:#96755C;margin-top:5px")}>
@@ -1617,7 +1617,7 @@ export default class App extends React.Component {
                         </>
                       )}
                     </div>
-                    <div style={st("display:flex;justify-content:space-between;gap:24px;padding:22px 0;border-bottom:1px solid rgba(94,43,23,.1)")}>
+                    <div className="coffee-bar-feature__item" style={st("display:flex;justify-content:space-between;gap:24px;padding:22px 0;border-bottom:1px solid rgba(94,43,23,.1)")}>
                       <div>
                         <div style={st("display:flex;align-items:center;gap:10px")}>
                           <span style={st("font-size:16px")}>Ceremonial Matcha</span>
@@ -1633,7 +1633,7 @@ export default class App extends React.Component {
                         </>
                       )}
                     </div>
-                    <div style={st("display:flex;justify-content:space-between;gap:24px;padding:22px 0;border-bottom:1px solid rgba(94,43,23,.1)")}>
+                    <div className="coffee-bar-feature__item" style={st("display:flex;justify-content:space-between;gap:24px;padding:22px 0;border-bottom:1px solid rgba(94,43,23,.1)")}>
                       <div>
                         <div style={st("font-size:16px")}>Drinking Chocolate</div>
                         <div style={st("font-size:12.5px;color:#96755C;margin-top:5px")}>
@@ -1646,7 +1646,7 @@ export default class App extends React.Component {
                         </>
                       )}
                     </div>
-                    <div style={st("display:flex;justify-content:space-between;gap:24px;padding:22px 0;border-bottom:1px solid rgba(94,43,23,.1)")}>
+                    <div className="coffee-bar-feature__item" style={st("display:flex;justify-content:space-between;gap:24px;padding:22px 0;border-bottom:1px solid rgba(94,43,23,.1)")}>
                       <div>
                         <div style={st("font-size:16px")}>Espresso Tonic</div>
                         <div style={st("font-size:12.5px;color:#96755C;margin-top:5px")}>
@@ -1659,7 +1659,7 @@ export default class App extends React.Component {
                         </>
                       )}
                     </div>
-                    <div style={st("display:flex;justify-content:space-between;gap:24px;padding:22px 0")}>
+                    <div className="coffee-bar-feature__item" style={st("display:flex;justify-content:space-between;gap:24px;padding:22px 0")}>
                       <div>
                         <div style={st("font-size:16px")}>Filter Flight</div>
                         <div style={st("font-size:12.5px;color:#96755C;margin-top:5px")}>
