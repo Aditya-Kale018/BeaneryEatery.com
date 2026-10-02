@@ -803,20 +803,20 @@ export default class App extends React.Component {
                   </div>
                 </div>
               </section>
-              <section style={st("padding:120px 0 130px;background:#5E2B17;color:#FBF8F4;overflow:hidden")}>
+              <section className="home-signature-section" style={st("padding:120px 0 130px;background:#5E2B17;color:#FBF8F4;overflow:hidden")}>
                 <div style={st("max-width:1560px;margin:0 auto;padding:0 40px")}>
-                  <div data-reveal="0" style={st("display:flex;justify-content:space-between;align-items:flex-end;gap:36px;flex-wrap:wrap;padding-bottom:26px;border-bottom:1px solid rgba(251,248,244,.2)")}>
+                  <div className="home-signature-section__heading" data-reveal="0" style={st("display:flex;justify-content:space-between;align-items:flex-end;gap:36px;flex-wrap:wrap;padding-bottom:26px;border-bottom:1px solid rgba(251,248,244,.2)")}>
                     <div>
                       <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#B78765;font-weight:500")}>
                         Beanery favourites
                       </div>
-                      <h2 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(34px,4vw,58px);line-height:1.04;letter-spacing:-.02em;margin-top:18px")}>
+                      <h2 className="home-signature-section__title" style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(34px,4vw,58px);line-height:1.04;letter-spacing:-.02em;margin-top:18px")}>
                         The cups and plates
                         <br />
-                        worth coming back for
+                        <span>worth coming back for</span>
                       </h2>
                     </div>
-                    <div style={st("display:flex;gap:8px")}>
+                    <div className="home-signature-section__controls" style={st("display:flex;gap:8px")}>
                       <button className="hv11" onClick={railSigPrev} aria-label="Previous" style={st("width:48px;height:48px;border:1px solid rgba(251,248,244,.3);background:transparent;color:#FBF8F4;cursor:pointer;font-size:16px;transition:all .3s ease")}>
                         ←
                       </button>
@@ -826,11 +826,11 @@ export default class App extends React.Component {
                     </div>
                   </div>
                 </div>
-                <div data-reveal="60" data-rail="" ref={railRefSig} style={st("display:flex;gap:28px;overflow-x:auto;scroll-snap-type:x mandatory;padding:52px 40px 32px;max-width:1640px;margin:0 auto")}>
+                <div className="home-signature-section__rail" data-reveal="60" data-rail="" ref={railRefSig} style={st("display:flex;gap:28px;overflow-x:auto;scroll-snap-type:x mandatory;padding:52px 40px 32px;max-width:1640px;margin:0 auto")}>
                   {signature.map((s, i) => (
-                    <div key={i} style={st("flex:0 0 380px;scroll-snap-align:start;background:rgba(251,248,244,.05);border:1px solid rgba(251,248,244,.12);padding:24px;display:flex;flex-direction:column;justify-content:space-between")}>
+                    <div className="home-signature-card" key={i} style={st("flex:0 0 380px;scroll-snap-align:start;background:rgba(251,248,244,.05);border:1px solid rgba(251,248,244,.12);padding:24px;display:flex;flex-direction:column;justify-content:space-between")}>
                       <div>
-                        <div style={st("overflow:hidden;background:#71351C;aspect-ratio:1/1")}>
+                        <div className="home-signature-card__image" style={st("overflow:hidden;background:#71351C;aspect-ratio:1/1")}>
                           <div className="hv12" style={st("width:100%;height:100%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)")}>
                             <ImageSlot id={s.slot} placeholder={s.shot} />
                           </div>
@@ -1265,8 +1265,8 @@ export default class App extends React.Component {
                   </div>
                 </div>
               </section>
-              <section style={st("background:#EFE3D8;display:grid;grid-template-columns:1.1fr 1fr;align-items:stretch")}>
-                <div style={st("padding:120px 40px;max-width:840px;margin-left:auto")}>
+              <section className="home-find-beanery" style={st("background:#EFE3D8;display:grid;grid-template-columns:1.1fr 1fr;align-items:stretch")}>
+                <div className="home-find-beanery__details" style={st("padding:120px 40px;max-width:840px;margin-left:auto")}>
                   <div data-reveal="0" style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
                     Visit Beanery
                   </div>
@@ -1315,7 +1315,7 @@ export default class App extends React.Component {
                     </a>
                   </div>
                 </div>
-                <div style={st("position:relative;overflow:hidden;background:#DFCBB9;min-height:600px")}>
+                <div className="home-find-beanery__map" style={st("position:relative;overflow:hidden;background:#DFCBB9;min-height:600px")}>
                   <LocalityMap />
                   <div style={st("position:absolute;left:32px;top:32px;background:#EED7BF;padding:16px 20px;pointer-events:none")}>
                     <div style={st("font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730")}>

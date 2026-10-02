@@ -710,3 +710,72 @@ img[data-await-load]:not([data-settled]) { visibility: hidden; }
   .menu-item p{font-size:12px;}
   .menu-footer-cta{padding:38px 24px!important;}
 }
+
+@media(max-width:760px){
+  .home-find-beanery{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  .home-find-beanery__details{
+    width:100%;
+    max-width:none!important;
+    margin:0!important;
+  }
+  .home-find-beanery__map{
+    width:100%;
+    height:62svh!important;
+    min-height:360px!important;
+  }
+}
+
+.home-signature-section{
+  position:relative;
+  isolation:isolate;
+  background:radial-gradient(ellipse at 82% 4%,rgba(183,135,101,.24),transparent 42%),linear-gradient(135deg,#492114 0%,#5E2B17 52%,#3D2118 100%)!important;
+}
+.home-signature-section::before{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  top:12%;
+  right:-180px;
+  width:480px;
+  aspect-ratio:1;
+  border:1px solid rgba(231,198,164,.11);
+  border-radius:50%;
+  box-shadow:0 0 0 30px rgba(231,198,164,.025),0 0 0 62px rgba(231,198,164,.02);
+  pointer-events:none;
+}
+.home-signature-section__heading{border-color:rgba(231,198,164,.28)!important;}
+.home-signature-section__title span{color:#E2BB94;font-style:italic;}
+.home-signature-section__controls button{border-color:rgba(231,198,164,.48)!important;}
+.home-signature-section__controls button:hover{background:#E2BB94!important;color:#3D2118!important;border-color:#E2BB94!important;}
+.home-signature-section__rail{scrollbar-width:none;}
+.home-signature-section__rail::-webkit-scrollbar{display:none;}
+.home-signature-card{
+  background:linear-gradient(160deg,rgba(255,248,238,.11),rgba(255,248,238,.045))!important;
+  border-color:rgba(231,198,164,.24)!important;
+  box-shadow:0 15px 42px rgba(25,12,7,.13);
+  transition:transform .4s ease,border-color .4s ease,box-shadow .4s ease;
+}
+.home-signature-card:hover{
+  transform:translateY(-7px);
+  border-color:rgba(231,198,164,.55)!important;
+  box-shadow:0 24px 54px rgba(25,12,7,.25);
+}
+.home-signature-card__image{
+  aspect-ratio:1.08/1!important;
+  outline:1px solid rgba(231,198,164,.18);
+  outline-offset:-1px;
+}
+.home-signature-card__image .imgslot{transition:transform 1.2s cubic-bezier(.2,.7,.2,1);}
+.home-signature-card:hover .home-signature-card__image .imgslot{transform:scale(1.035);}
+.home-signature-card>div>div:nth-child(2){color:#D9AA7E!important;}
+.home-signature-card h3{font-size:27px!important;}
+
+@media(max-width:760px){
+  .home-signature-section{padding:72px 0 76px!important;}
+  .home-signature-section__heading{align-items:flex-start!important;}
+  .home-signature-section__title{font-size:clamp(34px,9vw,48px)!important;}
+  .home-signature-section__rail{gap:16px!important;padding:34px 22px 24px!important;}
+  .home-signature-card{flex-basis:min(82vw,360px)!important;padding:16px!important;}
+}

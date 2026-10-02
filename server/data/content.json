@@ -1,8 +1,8 @@
 {
   "admin": {
     "username": "beaneryeatery@gmail.com",
-    "salt": "0ee0d3e2d71b0dbee237a561a480cba7",
-    "key": "ca51356ad5c6c9b3c5ffd35d9460f51357fa1bd6f372f78cd7b37e5dfd0b6a34ceefa3e8bb4ee2fe89cb6f399a07d833d67a0e428a57af877013400b9df47fc0"
+    "salt": "2ab9e8294e60b8f1a3a49cf05eded1e4",
+    "key": "76e5996be04191481da505f20dc421049146e68aadaa66289b693cf12bd178932e783eb059aad52619ea2a64aced6da405cc629a1bbffba4bbc731cd8be1c18e"
   },
   "content": {
     "site": {
@@ -212,7 +212,44 @@
         }
       ]
     },
-    "images": {}
+    "journal": [
+      {
+        "id": "fb99018d-e3c6-4aa8-bd59-d19bab6e5c80",
+        "title": "",
+        "category": "Coffee",
+        "date": "2026-10-02",
+        "read": "4 min",
+        "dek": "",
+        "body": "",
+        "image": ""
+      }
+    ],
+    "images": {
+      "hero-grid-1": "/uploads/0da5d3f48f067c75abfcf6ed5a92ee9c.jpg"
+    }
   },
-  "uploads": []
+  "uploads": [
+    {
+      "id": "e0c376ba7a56f445df7be7311dd6c41b",
+      "url": "/uploads/0da5d3f48f067c75abfcf6ed5a92ee9c.jpg",
+      "name": "TAG@LENSSHIMMMER-00266.jpg",
+      "size": 8153083,
+      "uploadedAt": "2026-10-02T15:28:55.248Z"
+    },
+    {
+      "id": "ea4812ba516a343fbb15c4dab7cd6e0c",
+      "url": "/uploads/d508773cf41118095a223c7858f4d1e0.jpg",
+      "name": "TAG@LENSSHIMMMER-00246.jpg",
+      "size": 6536310,
+      "uploadedAt": "2026-10-02T15:24:50.521Z"
+    },
+    {
+      "id": "452b3d69a81808cf9375596e79adb563",
+      "url": "/uploads/8697ad2c26df090ea924d245aceb7051.png",
+      "name": "impact and benefits.png",
+      "size": 1781450,
+      "uploadedAt": "2026-10-02T11:44:41.564Z"
+    }
+  ],
+  "events": []
 }
