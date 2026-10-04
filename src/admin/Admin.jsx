@@ -4,6 +4,7 @@ import { DEFAULT_CONTENT } from '../../shared/content-defaults.js';
 import { SLOT_GROUPS, SLOT_INFO } from '../../shared/image-slots.js';
 import { api } from './api';
 import './admin.css';
+import './journal-admin.css';
 
 /* ------------------------------------------------------------ small parts -- */
 
@@ -912,58 +913,100 @@ function JournalTab({ content, update, uploads, refreshUploads, onError }) {
     setLinkingImage(false);
   }
 
+  function addStory() {
+    const entry = emptyJournalEntry();
+    update((draft) => { draft.journal = [entry, ...(draft.journal || [])]; });
+    setActiveId(entry.id);
+    setLinkingImage(false);
+  }
+
+  function deleteStory(id) {
+    if (!confirm('Delete this journal story?')) return;
+    update((draft) => { draft.journal = (draft.journal || []).filter((entry) => entry.id !== id); });
+    setActiveId('');
+    setLinkingImage(false);
+  }
+
+  const isReady = (entry) => Boolean(entry.title && entry.category && entry.date && entry.dek && entry.body && entry.image);
+
   return (
-    <div className="stack journal-admin">
+    <div className="journal-admin">
       <section className="card journal-admin__intro">
-        <div><p className="tag">The Beanery journal</p><h2 className="section__title">Stories worth staying for</h2><p className="field__hint">Create and publish editorial notes for the Journal page. Every published story also appears in the journal feature on Home.</p></div>
-        <button className="btn btn--primary" onClick={() => { const entry = emptyJournalEntry(); update((draft) => { draft.journal = [entry, ...(draft.journal || [])]; }); setActiveId(entry.id); }}>＋ Add journal</button>
+        <div className="journal-admin__intro-copy">
+          <p className="journal-admin__eyebrow">THE BEANERY JOURNAL</p>
+          <h2>Stories worth staying for</h2>
+          <p>Create and publish editorial notes for the Journal page. Published stories also appear on Home.</p>
+        </div>
+        <button className="btn btn--primary journal-admin__add" type="button" onClick={addStory}>＋ New story</button>
       </section>
 
-      {entries.length === 0 ? <section className="card"><p className="empty">No journal stories yet. Add a story to begin building the page.</p></section> : (
-        <div className="journal-admin__layout">
-          <nav className="card journal-admin__list" aria-label="Journal entries">
-            {entries.map((entry) => <button key={entry.id} className={`journal-admin__item${entry.id === activeId ? ' is-active' : ''}`} onClick={() => setActiveId(entry.id)}>
-              {entry.image ? <img src={entry.image} alt="" /> : <span className="journal-admin__thumb">✳</span>}
-              <span><small>{entry.category || 'Draft story'}</small><strong>{entry.title || 'Untitled story'}</strong><small>{entry.date}</small></span>
-            </button>)}
-          </nav>
-          {active ? <section className="card journal-admin__editor">
-            <div className="journal-admin__editorhead"><div><p className="tag">Story details</p><h2 className="section__title">{active.title || 'New journal entry'}</h2></div><button className="btn btn--danger" onClick={() => { if (!confirm('Delete this journal story?')) return; update((draft) => { draft.journal = (draft.journal || []).filter((entry) => entry.id !== active.id); }); setActiveId(''); }}>Delete</button></div>
-            <div className="journal-admin__fields">
-              <Field label="Story title" value={active.title} maxLength={180} onChange={(value) => patchEntry(active.id, { title: value })} />
-              <div className="journal-admin__row">
-                <label className="field"><span className="field__label">Category</span><select className="field__input" value={active.category} onChange={(e) => patchEntry(active.id, { category: e.target.value })}>{['Coffee', 'Food', 'People', 'Behind the scenes', 'Gatherings', 'News'].map((value) => <option key={value}>{value}</option>)}</select></label>
-                <Field label="Publish date" type="date" value={active.date} onChange={(value) => patchEntry(active.id, { date: value })} />
-                <Field label="Reading time" value={active.read} maxLength={30} placeholder="4 min" onChange={(value) => patchEntry(active.id, { read: value })} />
-              </div>
-              <Field label="Short introduction" value={active.dek} multiline rows={3} maxLength={500} hint="A concise preview shown on the journal card." onChange={(value) => patchEntry(active.id, { dek: value })} />
-              <Field label="Full story" value={active.body} multiline rows={10} maxLength={4000} hint="Write the article text. Use blank lines between paragraphs." onChange={(value) => patchEntry(active.id, { body: value })} />
-              <div className="journal-admin__cover">
-                <div><span className="field__label">Cover photograph</span><p className="field__hint">Choose an existing upload, upload a new image, or paste a direct image link. A cover is required before publishing.</p>
-                  <select className="field__input" value={active.image} onChange={(e) => patchEntry(active.id, { image: e.target.value })}>
-                    <option value="">Choose a photograph…</option>
-                    {uploads.map((file) => <option key={file.id} value={file.url}>{file.name}</option>)}
-                    {active.image && !uploads.some((file) => file.url === active.image) ? <option value={active.image}>Direct image link</option> : null}
-                  </select>
-                  <div className="journal-admin__cover-actions">
-                    <label className="btn btn--ghost journal-admin__upload">{busy ? 'Uploading…' : 'Upload cover'}<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={busy} onChange={(e) => { const file = e.target.files?.[0]; e.target.value = ''; if (file) uploadCover(file); }} /></label>
-                    <button className="btn btn--ghost" type="button" onClick={toggleImageLink}>{linkingImage ? 'Close link' : /^https:\/\//i.test(active.image || '') ? 'Edit image link' : 'Use image link'}</button>
-                  </div>
-                  {linkingImage ? <form className="slot__link" onSubmit={applyImageLink} noValidate>
-                    <label className="field__label" htmlFor={`journal-image-link-${active.id}`}>Direct image link</label>
-                    <div className="slot__link-row">
-                      <input id={`journal-image-link-${active.id}`} className="field__input" type="url" inputMode="url" placeholder="https://example.com/photo.jpg" value={imageLink} aria-invalid={Boolean(imageLinkError)} onChange={(event) => { setImageLink(event.target.value); setImageLinkError(''); }} />
-                      <button className="btn btn--primary" type="submit">Apply</button>
-                    </div>
-                    <p className="field__hint">Paste a public HTTPS link that opens the image directly.</p>
-                    {imageLinkError ? <p className="slot__link-error">{imageLinkError}</p> : null}
-                  </form> : null}
-                </div>
-                <div className="journal-admin__preview">{active.image ? <img src={active.image} alt="Selected journal cover" /> : <span>Cover preview</span>}</div>
-              </div>
-              <p className="field__hint">Press “Save changes” below to publish this story on the live site. Stories missing required information will not be published.</p>
+      {entries.length === 0 ? (
+        <section className="journal-admin__empty card">
+          <span className="journal-admin__empty-mark" aria-hidden="true">✳</span>
+          <h3>Your journal starts here</h3>
+          <p>Add a story, choose a cover, and shape the next note from Beanery.</p>
+          <button className="btn btn--primary" type="button" onClick={addStory}>＋ Create your first story</button>
+        </section>
+      ) : (
+        <div className="journal-admin__workspace">
+          <section className="card journal-admin__library">
+            <div className="journal-admin__library-head">
+              <div><p className="journal-admin__eyebrow">YOUR STORIES</p><h3>Journal entries <span>{entries.length}</span></h3></div>
+              <button className="journal-admin__small-add" type="button" onClick={addStory} aria-label="Add a journal story">＋</button>
             </div>
-          </section> : <section className="card journal-admin__empty"><p>Select a story to edit, or add a new journal entry.</p></section>}
+            <nav className="journal-admin__list" aria-label="Journal entries">
+              {entries.map((entry) => (
+                <button key={entry.id} className={`journal-admin__item${entry.id === activeId ? ' is-active' : ''}`} type="button" aria-current={entry.id === activeId ? 'page' : undefined} onClick={() => { setActiveId(entry.id); setLinkingImage(false); }}>
+                  {entry.image ? <img src={entry.image} alt="" /> : <span className="journal-admin__thumb" aria-hidden="true">✳</span>}
+                  <span className="journal-admin__item-copy"><small>{entry.category || 'Uncategorised'}</small><strong>{entry.title || 'Untitled story'}</strong><small>{entry.date || 'No publish date'}</small></span>
+                  <span className={`journal-admin__status${isReady(entry) ? ' is-ready' : ''}`}>{isReady(entry) ? 'Ready' : 'Draft'}</span>
+                </button>
+              ))}
+            </nav>
+          </section>
+
+          {active ? (
+            <section className="card journal-admin__editor">
+              <header className="journal-admin__editorhead">
+                <div><p className="journal-admin__eyebrow">STORY EDITOR</p><h3>{active.title || 'Untitled story'}</h3><p>{isReady(active) ? 'Ready to publish when you save.' : 'Add the missing details to prepare this story.'}</p></div>
+                <button className="btn btn--danger" type="button" onClick={() => deleteStory(active.id)}>Delete story</button>
+              </header>
+
+              <div className="journal-admin__fields">
+                <Field label="Story title" value={active.title} maxLength={180} placeholder="Give this story a title" onChange={(value) => patchEntry(active.id, { title: value })} />
+                <div className="journal-admin__row">
+                  <label className="field"><span className="field__label">Category</span><select className="field__input" value={active.category} onChange={(e) => patchEntry(active.id, { category: e.target.value })}>{['Coffee', 'Food', 'People', 'Behind the scenes', 'Gatherings', 'News'].map((value) => <option key={value}>{value}</option>)}</select></label>
+                  <Field label="Publish date" type="date" value={active.date} onChange={(value) => patchEntry(active.id, { date: value })} />
+                  <Field label="Reading time" value={active.read} maxLength={30} placeholder="4 min" onChange={(value) => patchEntry(active.id, { read: value })} />
+                </div>
+                <Field label="Short introduction" value={active.dek} multiline rows={3} maxLength={500} hint="A concise preview shown on the journal card." onChange={(value) => patchEntry(active.id, { dek: value })} />
+                <Field label="Full story" value={active.body} multiline rows={10} maxLength={4000} hint="Write the article text. Use blank lines between paragraphs." onChange={(value) => patchEntry(active.id, { body: value })} />
+
+                <section className="journal-admin__cover" aria-label="Cover photograph">
+                  <div className="journal-admin__cover-copy">
+                    <div><p className="journal-admin__eyebrow">STORY IMAGE</p><h4>Cover photograph</h4><p className="journal-admin__cover-hint">This image appears with your story on the Journal page and Home.</p></div>
+                    <select className="field__input" value={active.image} onChange={(e) => patchEntry(active.id, { image: e.target.value })} aria-label="Choose a cover photograph">
+                      <option value="">Choose from your uploads…</option>
+                      {uploads.map((file) => <option key={file.id} value={file.url}>{file.name}</option>)}
+                      {active.image && !uploads.some((file) => file.url === active.image) ? <option value={active.image}>Direct image link</option> : null}
+                    </select>
+                    <div className="journal-admin__cover-actions">
+                      <label className="btn btn--ghost journal-admin__upload">{busy ? 'Uploading…' : '＋ Upload a photo'}<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={busy} onChange={(e) => { const file = e.target.files?.[0]; e.target.value = ''; if (file) uploadCover(file); }} /></label>
+                      <button className="btn btn--ghost" type="button" onClick={toggleImageLink}>{linkingImage ? 'Close link' : /^https:\/\//i.test(active.image || '') ? 'Edit image link' : 'Add image link'}</button>
+                    </div>
+                    {linkingImage ? <form className="slot__link journal-admin__link-form" onSubmit={applyImageLink} noValidate>
+                      <label className="field__label" htmlFor={`journal-image-link-${active.id}`}>Direct image link</label>
+                      <div className="slot__link-row"><input id={`journal-image-link-${active.id}`} className="field__input" type="url" inputMode="url" placeholder="https://example.com/photo.jpg" value={imageLink} aria-invalid={Boolean(imageLinkError)} onChange={(event) => { setImageLink(event.target.value); setImageLinkError(''); }} /><button className="btn btn--primary" type="submit">Apply</button></div>
+                      <p className="field__hint">Use a public HTTPS link that opens the image directly.</p>
+                      {imageLinkError ? <p className="slot__link-error">{imageLinkError}</p> : null}
+                    </form> : null}
+                  </div>
+                  <div className="journal-admin__preview">{active.image ? <img src={active.image} alt="Selected journal cover" /> : <div><span aria-hidden="true">✳</span><small>Cover preview</small></div>}</div>
+                </section>
+                <p className="journal-admin__save-note">Save changes below to publish this story. Stories missing required details stay off the live site.</p>
+              </div>
+            </section>
+          ) : <section className="card journal-admin__select-prompt"><span aria-hidden="true">←</span><p>Choose a story to edit, or add a new one.</p></section>}
         </div>
       )}
     </div>
