@@ -114,7 +114,8 @@ function journalEntries(raw, uploadUrls) {
   if (!Array.isArray(raw)) return [];
   return raw.slice(0, 100).map((entry, index) => {
     const id = slug(entry?.id, `journal-${index + 1}`);
-    const image = typeof entry?.image === 'string' && uploadUrls.has(entry.image) ? entry.image : '';
+    const imageSource = typeof entry?.image === 'string' ? entry.image.trim() : '';
+    const image = uploadUrls.has(imageSource) ? imageSource : url(imageSource);
     return {
       id,
       title: text(entry?.title).trim().slice(0, 180),

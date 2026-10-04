@@ -870,6 +870,9 @@ const emptyJournalEntry = () => ({
 function JournalTab({ content, update, uploads, refreshUploads, onError }) {
   const [activeId, setActiveId] = React.useState('');
   const [busy, setBusy] = React.useState(false);
+  const [linkingImage, setLinkingImage] = React.useState(false);
+  const [imageLink, setImageLink] = React.useState('');
+  const [imageLinkError, setImageLinkError] = React.useState('');
   const entries = content.journal || [];
   const active = entries.find((entry) => entry.id === activeId);
 
@@ -886,6 +889,27 @@ function JournalTab({ content, update, uploads, refreshUploads, onError }) {
       patchEntry(active.id, { image: uploaded.url });
     } catch (err) { onError(err); }
     finally { setBusy(false); }
+  }
+
+  function toggleImageLink() {
+    setImageLink(/^https:\/\//i.test(active?.image || '') ? active.image : '');
+    setImageLinkError('');
+    setLinkingImage((open) => !open);
+  }
+
+  function applyImageLink(event) {
+    event.preventDefault();
+    const value = imageLink.trim();
+    try {
+      const parsed = new URL(value);
+      if (parsed.protocol !== 'https:' || parsed.username || parsed.password) throw new Error();
+    } catch {
+      setImageLinkError('Enter a complete public HTTPS link that opens an image.');
+      return;
+    }
+    patchEntry(active.id, { image: value });
+    setImageLinkError('');
+    setLinkingImage(false);
   }
 
   return (
@@ -915,9 +939,25 @@ function JournalTab({ content, update, uploads, refreshUploads, onError }) {
               <Field label="Short introduction" value={active.dek} multiline rows={3} maxLength={500} hint="A concise preview shown on the journal card." onChange={(value) => patchEntry(active.id, { dek: value })} />
               <Field label="Full story" value={active.body} multiline rows={10} maxLength={4000} hint="Write the article text. Use blank lines between paragraphs." onChange={(value) => patchEntry(active.id, { body: value })} />
               <div className="journal-admin__cover">
-                <div><span className="field__label">Cover photograph</span><p className="field__hint">Choose an existing upload or add a new image. A cover is required before publishing.</p>
-                  <select className="field__input" value={active.image} onChange={(e) => patchEntry(active.id, { image: e.target.value })}><option value="">Choose a photograph…</option>{uploads.map((file) => <option key={file.id} value={file.url}>{file.name}</option>)}</select>
-                  <label className="btn btn--ghost journal-admin__upload">{busy ? 'Uploading…' : 'Upload cover'}<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={busy} onChange={(e) => uploadCover(e.target.files?.[0])} /></label>
+                <div><span className="field__label">Cover photograph</span><p className="field__hint">Choose an existing upload, upload a new image, or paste a direct image link. A cover is required before publishing.</p>
+                  <select className="field__input" value={active.image} onChange={(e) => patchEntry(active.id, { image: e.target.value })}>
+                    <option value="">Choose a photograph…</option>
+                    {uploads.map((file) => <option key={file.id} value={file.url}>{file.name}</option>)}
+                    {active.image && !uploads.some((file) => file.url === active.image) ? <option value={active.image}>Direct image link</option> : null}
+                  </select>
+                  <div className="journal-admin__cover-actions">
+                    <label className="btn btn--ghost journal-admin__upload">{busy ? 'Uploading…' : 'Upload cover'}<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={busy} onChange={(e) => { const file = e.target.files?.[0]; e.target.value = ''; if (file) uploadCover(file); }} /></label>
+                    <button className="btn btn--ghost" type="button" onClick={toggleImageLink}>{linkingImage ? 'Close link' : /^https:\/\//i.test(active.image || '') ? 'Edit image link' : 'Use image link'}</button>
+                  </div>
+                  {linkingImage ? <form className="slot__link" onSubmit={applyImageLink} noValidate>
+                    <label className="field__label" htmlFor={`journal-image-link-${active.id}`}>Direct image link</label>
+                    <div className="slot__link-row">
+                      <input id={`journal-image-link-${active.id}`} className="field__input" type="url" inputMode="url" placeholder="https://example.com/photo.jpg" value={imageLink} aria-invalid={Boolean(imageLinkError)} onChange={(event) => { setImageLink(event.target.value); setImageLinkError(''); }} />
+                      <button className="btn btn--primary" type="submit">Apply</button>
+                    </div>
+                    <p className="field__hint">Paste a public HTTPS link that opens the image directly.</p>
+                    {imageLinkError ? <p className="slot__link-error">{imageLinkError}</p> : null}
+                  </form> : null}
                 </div>
                 <div className="journal-admin__preview">{active.image ? <img src={active.image} alt="Selected journal cover" /> : <span>Cover preview</span>}</div>
               </div>
