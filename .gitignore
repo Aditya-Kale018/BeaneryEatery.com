@@ -5,3 +5,6 @@ dist/
 .DS_Store
 .vercel/
 server/uploads/
+/server/data/content.json
+/server/data/*.tmp
+/server/data/uploads/

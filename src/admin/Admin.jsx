@@ -431,16 +431,68 @@ function MenuTab({ content, update }) {
 
 /* ------------------------------------------------------------ image editor -- */
 
-function SlotCard({ id, info, override, uploads, update, onUpload, busyId }) {
+const IMAGE_ALIGNMENTS = [
+  { x: -50, y: -50, icon: '↖', label: 'Top left' },
+  { x: 0, y: -50, icon: '↑', label: 'Top centre' },
+  { x: 50, y: -50, icon: '↗', label: 'Top right' },
+  { x: -50, y: 0, icon: '←', label: 'Centre left' },
+  { x: 0, y: 0, icon: '•', label: 'Centre' },
+  { x: 50, y: 0, icon: '→', label: 'Centre right' },
+  { x: -50, y: 50, icon: '↙', label: 'Bottom left' },
+  { x: 0, y: 50, icon: '↓', label: 'Bottom centre' },
+  { x: 50, y: 50, icon: '↘', label: 'Bottom right' },
+];
+
+function SlotCard({ id, info, override, position, uploads, update, onUpload, busyId }) {
   const [picking, setPicking] = React.useState(false);
+  const [linking, setLinking] = React.useState(false);
+  const [aligning, setAligning] = React.useState(false);
+  const [linkValue, setLinkValue] = React.useState('');
+  const [linkError, setLinkError] = React.useState('');
   const bundled = SLOTS[id];
   const current = override || bundled?.src;
   const busy = busyId === id;
+  const defaultPosition = override ? { x: 0, y: 0 } : { x: bundled?.x ?? 0, y: bundled?.y ?? 0 };
+  const activePosition = position || defaultPosition;
+
+  function openLinkEditor() {
+    setLinkValue(/^https?:\/\//i.test(override) ? override : '');
+    setLinkError('');
+    setLinking((value) => !value);
+    setPicking(false);
+    setAligning(false);
+  }
+
+  function applyLink(event) {
+    event.preventDefault();
+    const value = linkValue.trim();
+
+    try {
+      const parsed = new URL(value);
+      const localHttp = parsed.protocol === 'http:' &&
+        ['localhost', '127.0.0.1', '::1'].includes(parsed.hostname);
+      if ((parsed.protocol !== 'https:' && !localHttp) || parsed.username || parsed.password) {
+        throw new Error();
+      }
+    } catch {
+      setLinkError('Enter a complete public HTTPS image link.');
+      return;
+    }
+
+    update((draft) => { draft.images[id] = value; });
+    setLinkError('');
+    setLinking(false);
+  }
 
   return (
     <article className={`slot${override ? ' is-replaced' : ''}`}>
       <div className="slot__figure">
-        <img src={current} alt="" loading="lazy" />
+        <img
+          src={current}
+          alt=""
+          loading="lazy"
+          style={{ objectPosition: `${50 + activePosition.x}% ${50 + activePosition.y}%` }}
+        />
         {override ? <span className="slot__badge">Replaced</span> : null}
       </div>
 
@@ -466,8 +518,35 @@ function SlotCard({ id, info, override, uploads, update, onUpload, busyId }) {
           />
         </label>
 
+        <button className="btn" type="button" onClick={openLinkEditor}>
+          {linking ? 'Close link' : /^https?:\/\//i.test(override) ? 'Edit image link' : 'Use image link'}
+        </button>
+
+        <button
+          className={`btn${aligning ? ' is-active' : ''}`}
+          type="button"
+          aria-expanded={aligning}
+          onClick={() => {
+            setAligning((value) => !value);
+            setPicking(false);
+            setLinking(false);
+            setLinkError('');
+          }}
+        >
+          {aligning ? 'Close align' : 'Align image'}
+        </button>
+
         {uploads.length > 0 ? (
-          <button className="btn" onClick={() => setPicking((v) => !v)}>
+          <button
+            className="btn"
+            type="button"
+            onClick={() => {
+              setPicking((value) => !value);
+              setLinking(false);
+              setAligning(false);
+              setLinkError('');
+            }}
+          >
             {picking ? 'Close' : 'Use existing'}
           </button>
         ) : null}
@@ -481,6 +560,69 @@ function SlotCard({ id, info, override, uploads, update, onUpload, busyId }) {
           </button>
         ) : null}
       </div>
+
+      {aligning ? (
+        <div className="slot__align">
+          <div className="slot__align-head">
+            <span className="field__label">Crop focus</span>
+            <button
+              className="slot__align-reset"
+              type="button"
+              disabled={!position}
+              onClick={() => update((draft) => { delete draft.imagePositions?.[id]; })}
+            >
+              Use default
+            </button>
+          </div>
+          <div className="slot__align-grid" role="group" aria-label={`Align ${info.label}`}>
+            {IMAGE_ALIGNMENTS.map((choice) => {
+              const selected = activePosition.x === choice.x && activePosition.y === choice.y;
+              return (
+                <button
+                  key={`${choice.x}-${choice.y}`}
+                  className={`slot__align-choice${selected ? ' is-selected' : ''}`}
+                  type="button"
+                  aria-label={choice.label}
+                  aria-pressed={selected}
+                  title={choice.label}
+                  onClick={() => update((draft) => {
+                    draft.imagePositions ||= {};
+                    draft.imagePositions[id] = { x: choice.x, y: choice.y };
+                  })}
+                >
+                  {choice.icon}
+                </button>
+              );
+            })}
+          </div>
+          <p className="field__hint">Choose which part of the image stays visible when it is cropped.</p>
+        </div>
+      ) : null}
+
+      {linking ? (
+        <form className="slot__link" onSubmit={applyLink} noValidate>
+          <label className="field__label" htmlFor={`image-link-${id}`}>Direct image link</label>
+          <div className="slot__link-row">
+            <input
+              id={`image-link-${id}`}
+              className="field__input"
+              type="url"
+              inputMode="url"
+              placeholder="https://example.com/photo.jpg"
+              value={linkValue}
+              aria-invalid={Boolean(linkError)}
+              onChange={(event) => {
+                setLinkValue(event.target.value);
+                setLinkError('');
+              }}
+              autoFocus
+            />
+            <button className="btn btn--primary" type="submit">Apply</button>
+          </div>
+          <p className="field__hint">Paste a public HTTPS link that opens the image directly.</p>
+          {linkError ? <p className="slot__link-error">{linkError}</p> : null}
+        </form>
+      ) : null}
 
       {picking ? (
         <select
@@ -560,8 +702,9 @@ function ImagesTab({ content, update, uploads, refreshUploads, onError }) {
           </label>
         </div>
         <p className="field__hint">
-          Every photograph on the site, grouped by the page it appears on. “Upload new” replaces one
-          straight away; “Reset” puts the original back. Remember to press Save changes.
+          Every photograph on the site, grouped by the page it appears on. Upload a file or paste a
+          direct image link to replace one, then use “Align image” to choose its crop focus. “Reset”
+          puts the original back. Remember to press Save changes.
         </p>
       </section>
 
@@ -598,6 +741,7 @@ function ImagesTab({ content, update, uploads, refreshUploads, onError }) {
                       id={id}
                       info={SLOT_INFO[id]}
                       override={content.images[id] || ''}
+                      position={content.imagePositions?.[id] || null}
                       uploads={uploads}
                       update={update}
                       onUpload={uploadInto}
@@ -672,7 +816,7 @@ function LinksTab({ content, update }) {
   return (
     <section className="card">
       <h2 className="section__title">Links</h2>
-      <p className="field__hint">Each must start with http:// or https://.</p>
+      <p className="field__hint">Each link must start with https://.</p>
       {fields.map(([key, label]) => (
         <Field
           key={key}

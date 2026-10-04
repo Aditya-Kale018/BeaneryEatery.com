@@ -257,7 +257,7 @@ API, so the browser stays on one origin and the session cookie is first-party.
 | --- | --- |
 | Pages | Nav label, both eyebrows, heading lines and intro for all seven pages; address, hours, contact and "good to know" on Visit |
 | Menu | Section headers, plus per dish: name, description, **price**, and **veg / non-veg**. Add, delete and reorder both sections and dishes |
-| Images | Upload WebP/JPEG/PNG/AVIF (8 MB max) and assign one to any of the ~60 image slots; "Original photo" restores the bundled shot |
+| Images | Upload verified WebP/JPEG/PNG/AVIF files (8 MB max) or paste a public HTTPS image link; "Original photo" restores the bundled shot |
 | Links | Reserve, Google Maps, live ordering menu and Instagram URLs |
 
 Menu prices ship **empty** — a dish with no price simply renders without one, so
@@ -277,11 +277,25 @@ npm start          # serves dist/ and the API together on :3001
 process. Put it behind HTTPS: the session cookie sets `secure` when
 `NODE_ENV=production`.
 
+Set `FRONTEND_URL` to the exact public website origin when the browser and API
+are hosted separately. Add any other trusted origins to the comma-separated
+`ALLOWED_ORIGINS` value. Wildcards are intentionally rejected because the CMS
+uses credentialed requests. Keep `CROSS_SITE_COOKIES=false` for same-domain
+deployments; enable it only when the browser and API genuinely live on
+different sites.
+
+The API applies a strict origin policy, CSRF protection, rate limits, file
+signature checks, hashed session identifiers and security response headers.
+The same browser headers are defined in both `vercel.json` and
+`public/_headers` for Vercel and Cloudflare Pages deployments.
+
 ### Data
 
-Everything lives in `server/data/` — `content.json` plus an `uploads/` folder.
-It is gitignored, so back it up separately; deleting it resets the site to the
-copy in `shared/content-defaults.js`.
+Runtime data lives in `server/data/` — the ignored `content.json` plus an
+`uploads/` folder. Back it up separately. The tracked `seed.json` contains only
+non-secret starter content and upload metadata; it never contains an admin
+password hash or event enquiries. Deleting local `content.json` rebuilds it
+from that safe seed.
 
 That defaults file is also the site's fallback: if the API is down or absent,
 the pages still render their real copy rather than blank. A static

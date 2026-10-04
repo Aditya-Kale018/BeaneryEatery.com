@@ -14,9 +14,25 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 export const DATA_DIR = path.join(here, 'data');
 export const UPLOADS_DIR = path.join(DATA_DIR, 'uploads');
 const DATA_FILE = path.join(DATA_DIR, 'content.json');
+const SEED_FILE = path.join(DATA_DIR, 'seed.json');
 
 function emptyDb() {
   return { admin: null, content: cloneDefaults(), uploads: [], events: [] };
+}
+
+function loadSeed() {
+  if (!fs.existsSync(SEED_FILE)) return emptyDb();
+  try {
+    const seed = JSON.parse(fs.readFileSync(SEED_FILE, 'utf8'));
+    return {
+      ...emptyDb(),
+      content: seed.content || cloneDefaults(),
+      uploads: Array.isArray(seed.uploads) ? seed.uploads : [],
+    };
+  } catch (err) {
+    console.error(`seed.json is unreadable (${err.message}); using built-in defaults`);
+    return emptyDb();
+  }
 }
 
 export async function addEventEntry(entry) {
@@ -86,11 +102,11 @@ function loadFromFile() {
         fs.renameSync(DATA_FILE, backup);
       } catch {}
       console.error(`content.json was unreadable (${err.message}); moved to ${backup}`);
-      fileDb = emptyDb();
+      fileDb = loadSeed();
       saveToFile();
     }
   } else {
-    fileDb = emptyDb();
+    fileDb = loadSeed();
     saveToFile();
   }
   return fileDb;

@@ -1,9 +1,4 @@
 {
-  "admin": {
-    "username": "beaneryeatery@gmail.com",
-    "salt": "2ab9e8294e60b8f1a3a49cf05eded1e4",
-    "key": "76e5996be04191481da505f20dc421049146e68aadaa66289b693cf12bd178932e783eb059aad52619ea2a64aced6da405cc629a1bbffba4bbc731cd8be1c18e"
-  },
   "content": {
     "site": {
       "reserveUrl": "https://www.google.com/maps/reserve/v/dine/c/pclcfD0uASk",
@@ -250,6 +245,5 @@
       "size": 1781450,
       "uploadedAt": "2026-10-02T11:44:41.564Z"
     }
-  ],
-  "events": []
+  ]
 }

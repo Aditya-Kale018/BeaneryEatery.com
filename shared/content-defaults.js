@@ -153,6 +153,13 @@ export const DEFAULT_CONTENT = {
    * photograph bundled for that slot, and removing the entry restores it.
    */
   images: {},
+
+  /**
+   * Slot id -> { x, y } crop focus, expressed from -50 to 50. Keeping this
+   * separate from the URL means original, uploaded and linked images can all
+   * be aligned without changing the image itself.
+   */
+  imagePositions: {},
 };
 
 export const DIETS = ['V', 'NV'];

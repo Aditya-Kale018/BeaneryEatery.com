@@ -2,16 +2,26 @@
  *  sends credentials and treats a 401 as "signed out". */
 
 const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
+let csrfToken = '';
 
 async function request(path, options = {}) {
   const url = path.startsWith('http') ? path : `${API_BASE}${path}`;
-  const res = await fetch(url, { credentials: 'include', ...options });
+  const method = (options.method || 'GET').toUpperCase();
+  const headers = new Headers(options.headers || {});
+  if (!['GET', 'HEAD', 'OPTIONS'].includes(method) && csrfToken) {
+    headers.set('X-CSRF-Token', csrfToken);
+  }
+
+  const res = await fetch(url, { credentials: 'include', ...options, headers });
+  const refreshedToken = res.headers.get('X-CSRF-Token');
+  if (refreshedToken) csrfToken = refreshedToken;
 
   // A 401 from login means the submitted credentials were rejected; preserve
   // that server message. Treat 401s on authenticated requests as expired
   // sessions so the editor can return to the sign-in screen.
   const isSignIn = path === '/api/auth/login' || path === '/api/auth/google';
   if (res.status === 401 && !isSignIn) {
+    csrfToken = '';
     const err = new Error('Your session has expired. Please sign in again.');
     err.unauthorised = true;
     throw err;
@@ -35,7 +45,7 @@ export const api = {
   me: () => request('/api/auth/me'),
   login: (username, password) => json('POST', '/api/auth/login', { username, password }),
   google: (credential) => json('POST', '/api/auth/google', { credential }),
-  logout: () => request('/api/auth/logout', { method: 'POST' }),
+  logout: () => request('/api/auth/logout', { method: 'POST' }).finally(() => { csrfToken = ''; }),
 
   getContent: () => request('/api/content'),
   saveContent: (content) => json('PUT', '/api/content', content),

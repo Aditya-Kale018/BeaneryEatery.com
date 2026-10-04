@@ -57,8 +57,8 @@ if (!username) {
 }
 
 const password = await askHidden('Password (not shown): ');
-if (password.length < 10) {
-  console.error('Use at least 10 characters.');
+if (password.length < 14) {
+  console.error('Use at least 14 characters.');
   process.exit(1);
 }
 

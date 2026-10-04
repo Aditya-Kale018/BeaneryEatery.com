@@ -77,16 +77,14 @@ export async function initDb() {
   if (contentRow.length === 0) {
     // Try to seed from local server/data/content.json if present
     const here = path.dirname(fileURLToPath(import.meta.url));
-    const localFile = path.join(here, 'data', 'content.json');
+    const localFile = path.join(here, 'data', 'seed.json');
     let seedContent = cloneDefaults();
-    let seedAdmin = null;
     let seedUploads = [];
 
     if (fs.existsSync(localFile)) {
       try {
         const localData = JSON.parse(fs.readFileSync(localFile, 'utf8'));
         if (localData.content) seedContent = localData.content;
-        if (localData.admin) seedAdmin = localData.admin;
         if (Array.isArray(localData.uploads)) seedUploads = localData.uploads;
       } catch (err) {
         console.warn('Could not read local content.json for seeding:', err.message);
@@ -98,15 +96,6 @@ export async function initDb() {
       VALUES ('main', ${JSON.stringify(seedContent)})
       ON CONFLICT (key) DO NOTHING
     `;
-
-    if (seedAdmin?.username && seedAdmin?.salt && seedAdmin?.key) {
-      await sql`
-        INSERT INTO beanery_admin (username, salt, key)
-        VALUES (${seedAdmin.username}, ${seedAdmin.salt}, ${seedAdmin.key})
-        ON CONFLICT (username) DO UPDATE
-        SET salt = EXCLUDED.salt, key = EXCLUDED.key
-      `;
-    }
 
     for (const up of seedUploads) {
       if (up.id && up.url) {

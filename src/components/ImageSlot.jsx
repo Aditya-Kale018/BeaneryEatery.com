@@ -1,5 +1,5 @@
 import { SLOTS } from '../assets/images';
-import { useImageOverride } from '../content/ContentProvider';
+import { useImageOverride, useImagePosition } from '../content/ContentProvider';
 import './ImageSlot.css';
 
 function PlaceholderIcon() {
@@ -37,6 +37,7 @@ export default function ImageSlot({ id, placeholder, fit = 'cover', alt = '', pr
   // this slot. Its crop is the slot's default, since a new file has no saved
   // pan or scale of its own.
   const override = useImageOverride(id);
+  const savedPosition = useImagePosition(id);
   const bundled = SLOTS[id];
   const slot = override ? { src: override, s: 1, x: 0, y: 0 } : bundled;
 
@@ -55,6 +56,8 @@ export default function ImageSlot({ id, placeholder, fit = 'cover', alt = '', pr
   }
 
   const settle = (e) => e.currentTarget.setAttribute('data-settled', '');
+  const x = savedPosition?.x ?? slot.x ?? 0;
+  const y = savedPosition?.y ?? slot.y ?? 0;
 
   return (
     <div className="imgslot" data-slot={id} data-filled="">
@@ -75,7 +78,7 @@ export default function ImageSlot({ id, placeholder, fit = 'cover', alt = '', pr
             left: 0,
             top: 0,
             objectFit: fit === 'contain' ? 'contain' : 'cover',
-            objectPosition: `${50 + slot.x}% ${50 + slot.y}%`,
+            objectPosition: `${50 + x}% ${50 + y}%`,
             transform: slot.s === 1 ? 'none' : `scale(${slot.s})`,
           }}
         />

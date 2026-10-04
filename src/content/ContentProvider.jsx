@@ -21,6 +21,11 @@ export function useImageOverride(slotId) {
   return useContent().images?.[slotId] || null;
 }
 
+/** Slot id -> the crop focus selected in the admin, if one was saved. */
+export function useImagePosition(slotId) {
+  return useContent().imagePositions?.[slotId] || null;
+}
+
 const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
 
 export function ContentProvider({ children }) {

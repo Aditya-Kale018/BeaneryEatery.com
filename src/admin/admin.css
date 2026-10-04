@@ -607,6 +607,71 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 1
 .slot__actions { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .slot__actions .btn { padding: 6px 12px; font-size: 11.5px; }
 .slot__actions .btn.is-busy { opacity: 0.6; pointer-events: none; }
+.slot__actions .btn.is-active {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  color: var(--accent);
+}
+.slot__align {
+  display: grid;
+  gap: 9px;
+  padding-top: 11px;
+  border-top: 1px solid var(--line);
+}
+.slot__align-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.slot__align-head .field__label { margin: 0; }
+.slot__align-reset {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+.slot__align-reset:disabled { color: var(--ink-muted); cursor: default; opacity: 0.6; }
+.slot__align-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 38px);
+  gap: 5px;
+  width: max-content;
+  padding: 7px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--card-tint);
+}
+.slot__align-choice {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #FFFFFF;
+  color: var(--ink-soft);
+  font: 16px/1 system-ui, sans-serif;
+  cursor: pointer;
+}
+.slot__align-choice:hover { border-color: var(--accent); color: var(--accent); }
+.slot__align-choice:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.slot__align-choice.is-selected {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #FFFFFF;
+}
+.slot__align .field__hint { margin: 0; }
+.slot__link {
+  display: grid;
+  gap: 7px;
+  padding-top: 11px;
+  border-top: 1px solid var(--line);
+}
+.slot__link-row { display: flex; gap: 7px; align-items: stretch; }
+.slot__link-row .field__input { min-width: 0; }
+.slot__link-row .btn { flex: 0 0 auto; }
+.slot__link .field__hint { margin: 0; }
+.slot__link-error { margin: 0; color: #A33A2C; font-size: 11.5px; line-height: 1.4; }
 .event-entry__heading { display:flex; justify-content:space-between; align-items:flex-start; gap:18px; }
 .event-entry__heading h3 { margin-top:10px; font:500 20px/1.3 inherit; }
 .event-entry__heading time { color:var(--ink-muted); font-size:12px; }

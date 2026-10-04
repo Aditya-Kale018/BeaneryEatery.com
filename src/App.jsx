@@ -467,6 +467,10 @@ export default class App extends React.Component {
       showPrices, signature, site, testimonials,
     } = this.renderVals();
     const faceImage = this.context.images?.['face-relief'] || faceRelief;
+    const facePosition = this.context.imagePositions?.['face-relief'];
+    const faceStyle = facePosition
+      ? { objectPosition: `${50 + facePosition.x}% ${50 + facePosition.y}%` }
+      : undefined;
 
     return (
       <>
@@ -474,9 +478,9 @@ export default class App extends React.Component {
       <div data-scroll-progress="" aria-hidden="true" />
       <div data-site-intro="" aria-hidden="true">
         <div data-intro-faces="">
-          <Img src={faceImage} alt="" loading="eager" fetchpriority="high" decoding="async" />
-          <Img src={faceImage} alt="" loading="eager" fetchpriority="high" decoding="async" />
-          <Img src={faceImage} alt="" loading="eager" fetchpriority="high" decoding="async" />
+          <Img src={faceImage} alt="" loading="eager" fetchpriority="high" decoding="async" style={faceStyle} />
+          <Img src={faceImage} alt="" loading="eager" fetchpriority="high" decoding="async" style={faceStyle} />
+          <Img src={faceImage} alt="" loading="eager" fetchpriority="high" decoding="async" style={faceStyle} />
         </div>
         <div data-intro-lockup="">
           <small>Awaken the senses</small>
@@ -667,7 +671,7 @@ export default class App extends React.Component {
                   <div data-feature-copy="">
                     <div data-feature-relief="" aria-hidden="true">
                       <span />
-                      <Img src={faceImage} alt="" />
+                      <Img src={faceImage} alt="" style={faceStyle} />
                     </div>
                     <div data-reveal="40" style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
                       Featured coffee · On the bar
@@ -852,7 +856,7 @@ export default class App extends React.Component {
               <section data-home-story="" style={st("display:grid;grid-template-columns:1fr 1fr;min-height:88vh;background:#EED7BF")}>
                 <div data-sculpture-copy="" style={st("padding:130px 40px;max-width:820px;margin-right:auto;display:flex;flex-direction:column;justify-content:center;order:2;position:relative;overflow:hidden")}>
                   <div data-face-signature="" aria-hidden="true">
-                    <Img src={faceImage} alt="" />
+                    <Img src={faceImage} alt="" style={faceStyle} />
                   </div>
                   <div data-reveal="0" style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
                     Why Beanery

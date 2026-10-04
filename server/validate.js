@@ -16,11 +16,19 @@ function text(value, fallback = '') {
 }
 
 function url(value, fallback = '') {
-  const raw = text(value, fallback).trim();
+  const raw = text(value, fallback).trim().slice(0, 2048);
   if (!raw) return '';
-  // Only http(s) - a javascript: or data: URL here would end up in an href.
-  if (!/^https?:\/\//i.test(raw)) return fallback;
-  return raw;
+  try {
+    const parsed = new URL(raw);
+    const localHttp = parsed.protocol === 'http:' &&
+      ['localhost', '127.0.0.1', '::1'].includes(parsed.hostname);
+    if ((parsed.protocol !== 'https:' && !localHttp) || parsed.username || parsed.password) {
+      return fallback;
+    }
+    return raw;
+  } catch {
+    return fallback;
+  }
 }
 
 function slug(value, fallback) {
@@ -63,10 +71,42 @@ function images(raw, uploadUrls) {
   if (!raw || typeof raw !== 'object') return out;
   for (const [slotId, value] of Object.entries(raw)) {
     if (typeof value !== 'string' || !value) continue;
-    // Only ever point a slot at a file this server actually serves.
-    if (!uploadUrls.has(value)) continue;
-    out[slotId] = value;
+    const source = value.trim().slice(0, 2048);
+
+    // Uploaded files may be relative server URLs. An admin may also paste a
+    // public image link, but never persist executable or local-file schemes.
+    if (uploadUrls.has(source)) {
+      out[slotId] = source;
+      continue;
+    }
+
+    try {
+      const parsed = new URL(source);
+      const localHttp = parsed.protocol === 'http:' &&
+        ['localhost', '127.0.0.1', '::1'].includes(parsed.hostname);
+      if ((parsed.protocol !== 'https:' && !localHttp) || parsed.username || parsed.password) continue;
+      out[slotId] = source;
+    } catch {
+      // Ignore malformed links and leave the slot on its bundled photograph.
+    }
   }
+  return out;
+}
+
+function imagePositions(raw) {
+  const out = {};
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return out;
+
+  for (const [slotId, value] of Object.entries(raw).slice(0, 200)) {
+    if (!slotId || slotId.length > 80 || !value || typeof value !== 'object') continue;
+    if (!Number.isFinite(value.x) || !Number.isFinite(value.y)) continue;
+
+    out[slotId] = {
+      x: Math.round(Math.max(-50, Math.min(50, value.x))),
+      y: Math.round(Math.max(-50, Math.min(50, value.y))),
+    };
+  }
+
   return out;
 }
 
@@ -119,5 +159,6 @@ export function normaliseContent(input, current, uploadUrls) {
     },
     journal: journalEntries(input?.journal ?? base.journal, uploadUrls),
     images: images(input?.images, uploadUrls),
+    imagePositions: imagePositions(input?.imagePositions ?? base.imagePositions),
   };
 }
