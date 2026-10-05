@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { cloneDefaults } from '../shared/content-defaults.js';
+import { cloneDefaults, DISTRICT_RESERVATION_URL } from '../shared/content-defaults.js';
 import { getDb, isDbConfigured, initDb } from './db.js';
 
 /**
@@ -15,6 +15,12 @@ export const DATA_DIR = path.join(here, 'data');
 export const UPLOADS_DIR = path.join(DATA_DIR, 'uploads');
 const DATA_FILE = path.join(DATA_DIR, 'content.json');
 const SEED_FILE = path.join(DATA_DIR, 'seed.json');
+const LEGACY_RESERVATION_URL = 'https://www.google.com/maps/reserve/v/dine/c/pclcfD0uASk';
+
+function migrateContent(content) {
+  if (content?.site?.reserveUrl !== LEGACY_RESERVATION_URL) return content;
+  return { ...content, site: { ...content.site, reserveUrl: DISTRICT_RESERVATION_URL } };
+}
 
 function emptyDb() {
   return { admin: null, content: cloneDefaults(), uploads: [], events: [] };
@@ -40,9 +46,9 @@ export async function addEventEntry(entry) {
     await initDb();
     const sql = getDb();
     const rows = await sql`
-      INSERT INTO beanery_event_entries (id, name, phone, email, event_type, preferred_date, preferred_time, message, submitted_at)
-      VALUES (${entry.id}, ${entry.name}, ${entry.phone}, ${entry.email}, ${entry.eventType}, ${entry.preferredDate}, ${entry.preferredTime}, ${entry.message}, ${entry.submittedAt})
-      RETURNING id, name, phone, email, event_type, preferred_date, preferred_time, message, submitted_at
+      INSERT INTO beanery_event_entries (id, name, phone, email, event_type, guest_count, preferred_date, preferred_time, message, submitted_at)
+      VALUES (${entry.id}, ${entry.name}, ${entry.phone}, ${entry.email}, ${entry.eventType}, ${entry.guestCount}, ${entry.preferredDate}, ${entry.preferredTime}, ${entry.message}, ${entry.submittedAt})
+      RETURNING id, name, phone, email, event_type, guest_count, preferred_date, preferred_time, message, submitted_at
     `;
     return eventFromRow(rows[0]);
   }
@@ -55,7 +61,9 @@ export async function addEventEntry(entry) {
 function eventFromRow(row) {
   return {
     id: row.id, name: row.name, phone: row.phone, email: row.email,
-    eventType: row.event_type, preferredDate: row.preferred_date,
+    eventType: row.event_type,
+    guestCount: row.guest_count == null ? null : Number(row.guest_count),
+    preferredDate: row.preferred_date,
     preferredTime: row.preferred_time, message: row.message,
     submittedAt: row.submitted_at instanceof Date ? row.submitted_at.toISOString() : row.submitted_at,
   };
@@ -65,7 +73,7 @@ export async function listEventEntries() {
   if (isDbConfigured()) {
     await initDb();
     const sql = getDb();
-    const rows = await sql`SELECT id, name, phone, email, event_type, preferred_date, preferred_time, message, submitted_at FROM beanery_event_entries ORDER BY submitted_at DESC`;
+    const rows = await sql`SELECT id, name, phone, email, event_type, guest_count, preferred_date, preferred_time, message, submitted_at FROM beanery_event_entries ORDER BY submitted_at DESC`;
     return rows.map(eventFromRow);
   }
   return loadFromFile().events || [];
@@ -176,11 +184,12 @@ export async function getContent() {
     const sql = getDb();
     const rows = await sql`SELECT value FROM beanery_content WHERE key = 'main'`;
     if (rows.length > 0) {
-      return typeof rows[0].value === 'string' ? JSON.parse(rows[0].value) : rows[0].value;
+      const content = typeof rows[0].value === 'string' ? JSON.parse(rows[0].value) : rows[0].value;
+      return migrateContent(content);
     }
     return cloneDefaults();
   }
-  return loadFromFile().content;
+  return migrateContent(loadFromFile().content);
 }
 
 export async function setContent(content) {

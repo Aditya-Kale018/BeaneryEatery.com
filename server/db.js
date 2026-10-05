@@ -65,11 +65,17 @@ export async function initDb() {
       phone TEXT NOT NULL,
       email TEXT NOT NULL DEFAULT '',
       event_type TEXT NOT NULL,
+      guest_count INTEGER,
       preferred_date TEXT NOT NULL DEFAULT '',
       preferred_time TEXT NOT NULL DEFAULT '',
       message TEXT NOT NULL,
       submitted_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
+  `;
+
+  await sql`
+    ALTER TABLE beanery_event_entries
+    ADD COLUMN IF NOT EXISTS guest_count INTEGER;
   `;
 
   await sql`

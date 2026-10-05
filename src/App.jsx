@@ -4,7 +4,6 @@ import StoryPage from './components/StoryPage';
 import HospitalityHome from './components/HospitalityHome';
 import CafeModules from './components/CafeModules';
 import EventEnquiry from './components/EventEnquiry';
-import ReservationForm from './components/ReservationForm';
 import './components/Journal.css';
 import LocalityMap from './components/LocalityMap';
 import logoDark from './assets/brand/beanery-logo-dark.png';
@@ -156,7 +155,6 @@ export default class App extends React.Component {
       : 'home',
     cup: 0,
     menu: false,
-    reservationOpen: false,
     brew: 0,
     bean: 0,
     part: 0,
@@ -407,7 +405,6 @@ export default class App extends React.Component {
       })),
       part,
       menuOpen: this.state.menu,
-      reservationOpen: this.state.reservationOpen,
       openMenu: (e) => { if (e) e.preventDefault(); this.setState({ menu: true }); },
       closeMenu: (e) => { if (e) e.preventDefault(); this.setState({ menu: false }); },
       navAll: this.pages.map(([key, label]) => ({
@@ -452,7 +449,11 @@ export default class App extends React.Component {
       railRefSig: this.railRef('sig'), railSigPrev: this.scrollRail('sig', -1), railSigNext: this.scrollRail('sig', 1),
       railRefBrew: this.railRef('brew'), railBrewPrev: this.scrollRail('brew', -1), railBrewNext: this.scrollRail('brew', 1),
       railRefExp: this.railRef('exp'), railExpPrev: this.scrollRail('exp', -1), railExpNext: this.scrollRail('exp', 1),
-      openReserve: (e) => { if (e) e.preventDefault(); this.setState({ reservationOpen: true, menu: false }); },
+      openReserve: (e) => {
+        if (e) e.preventDefault();
+        this.setState({ menu: false });
+        window.location.assign(site.reserveUrl);
+      },
       openOrder: (e) => { if (e) e.preventDefault(); window.open(site.mapsUrl, '_blank', 'noopener,noreferrer'); },
       openMenuOrder: (e) => { if (e) e.preventDefault(); window.open(site.liveMenuUrl, '_blank', 'noopener,noreferrer'); },
       goCoffee: this.go('coffee'), goFood: this.go('food'), goStory: this.go('story'),
@@ -465,7 +466,7 @@ export default class App extends React.Component {
       bean, beanProfile, beans, brews, closeMenu, copy, cup, cups, dayparts,
       goCoffee, goExp, goFood, goHome, goJournal, goStory, goVisit,
       isCoffee, isExp, isFood, isHome, isJournal, isStory, isVisit,
-      journal, journalPositions, menuOpen, reservationOpen, navAll, navLeft, navRef, navRight, openMenu, openMenuOrder, openOrder, openReserve,
+      journal, journalPositions, menuOpen, navAll, navLeft, navRef, navRight, openMenu, openMenuOrder, openOrder, openReserve,
       part, pillars, railBrewNext, railBrewPrev, railExpNext, railExpPrev, railRefBrew,
       railRefExp, railRefSig, railSigNext, railSigPrev,
       showPrices, signature, site, testimonials,
@@ -2282,19 +2283,6 @@ export default class App extends React.Component {
           </div>
         </div>
       </footer>
-      {reservationOpen ? (
-        <div
-          data-overlay="reserve"
-          onMouseDown={(event) => { if (event.target === event.currentTarget) this.setState({ reservationOpen: false }); }}
-          onKeyDown={(event) => { if (event.key === 'Escape') this.setState({ reservationOpen: false }); }}
-          style={st('position:fixed;z-index:1000;inset:0;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(24,18,14,.68);backdrop-filter:blur(5px)')}
-        >
-          <section role="dialog" aria-modal="true" aria-labelledby="reserve-dialog-title" style={st('position:relative;width:min(100%,680px);max-height:min(90vh,900px);overflow:auto;background:#FBF8F4;padding:clamp(24px,5vw,48px);box-shadow:0 24px 90px rgba(0,0,0,.24)')}>
-            <button type="button" onClick={() => this.setState({ reservationOpen: false })} aria-label="Close reservation form" style={st('position:absolute;right:16px;top:14px;border:0;background:transparent;color:#5E2B17;font-size:26px;line-height:1;cursor:pointer')}>×</button>
-            <ReservationForm onClose={() => this.setState({ reservationOpen: false })} />
-          </section>
-        </div>
-      ) : null}
       </>
     );
   }

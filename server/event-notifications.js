@@ -31,6 +31,7 @@ function eventEmailText(entry) {
     `Phone: ${entry.phone}`,
     `Email: ${entry.email || 'Not provided'}`,
     `Event: ${entry.eventType}`,
+    `Guests: ${entry.guestCount}`,
     `Preferred date: ${entry.preferredDate || 'Flexible'}`,
     `Preferred time: ${entry.preferredTime || 'Flexible'}`,
     '',
@@ -48,7 +49,7 @@ async function sendEventEmail(entry) {
   if (!apiKey || !from) return;
 
   const detail = (label, value) => `<tr><th align="left" style="padding:6px 16px 6px 0">${label}</th><td>${escapeHtml(value || 'Not provided')}</td></tr>`;
-  const html = `<div style="font-family:Arial,sans-serif;color:#35261f;max-width:640px"><p style="color:#a35730;font-size:12px;letter-spacing:2px;text-transform:uppercase">Beanery · Events</p><h1 style="font-weight:500">A new event enquiry was sent</h1><table>${detail('Name', entry.name)}${detail('Phone', entry.phone)}${detail('Email', entry.email)}${detail('Event', entry.eventType)}${detail('Preferred date', entry.preferredDate || 'Flexible')}${detail('Preferred time', entry.preferredTime || 'Flexible')}</table><h2 style="font-size:16px">Message</h2><p style="white-space:pre-wrap;line-height:1.6">${escapeHtml(entry.message)}</p><p><a href="https://beaneryeatery.com/admin">Open Beanery admin</a></p></div>`;
+  const html = `<div style="font-family:Arial,sans-serif;color:#35261f;max-width:640px"><p style="color:#a35730;font-size:12px;letter-spacing:2px;text-transform:uppercase">Beanery · Events</p><h1 style="font-weight:500">A new event enquiry was sent</h1><table>${detail('Name', entry.name)}${detail('Phone', entry.phone)}${detail('Email', entry.email)}${detail('Event', entry.eventType)}${detail('Guests', entry.guestCount)}${detail('Preferred date', entry.preferredDate || 'Flexible')}${detail('Preferred time', entry.preferredTime || 'Flexible')}</table><h2 style="font-size:16px">Message</h2><p style="white-space:pre-wrap;line-height:1.6">${escapeHtml(entry.message)}</p><p><a href="https://beaneryeatery.com/admin">Open Beanery admin</a></p></div>`;
   const response = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: {

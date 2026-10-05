@@ -56,7 +56,8 @@ export default function EventEnquiry() {
           <label>Email <span>(optional)</span><input name="email" type="email" autoComplete="email" maxLength="160" placeholder="you@example.com" /></label>
           <label>What are you gathering for?<select name="eventType" required defaultValue=""><option value="" disabled>Select a setting</option>{EVENT_TYPES.map((type) => <option key={type}>{type}</option>)}</select></label>
         </div>
-        <div className="event-form__row">
+        <div className="event-form__row event-form__row--timing">
+          <label>Number of guests<input name="guestCount" type="number" inputMode="numeric" min="1" max="500" step="1" required placeholder="How many people?" /></label>
           <label>Preferred date <span>(optional)</span><input name="preferredDate" type="date" min={new Date().toISOString().slice(0, 10)} /></label>
           <label>Preferred time <span>(optional)</span><input name="preferredTime" maxLength="60" placeholder="Morning, afternoon, or a time" /></label>
         </div>

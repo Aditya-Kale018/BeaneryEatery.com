@@ -12,7 +12,7 @@ import {
 } from '../server/auth.js';
 import { isTrustedRequestOrigin, rejectUntrustedWrites } from '../server/security.js';
 import { detectImageMime } from '../server/upload-security.js';
-import { normaliseContent } from '../server/validate.js';
+import { normaliseContent, normaliseGuestCount } from '../server/validate.js';
 import { DEFAULT_CONTENT } from '../shared/content-defaults.js';
 
 function mockRequest(headers = {}, extras = {}) {
@@ -79,6 +79,14 @@ test('origin policy allows same-origin and configured local requests, but blocks
     host: 'localhost:3001',
   }, { protocol: 'http' })), true);
   assert.equal(isTrustedRequestOrigin(mockRequest({
+    origin: 'http://localhost:5183',
+    host: 'localhost:3011',
+  }, { protocol: 'http' })), true);
+  assert.equal(isTrustedRequestOrigin(mockRequest({
+    origin: 'http://localhost.attacker.example:5183',
+    host: 'localhost:3011',
+  }, { protocol: 'http' })), false);
+  assert.equal(isTrustedRequestOrigin(mockRequest({
     origin: 'https://attacker.example',
     host: 'beanery.example',
   })), false);
@@ -142,11 +150,20 @@ test('CMS stores bounded image alignment without accepting malformed values', ()
   });
 });
 
+test('event guest counts accept whole parties within the supported range', () => {
+  assert.equal(normaliseGuestCount('24'), 24);
+  assert.equal(normaliseGuestCount(1), 1);
+  assert.equal(normaliseGuestCount('0'), null);
+  assert.equal(normaliseGuestCount('3.5'), null);
+  assert.equal(normaliseGuestCount('501'), null);
+});
+
 test('tracked CMS seed contains no credentials or private enquiries', () => {
   const seed = JSON.parse(fs.readFileSync(new URL('../server/data/seed.json', import.meta.url), 'utf8'));
   assert.equal('admin' in seed, false);
   assert.equal('events' in seed, false);
   assert.ok(seed.content);
+  assert.equal(seed.content.site.reserveUrl, DEFAULT_CONTENT.site.reserveUrl);
 });
 
 test('API sends security headers and rejects untrusted preflights', async (t) => {

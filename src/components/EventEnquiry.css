@@ -9,6 +9,7 @@
 .event-enquiry__promise span { color:#A35730; }
 .event-form { display:grid; gap:27px; align-content:start; padding:clamp(26px,4vw,50px); border:1px solid rgba(94,43,23,.12); background:rgba(255,252,248,.76); box-shadow:0 20px 60px rgba(74,45,27,.07); }
 .event-form__row { display:grid; grid-template-columns:1fr 1fr; gap:26px; }
+.event-form__row--timing { grid-template-columns:minmax(120px,.7fr) 1fr 1fr; }
 .event-form label { display:grid; gap:10px; color:#68432D; font-size:9px; font-weight:600; letter-spacing:.13em; text-transform:uppercase; }
 .event-form label span { color:#9D8068; font-weight:400; }
 .event-form input,.event-form select,.event-form textarea { width:100%; border:1px solid rgba(94,43,23,.13); border-radius:2px; outline:none; padding:13px 14px; background:rgba(255,255,255,.54); color:#35261F; font:13px/1.6 Archivo,system-ui,sans-serif; letter-spacing:normal; text-transform:none; transition:border-color .2s ease,background .2s ease,box-shadow .2s ease; }
@@ -23,6 +24,7 @@
 .event-form__submit button span { font:18px/1 Georgia,serif; }
 .event-form__feedback { color:#386547; font-size:13px; line-height:1.7; }
 .event-form__feedback--error { color:#9b3528; }
+@media(max-width:900px) { .event-form__row--timing { grid-template-columns:1fr 1fr; } .event-form__row--timing label:last-child { grid-column:1 / -1; } }
 @media(max-width:760px) { .event-enquiry { grid-template-columns:1fr; gap:38px; padding-block:48px 78px; } }
 @media(max-width:760px) { .event-enquiry__intro { position:static; max-width:560px; } .event-enquiry__promise { margin-top:24px; } }
-@media(max-width:520px) { .event-form { gap:22px; padding:23px 19px; } .event-form__row { grid-template-columns:1fr; gap:20px; } .event-form__submit { align-items:flex-start; flex-direction:column; } .event-form__submit button { justify-content:space-between; width:100%; } }
+@media(max-width:520px) { .event-form { gap:22px; padding:23px 19px; } .event-form__row,.event-form__row--timing { grid-template-columns:1fr; gap:20px; } .event-form__row--timing label:last-child { grid-column:auto; } .event-form__submit { align-items:flex-start; flex-direction:column; } .event-form__submit button { justify-content:space-between; width:100%; } }

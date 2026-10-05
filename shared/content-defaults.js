@@ -13,9 +13,12 @@
 // file. An item with an empty price simply renders without one.
 const item = (name, description, diet, price = '') => ({ name, description, diet, price });
 
+export const DISTRICT_RESERVATION_URL =
+  'https://www.district.in/dining/pune/beanery-cafe-senapati-bapat-road';
+
 export const DEFAULT_CONTENT = {
   site: {
-    reserveUrl: 'https://www.google.com/maps/reserve/v/dine/c/pclcfD0uASk',
+    reserveUrl: DISTRICT_RESERVATION_URL,
     mapsUrl: 'https://maps.app.goo.gl/VFNfybtJFMzzDoCM9?g_st=aw',
     instagramUrl: 'https://www.instagram.com/beanery.pune/',
     liveMenuUrl:

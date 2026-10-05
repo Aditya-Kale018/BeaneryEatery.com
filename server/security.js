@@ -29,6 +29,17 @@ function configuredOrigins() {
 
 const ALLOWED_ORIGINS = configuredOrigins();
 
+function isDevelopmentLoopbackOrigin(origin) {
+  if (IS_PRODUCTION) return false;
+  try {
+    const hostname = new URL(origin).hostname;
+    return hostname === 'localhost' || hostname === '127.0.0.1' ||
+      hostname === '::1' || hostname === '[::1]';
+  } catch {
+    return false;
+  }
+}
+
 function targetOrigin(req) {
   const forwardedProto = req.get('x-forwarded-proto')?.split(',')[0]?.trim();
   const forwardedHost = req.get('x-forwarded-host')?.split(',')[0]?.trim();
@@ -42,7 +53,8 @@ export function isTrustedRequestOrigin(req) {
   if (!rawOrigin) return true;
   const origin = normaliseOrigin(rawOrigin);
   if (!origin) return false;
-  return origin === targetOrigin(req) || ALLOWED_ORIGINS.has(origin);
+  return origin === targetOrigin(req) || ALLOWED_ORIGINS.has(origin) ||
+    isDevelopmentLoopbackOrigin(origin);
 }
 
 /**

@@ -869,6 +869,7 @@ function EventsTab({ events, onRefresh, onDelete, notificationConfig, notificati
             <time>{new Date(event.submittedAt).toLocaleString()}</time>
           </div>
           <p className="event-entry__type">{event.eventType}</p>
+          <p><strong>Number of guests:</strong> {event.guestCount || 'Not specified'}</p>
           <div className="event-entry__contact">
             <a href={`tel:${event.phone}`}>{event.phone}</a>
             {event.email ? <a href={`mailto:${event.email}`}>{event.email}</a> : <span>No email provided</span>}

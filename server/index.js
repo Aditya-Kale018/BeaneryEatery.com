@@ -35,7 +35,7 @@ import {
   removeUpload,
   setContent,
 } from './store.js';
-import { normaliseContent } from './validate.js';
+import { normaliseContent, normaliseGuestCount } from './validate.js';
 import {
   googleAllowlistEmpty,
   googleClientId,
@@ -90,11 +90,12 @@ app.post('/api/events', eventLimiter, async (req, res) => {
   const phone = fieldText(req.body?.phone, 40);
   const email = fieldText(req.body?.email, 160);
   const eventType = fieldText(req.body?.eventType, 50);
+  const guestCount = normaliseGuestCount(req.body?.guestCount);
   const preferredDate = fieldText(req.body?.preferredDate, 10);
   const preferredTime = fieldText(req.body?.preferredTime, 60);
   const message = fieldText(req.body?.message, 2000);
-  if (!name || !phone || !EVENT_TYPES.has(eventType) || !message) {
-    res.status(400).json({ error: 'Please include your name, phone, event setting and a short note.' });
+  if (!name || !phone || !EVENT_TYPES.has(eventType) || !guestCount || !message) {
+    res.status(400).json({ error: 'Please include your name, phone, guest count, event setting and a short note.' });
     return;
   }
   if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -103,7 +104,7 @@ app.post('/api/events', eventLimiter, async (req, res) => {
   }
   try {
     const entry = await addEventEntry({
-      id: crypto.randomUUID(), name, phone, email, eventType, preferredDate,
+      id: crypto.randomUUID(), name, phone, email, eventType, guestCount, preferredDate,
       preferredTime, message, submittedAt: new Date().toISOString(),
     });
     await notifyNewEvent(entry);

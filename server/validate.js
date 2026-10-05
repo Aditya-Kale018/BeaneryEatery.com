@@ -10,6 +10,11 @@ import { DEFAULT_CONTENT, DIETS } from '../shared/content-defaults.js';
 
 const MAX_TEXT = 4000;
 
+export function normaliseGuestCount(value) {
+  const count = Number(value);
+  return Number.isInteger(count) && count >= 1 && count <= 500 ? count : null;
+}
+
 function text(value, fallback = '') {
   if (typeof value !== 'string') return fallback;
   return value.replace(/\r\n/g, '\n').slice(0, MAX_TEXT);
