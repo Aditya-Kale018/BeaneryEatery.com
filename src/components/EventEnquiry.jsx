@@ -1,5 +1,6 @@
 import React from 'react';
 import './EventEnquiry.css';
+import { API_BASE } from '../lib/apiBase';
 
 const EVENT_TYPES = ['Private Lounge', 'Rooftop Table', 'Business Gathering', 'Celebration', 'Other'];
 
@@ -14,11 +15,22 @@ export default function EventEnquiry() {
     const form = e.currentTarget;
     const data = Object.fromEntries(new FormData(form).entries());
     try {
-      const response = await fetch('/api/events', {
+      const response = await fetch(`${API_BASE}/api/events`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
-      const body = await response.json();
+      const responseText = await response.text();
+      let body;
+      try {
+        body = responseText ? JSON.parse(responseText) : null;
+      } catch {
+        body = null;
+      }
+      if (!body || typeof body !== 'object') {
+        throw new Error(response.ok
+          ? 'The event service returned an unexpected response. Please call Beanery so we can help with your enquiry.'
+          : `The event service is temporarily unavailable (HTTP ${response.status}). Please call Beanery so we can help with your enquiry.`);
+      }
       if (!response.ok) throw new Error(body.error || 'Please try again.');
       form.reset();
       setResult('Your event note is with our team. We’ll be in touch to plan the details.');

@@ -1,14 +1,7 @@
+import { API_BASE } from '../lib/apiBase';
+
 /** Thin wrapper over the CMS API. Cookies carry the session, so every call
  *  sends credentials and treats a 401 as "signed out". */
-
-// Production serves the website and API from separate deployments. Keep this
-// public API origin in sync with the backend Vercel project. VITE_API_URL can
-// override it for previews or a custom same-site API domain.
-const API_BASE = (
-  import.meta.env.DEV
-    ? ''
-    : import.meta.env.VITE_API_URL || 'https://beanery-eatery-com-backend.vercel.app'
-).replace(/\/+$/, '');
 let csrfToken = '';
 
 async function request(path, options = {}) {
