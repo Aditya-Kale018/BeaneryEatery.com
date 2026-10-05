@@ -407,6 +407,7 @@ export default class App extends React.Component {
       })),
       part,
       menuOpen: this.state.menu,
+      reservationOpen: this.state.reservationOpen,
       openMenu: (e) => { if (e) e.preventDefault(); this.setState({ menu: true }); },
       closeMenu: (e) => { if (e) e.preventDefault(); this.setState({ menu: false }); },
       navAll: this.pages.map(([key, label]) => ({
