@@ -891,11 +891,14 @@ function JournalTab({ content, update, uploads, refreshUploads, onError }) {
   const [activeId, setActiveId] = React.useState('');
   const [busy, setBusy] = React.useState(false);
   const [linkingImage, setLinkingImage] = React.useState(false);
+  const [aligningImage, setAligningImage] = React.useState(false);
   const [imageLink, setImageLink] = React.useState('');
   const [imageLinkError, setImageLinkError] = React.useState('');
   const [failedImageUrls, setFailedImageUrls] = React.useState(() => new Set());
   const entries = content.journal || [];
   const active = entries.find((entry) => entry.id === activeId);
+  const imagePositionKey = active ? `journal-${active.id}` : '';
+  const activeImagePosition = content.imagePositions?.[imagePositionKey] || { x: 0, y: 0 };
 
   function patchEntry(id, patch) {
     update((draft) => { draft.journal = (draft.journal || []).map((entry) => entry.id === id ? { ...entry, ...patch } : entry); });
@@ -944,9 +947,13 @@ function JournalTab({ content, update, uploads, refreshUploads, onError }) {
 
   function deleteStory(id) {
     if (!confirm('Delete this journal story?')) return;
-    update((draft) => { draft.journal = (draft.journal || []).filter((entry) => entry.id !== id); });
+    update((draft) => {
+      draft.journal = (draft.journal || []).filter((entry) => entry.id !== id);
+      if (draft.imagePositions) delete draft.imagePositions[`journal-${id}`];
+    });
     setActiveId('');
     setLinkingImage(false);
+    setAligningImage(false);
   }
 
   function setImageFailed(url, failed) {
@@ -988,7 +995,7 @@ function JournalTab({ content, update, uploads, refreshUploads, onError }) {
             </div>
             <nav className="journal-admin__list" aria-label="Journal entries">
               {entries.map((entry) => (
-                <button key={entry.id} className={`journal-admin__item${entry.id === activeId ? ' is-active' : ''}`} type="button" aria-current={entry.id === activeId ? 'page' : undefined} onClick={() => { setActiveId(entry.id); setLinkingImage(false); }}>
+                <button key={entry.id} className={`journal-admin__item${entry.id === activeId ? ' is-active' : ''}`} type="button" aria-current={entry.id === activeId ? 'page' : undefined} onClick={() => { setActiveId(entry.id); setLinkingImage(false); setAligningImage(false); }}>
                   {entry.image && !failedImageUrls.has(entry.image)
                     ? <img src={entry.image} alt="" onLoad={() => setImageFailed(entry.image, false)} onError={() => setImageFailed(entry.image, true)} />
                     : <span className="journal-admin__thumb" aria-hidden="true">{entry.image ? '!' : '✳'}</span>}
@@ -1027,7 +1034,21 @@ function JournalTab({ content, update, uploads, refreshUploads, onError }) {
                     <div className="journal-admin__cover-actions">
                       <label className="btn btn--ghost journal-admin__upload">{busy ? 'Uploading…' : '＋ Upload a photo'}<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={busy} onChange={(e) => { const file = e.target.files?.[0]; e.target.value = ''; if (file) uploadCover(file); }} /></label>
                       <button className="btn btn--ghost" type="button" onClick={toggleImageLink}>{linkingImage ? 'Close link' : /^https:\/\//i.test(active.image || '') ? 'Edit image link' : 'Add image link'}</button>
+                      <button className="btn btn--ghost" type="button" onClick={() => setAligningImage((open) => !open)}>{aligningImage ? 'Close crop focus' : 'Align image'}</button>
                     </div>
+                    {aligningImage ? <div className="slot__align journal-admin__align">
+                      <div className="slot__align-head">
+                        <span className="field__label">Crop focus</span>
+                        <button className="slot__align-reset" type="button" disabled={!content.imagePositions?.[imagePositionKey]} onClick={() => update((draft) => { delete draft.imagePositions?.[imagePositionKey]; })}>Use default</button>
+                      </div>
+                      <div className="slot__align-grid" role="group" aria-label="Align journal cover image">
+                        {IMAGE_ALIGNMENTS.map((choice) => {
+                          const selected = activeImagePosition.x === choice.x && activeImagePosition.y === choice.y;
+                          return <button key={`${choice.x}-${choice.y}`} className={`slot__align-choice${selected ? ' is-selected' : ''}`} type="button" aria-label={choice.label} aria-pressed={selected} title={choice.label} onClick={() => update((draft) => { draft.imagePositions ||= {}; draft.imagePositions[imagePositionKey] = { x: choice.x, y: choice.y }; })}>{choice.icon}</button>;
+                        })}
+                      </div>
+                      <p className="field__hint">Choose which part of the cover stays visible in cropped Journal and Home images.</p>
+                    </div> : null}
                     {linkingImage ? <form className="slot__link journal-admin__link-form" onSubmit={applyImageLink} noValidate>
                       <label className="field__label" htmlFor={`journal-image-link-${active.id}`}>Direct image link</label>
                       <div className="slot__link-row"><input id={`journal-image-link-${active.id}`} className="field__input" type="url" inputMode="url" placeholder="https://example.com/photo.jpg" value={imageLink} aria-invalid={Boolean(imageLinkError)} onChange={(event) => { setImageLink(event.target.value); setImageLinkError(''); }} /><button className="btn btn--primary" type="submit">Apply</button></div>
@@ -1037,7 +1058,7 @@ function JournalTab({ content, update, uploads, refreshUploads, onError }) {
                   </div>
                   <div className={`journal-admin__preview${failedImageUrls.has(active.image) ? ' is-broken' : ''}`}>
                     {active.image && !failedImageUrls.has(active.image)
-                      ? <img src={active.image} alt="Selected journal cover" onLoad={() => setImageFailed(active.image, false)} onError={() => setImageFailed(active.image, true)} />
+                      ? <img src={active.image} alt="Selected journal cover" style={{ objectPosition: `${50 + activeImagePosition.x}% ${50 + activeImagePosition.y}%` }} onLoad={() => setImageFailed(active.image, false)} onError={() => setImageFailed(active.image, true)} />
                       : failedImageUrls.has(active.image)
                         ? <div role="status"><span aria-hidden="true">!</span><small>This image link didn’t load. Upload a photo or apply a direct link to an image file.</small></div>
                         : <div><span aria-hidden="true">✳</span><small>Cover preview</small></div>}

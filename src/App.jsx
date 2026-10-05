@@ -422,6 +422,7 @@ export default class App extends React.Component {
       isVisit: page === 'visit',
       signature: this.signature.slice(0, 4),
       journal,
+      journalPositions: content.imagePositions || {},
       testimonials: this.testimonials,
       brews: this.brews.slice(0, 4),
       showPrices: this.props.showPrices !== false,
@@ -463,7 +464,7 @@ export default class App extends React.Component {
       bean, beanProfile, beans, brews, closeMenu, copy, cup, cups, dayparts,
       goCoffee, goExp, goFood, goHome, goJournal, goStory, goVisit,
       isCoffee, isExp, isFood, isHome, isJournal, isStory, isVisit,
-      journal, menuOpen, reservationOpen, navAll, navLeft, navRef, navRight, openMenu, openMenuOrder, openOrder, openReserve,
+      journal, journalPositions, menuOpen, reservationOpen, navAll, navLeft, navRef, navRight, openMenu, openMenuOrder, openOrder, openReserve,
       part, pillars, railBrewNext, railBrewPrev, railExpNext, railExpPrev, railRefBrew,
       railRefExp, railRefSig, railSigNext, railSigPrev,
       showPrices, signature, site, testimonials,
@@ -473,6 +474,10 @@ export default class App extends React.Component {
     const faceStyle = facePosition
       ? { objectPosition: `${50 + facePosition.x}% ${50 + facePosition.y}%` }
       : undefined;
+    const journalImageStyle = (entry) => {
+      const position = journalPositions[`journal-${entry.id}`] || { x: 0, y: 0 };
+      return { objectPosition: `${50 + position.x}% ${50 + position.y}%` };
+    };
 
     return (
       <>
@@ -1219,7 +1224,7 @@ export default class App extends React.Component {
                   <div style={st(journal.length ? "display:grid;grid-template-columns:repeat(3,1fr);gap:30px;margin-top:52px" : "display:none")}>
                     {journal.slice(0, 3).map((a) => (
                       <a key={a.id} href="#top" onClick={goJournal} data-reveal="60" className="journal-home-card">
-                        <div className="journal-home-card__image"><img src={a.image} alt={a.title} loading="lazy" /></div>
+                        <div className="journal-home-card__image"><img src={a.image} alt={a.title} loading="lazy" style={journalImageStyle(a)} /></div>
                         <div className="journal-home-card__meta">{a.category}<span />{formatJournalDate(a.date)}</div>
                         <h3>{a.title}</h3><p>{a.dek}</p>
                       </a>
@@ -2061,10 +2066,10 @@ export default class App extends React.Component {
                 <div className="journal-page-content__inner">
                   {journal.length === 0 ? <div className="journal-empty"><span>✳</span><p className="hospitality-label">From the Beanery team</p><h2>Notes are taking shape.</h2><p>We’re gathering stories about the coffee, food and people that make Beanery. Check back for notes from behind the counter.</p></div> : <>
                     {journal[0] ? <article className="journal-feature">
-                      <div className="journal-feature__image"><img src={journal[0].image} alt={journal[0].title} /></div>
+                      <div className="journal-feature__image"><img src={journal[0].image} alt={journal[0].title} style={journalImageStyle(journal[0])} /></div>
                       <div className="journal-feature__copy"><p className="journal-card__meta">{journal[0].category}<span />{formatJournalDate(journal[0].date)}<span />{journal[0].read} read</p><h2>{journal[0].title}</h2><p className="journal-feature__dek">{journal[0].dek}</p><div className="journal-article-body">{journal[0].body.split(/\n\s*\n/).map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div></div>
                     </article> : null}
-                    {journal.length > 1 ? <div className="journal-card-grid">{journal.slice(1).map((entry) => <article className="journal-card" key={entry.id}><div className="journal-card__image"><img src={entry.image} alt={entry.title} loading="lazy" /></div><div className="journal-card__copy"><p className="journal-card__meta">{entry.category}<span />{formatJournalDate(entry.date)}</p><h2>{entry.title}</h2><p className="journal-card__dek">{entry.dek}</p><details className="journal-card__story"><summary>Read the story <span>{entry.read} read</span></summary><div className="journal-article-body">{entry.body.split(/\n\s*\n/).map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div></details></div></article>)}</div> : null}
+                    {journal.length > 1 ? <div className="journal-card-grid">{journal.slice(1).map((entry) => <article className="journal-card" key={entry.id}><div className="journal-card__image"><img src={entry.image} alt={entry.title} loading="lazy" style={journalImageStyle(entry)} /></div><div className="journal-card__copy"><p className="journal-card__meta">{entry.category}<span />{formatJournalDate(entry.date)}</p><h2>{entry.title}</h2><p className="journal-card__dek">{entry.dek}</p><details className="journal-card__story"><summary>Read the story <span>{entry.read} read</span></summary><div className="journal-article-body">{entry.body.split(/\n\s*\n/).map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div></details></div></article>)}</div> : null}
                   </>}
                 </div>
               </section>
