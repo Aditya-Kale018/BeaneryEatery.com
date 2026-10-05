@@ -71,6 +71,25 @@ export async function listEventEntries() {
   return loadFromFile().events || [];
 }
 
+export async function removeEventEntry(id) {
+  if (isDbConfigured()) {
+    await initDb();
+    const sql = getDb();
+    const rows = await sql`
+      DELETE FROM beanery_event_entries
+      WHERE id = ${id}
+      RETURNING id
+    `;
+    return rows.length > 0;
+  }
+  const db = loadFromFile();
+  const remaining = (db.events || []).filter((entry) => entry.id !== id);
+  if (remaining.length === (db.events || []).length) return false;
+  db.events = remaining;
+  saveToFile();
+  return true;
+}
+
 export async function savePushSubscription(subscription) {
   if (!isDbConfigured()) throw new Error('Push notifications require the configured database.');
   await initDb();

@@ -843,7 +843,7 @@ function LinksTab({ content, update }) {
 
 /* ------------------------------------------------------------------- shell -- */
 
-function EventsTab({ events, onRefresh, notificationConfig, notificationStatus, onEnableNotifications }) {
+function EventsTab({ events, onRefresh, onDelete, notificationConfig, notificationStatus, onEnableNotifications }) {
   return (
     <div className="stack">
       <section className="card">
@@ -875,6 +875,7 @@ function EventsTab({ events, onRefresh, notificationConfig, notificationStatus, 
           </div>
           {(event.preferredDate || event.preferredTime) ? <p><strong>Preferred timing:</strong> {[event.preferredDate, event.preferredTime].filter(Boolean).join(' · ')}</p> : <p><strong>Preferred timing:</strong> Flexible / not specified</p>}
           <p className="event-entry__message">{event.message}</p>
+          <button className="btn btn--danger" type="button" onClick={() => onDelete(event)}>Delete request</button>
         </article>
       ))}
     </div>
@@ -1067,6 +1068,18 @@ function Editor({ user, onSignedOut }) {
 
   const refreshEvents = React.useCallback(() => api.listEvents().then(setEvents).catch(handleError), []);
 
+  async function deleteEvent(event) {
+    if (!window.confirm(`Delete the event request from ${event.name}? This cannot be undone.`)) return;
+    setError('');
+    try {
+      await api.deleteEvent(event.id);
+      setEvents((current) => current.filter((item) => item.id !== event.id));
+      setStatus('Event request deleted.');
+    } catch (err) {
+      handleError(err);
+    }
+  }
+
   React.useEffect(() => {
     api
       .getContent()
@@ -1199,7 +1212,7 @@ function Editor({ user, onSignedOut }) {
       {status ? <p className="notice notice--ok">{status}</p> : null}
 
       <main className="admin__body">
-        {tab === 'events' ? <EventsTab events={events} onRefresh={refreshEvents} notificationConfig={notificationConfig} notificationStatus={notificationStatus} onEnableNotifications={enableDeviceNotifications} /> : null}
+        {tab === 'events' ? <EventsTab events={events} onRefresh={refreshEvents} onDelete={deleteEvent} notificationConfig={notificationConfig} notificationStatus={notificationStatus} onEnableNotifications={enableDeviceNotifications} /> : null}
         {tab === 'journal' ? <JournalTab {...shared} uploads={uploads} refreshUploads={refreshUploads} onError={handleError} /> : null}
         {tab === 'pages' ? <PagesTab {...shared} /> : null}
         {tab === 'menu' ? <MenuTab {...shared} /> : null}

@@ -55,6 +55,7 @@ export const api = {
 
   listUploads: () => request('/api/uploads'),
   listEvents: () => request('/api/events'),
+  deleteEvent: (id) => request(`/api/events/${encodeURIComponent(id)}`, { method: 'DELETE' }),
   getNotificationConfig: () => request('/api/notifications/config'),
   savePushSubscription: (subscription) => json('POST', '/api/notifications/subscriptions', { subscription }),
   removePushSubscription: (endpoint) => json('DELETE', '/api/notifications/subscriptions', { endpoint }),

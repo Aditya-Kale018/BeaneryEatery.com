@@ -29,6 +29,7 @@ import {
   getContent,
   listUploads,
   listEventEntries,
+  removeEventEntry,
   savePushSubscription,
   removePushSubscription,
   removeUpload,
@@ -161,6 +162,20 @@ app.get('/api/events', requireAuth, async (req, res) => {
     res.json(await listEventEntries());
   } catch (err) {
     res.status(500).json({ error: 'Could not load event enquiries.' });
+  }
+});
+
+app.delete('/api/events/:id', requireAuth, requireCsrf, async (req, res) => {
+  try {
+    const deleted = await removeEventEntry(req.params.id);
+    if (!deleted) {
+      res.status(404).json({ error: 'No such event enquiry.' });
+      return;
+    }
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('Could not delete event enquiry.');
+    res.status(500).json({ error: 'Could not delete that event enquiry.' });
   }
 });
 
