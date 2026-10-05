@@ -29,6 +29,8 @@ import {
   getContent,
   listUploads,
   listEventEntries,
+  savePushSubscription,
+  removePushSubscription,
   removeUpload,
   setContent,
 } from './store.js';
@@ -51,6 +53,7 @@ import {
   uploadLimiter,
 } from './security.js';
 import { removeLocalUpload, uploadedFileMatchesMime } from './upload-security.js';
+import { eventNotificationConfig, notifyNewEvent } from './event-notifications.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const distDir = path.join(here, '..', 'dist');
@@ -102,10 +105,54 @@ app.post('/api/events', eventLimiter, async (req, res) => {
       id: crypto.randomUUID(), name, phone, email, eventType, preferredDate,
       preferredTime, message, submittedAt: new Date().toISOString(),
     });
+    await notifyNewEvent(entry);
     res.status(201).json({ ok: true, id: entry.id });
   } catch (err) {
     console.error('Could not store event enquiry:', err);
     res.status(500).json({ error: 'We could not send your enquiry just now. Please try again.' });
+  }
+});
+
+app.get('/api/notifications/config', requireAuth, (req, res) => {
+  res.json(eventNotificationConfig());
+});
+
+app.post('/api/notifications/subscriptions', requireAuth, requireCsrf, async (req, res) => {
+  const subscription = req.body?.subscription;
+  const endpoint = subscription?.endpoint;
+  const keys = subscription?.keys;
+  try {
+    const parsedEndpoint = new URL(endpoint);
+    if (parsedEndpoint.protocol !== 'https:' || endpoint.length > 2048 ||
+        typeof keys?.p256dh !== 'string' || keys.p256dh.length > 256 ||
+        typeof keys?.auth !== 'string' || keys.auth.length > 128) {
+      res.status(400).json({ error: 'Invalid device notification subscription.' });
+      return;
+    }
+  } catch {
+    res.status(400).json({ error: 'Invalid device notification subscription.' });
+    return;
+  }
+  try {
+    await savePushSubscription(subscription);
+    res.status(201).json({ ok: true });
+  } catch (err) {
+    console.error('Could not save device notification subscription.');
+    res.status(503).json({ error: 'Could not enable device notifications right now.' });
+  }
+});
+
+app.delete('/api/notifications/subscriptions', requireAuth, requireCsrf, async (req, res) => {
+  const endpoint = req.body?.endpoint;
+  if (typeof endpoint !== 'string' || endpoint.length > 2048) {
+    res.status(400).json({ error: 'Invalid device notification subscription.' });
+    return;
+  }
+  try {
+    await removePushSubscription(endpoint);
+    res.json({ ok: true });
+  } catch {
+    res.status(503).json({ error: 'Could not disable device notifications right now.' });
   }
 });
 

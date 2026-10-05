@@ -72,6 +72,15 @@ export async function initDb() {
     );
   `;
 
+  await sql`
+    CREATE TABLE IF NOT EXISTS beanery_push_subscriptions (
+      endpoint TEXT PRIMARY KEY,
+      subscription JSONB NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+  `;
+
   // Check if content is already seeded
   const contentRow = await sql`SELECT value FROM beanery_content WHERE key = 'main'`;
   if (contentRow.length === 0) {

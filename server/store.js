@@ -71,6 +71,33 @@ export async function listEventEntries() {
   return loadFromFile().events || [];
 }
 
+export async function savePushSubscription(subscription) {
+  if (!isDbConfigured()) throw new Error('Push notifications require the configured database.');
+  await initDb();
+  const sql = getDb();
+  await sql`
+    INSERT INTO beanery_push_subscriptions (endpoint, subscription, updated_at)
+    VALUES (${subscription.endpoint}, ${JSON.stringify(subscription)}, NOW())
+    ON CONFLICT (endpoint) DO UPDATE
+    SET subscription = EXCLUDED.subscription, updated_at = NOW()
+  `;
+}
+
+export async function listPushSubscriptions() {
+  if (!isDbConfigured()) return [];
+  await initDb();
+  const sql = getDb();
+  const rows = await sql`SELECT subscription FROM beanery_push_subscriptions`;
+  return rows.map((row) => typeof row.subscription === 'string' ? JSON.parse(row.subscription) : row.subscription);
+}
+
+export async function removePushSubscription(endpoint) {
+  if (!isDbConfigured()) return;
+  await initDb();
+  const sql = getDb();
+  await sql`DELETE FROM beanery_push_subscriptions WHERE endpoint = ${endpoint}`;
+}
+
 function ensureDirs() {
   try {
     fs.mkdirSync(UPLOADS_DIR, { recursive: true });

@@ -62,6 +62,9 @@ export const api = {
 
   listUploads: () => request('/api/uploads'),
   listEvents: () => request('/api/events'),
+  getNotificationConfig: () => request('/api/notifications/config'),
+  savePushSubscription: (subscription) => json('POST', '/api/notifications/subscriptions', { subscription }),
+  removePushSubscription: (endpoint) => json('DELETE', '/api/notifications/subscriptions', { endpoint }),
   deleteUpload: (id) => request(`/api/uploads/${id}`, { method: 'DELETE' }),
   uploadImage: (file) => {
     const form = new FormData();

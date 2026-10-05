@@ -843,9 +843,20 @@ function LinksTab({ content, update }) {
 
 /* ------------------------------------------------------------------- shell -- */
 
-function EventsTab({ events, onRefresh }) {
+function EventsTab({ events, onRefresh, notificationConfig, notificationStatus, onEnableNotifications }) {
   return (
     <div className="stack">
+      <section className="card">
+        <h2 className="section__title">Event notifications</h2>
+        <p className="field__hint">When someone sends an event enquiry, Beanery sends an email alert and can notify this device, even when the admin page is closed.</p>
+        <p>{notificationConfig?.email?.enabled
+          ? `Email alerts are configured for ${notificationConfig.email.to}.`
+          : `Email alerts will go to ${notificationConfig?.email?.to || 'Beaneryeatery@gmail.com'} once Resend is configured on the backend.`}</p>
+        {notificationConfig?.push?.enabled
+          ? <button className="btn" onClick={onEnableNotifications}>Enable notifications on this device</button>
+          : <p className="field__hint">Device alerts need push keys configured on the backend first.</p>}
+        {notificationStatus ? <p className="field__hint" role="status">{notificationStatus}</p> : null}
+      </section>
       <section className="card">
         <h2 className="section__title">Incoming event enquiries</h2>
         <p className="field__hint">New requests from the public Events page appear here, newest first.</p>
@@ -1038,6 +1049,8 @@ function Editor({ user, onSignedOut }) {
   const [status, setStatus] = React.useState('');
   const [error, setError] = React.useState('');
   const [saving, setSaving] = React.useState(false);
+  const [notificationConfig, setNotificationConfig] = React.useState(null);
+  const [notificationStatus, setNotificationStatus] = React.useState('');
 
   const refreshUploads = React.useCallback(
     () => api.listUploads().then(setUploads).catch(handleError),
@@ -1063,6 +1076,7 @@ function Editor({ user, onSignedOut }) {
       })
       .catch(handleError);
     refreshUploads();
+    api.getNotificationConfig().then(setNotificationConfig).catch(handleError);
   }, [refreshUploads]);
 
   React.useEffect(() => {
@@ -1082,6 +1096,33 @@ function Editor({ user, onSignedOut }) {
   }, []);
 
   const dirty = content !== null && JSON.stringify(content) !== saved;
+
+  async function enableDeviceNotifications() {
+    setNotificationStatus('');
+    try {
+      if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) {
+        throw new Error('This browser does not support device notifications.');
+      }
+      const permission = await Notification.requestPermission();
+      if (permission !== 'granted') throw new Error('Allow notifications in your browser settings, then try again.');
+      const registration = await navigator.serviceWorker.register('/push-sw.js');
+      const decodeKey = (base64Url) => {
+        const padded = base64Url.replace(/-/g, '+').replace(/_/g, '/') + '='.repeat((4 - base64Url.length % 4) % 4);
+        return Uint8Array.from(atob(padded), (char) => char.charCodeAt(0));
+      };
+      let subscription = await registration.pushManager.getSubscription();
+      if (!subscription) {
+        subscription = await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: decodeKey(notificationConfig.push.publicKey),
+        });
+      }
+      await api.savePushSubscription(subscription.toJSON());
+      setNotificationStatus('Notifications are enabled on this device.');
+    } catch (err) {
+      setNotificationStatus(err.message || 'Could not enable notifications on this device.');
+    }
+  }
 
   // Guard against closing the tab with edits that were never saved.
   React.useEffect(() => {
@@ -1158,7 +1199,7 @@ function Editor({ user, onSignedOut }) {
       {status ? <p className="notice notice--ok">{status}</p> : null}
 
       <main className="admin__body">
-        {tab === 'events' ? <EventsTab events={events} onRefresh={refreshEvents} /> : null}
+        {tab === 'events' ? <EventsTab events={events} onRefresh={refreshEvents} notificationConfig={notificationConfig} notificationStatus={notificationStatus} onEnableNotifications={enableDeviceNotifications} /> : null}
         {tab === 'journal' ? <JournalTab {...shared} uploads={uploads} refreshUploads={refreshUploads} onError={handleError} /> : null}
         {tab === 'pages' ? <PagesTab {...shared} /> : null}
         {tab === 'menu' ? <MenuTab {...shared} /> : null}

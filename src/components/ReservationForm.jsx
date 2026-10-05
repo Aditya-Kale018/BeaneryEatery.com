@@ -10,11 +10,8 @@ import { st } from '../lib/style';
  * weekday rather than hard-coded, so a Friday offers a later last seating than
  * a Tuesday and a late booking is correctly flagged as bar-menu only.
  *
- * NOTE: `submit()` below is where a real booking endpoint goes. Right now it
- * resolves locally after a short delay and issues a reference. The form is
- * complete, the backend is not. It deliberately does not invent availability:
- * every slot within opening hours is offered, because only a real system knows
- * what is actually free.
+ * The form collects a preferred time and prepares a WhatsApp request for the
+ * guest to send to Beanery. It does not claim that a table is confirmed.
  */
 
 // - palette, matching the design's tokens -
@@ -68,11 +65,6 @@ const prettyDate = (dateStr) =>
     weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
   });
 
-function reference() {
-  const s = Date.now().toString(36).toUpperCase();
-  return `BNY-${s.slice(-4)}`;
-}
-
 function validate(v) {
   const e = {};
   if (v.name.trim().length < 2) e.name = 'Please tell us who the table is for.';
@@ -120,7 +112,7 @@ export default function ReservationForm({ onClose, initial }) {
   });
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
-  const [state, setState] = useState('editing'); // editing | sending | done
+  const [state, setState] = useState('editing'); // editing | done
   const [confirmed, setConfirmed] = useState(null);
   const errorRef = useRef(null);
 
@@ -145,7 +137,7 @@ export default function ReservationForm({ onClose, initial }) {
   const barOnly = v.time && Number(v.time) > kitchenClose;
   const bigParty = v.partySize === '13+';
 
-  async function submit(e) {
+  function submit(e) {
     e.preventDefault();
     const found = validate(v);
     setErrors(found);
@@ -155,37 +147,45 @@ export default function ReservationForm({ onClose, initial }) {
       return;
     }
 
-    setState('sending');
-    // TODO: POST to the booking endpoint. Until then, resolve locally.
-    await new Promise((r) => setTimeout(r, 900));
-    setConfirmed({ ...v, ref: reference() });
+    setConfirmed({ ...v });
     setState('done');
   }
 
   if (state === 'done' && confirmed) {
     const rows = [
-      ['Reference', confirmed.ref],
       ['Name', confirmed.name.trim()],
       ['When', `${prettyDate(confirmed.date)}, ${label12(Number(confirmed.time))}`],
       ['Party size', confirmed.partySize === '1' ? '1 person' : `${confirmed.partySize} people`],
       ['Seating', confirmed.seating],
     ];
     if (confirmed.occasion !== OCCASIONS[0]) rows.push(['Occasion', confirmed.occasion]);
+    const requestMessage = [
+      'Hello Beanery, I would like to request a table.',
+      `Name: ${confirmed.name.trim()}`,
+      `Phone: ${confirmed.phone.trim()}`,
+      confirmed.email.trim() ? `Email: ${confirmed.email.trim()}` : '',
+      `Date: ${prettyDate(confirmed.date)}`,
+      `Time: ${label12(Number(confirmed.time))}`,
+      `Party size: ${confirmed.partySize === '1' ? '1 person' : `${confirmed.partySize} people`}`,
+      `Seating: ${confirmed.seating}`,
+      confirmed.occasion !== OCCASIONS[0] ? `Occasion: ${confirmed.occasion}` : '',
+      confirmed.notes.trim() ? `Note: ${confirmed.notes.trim()}` : '',
+    ].filter(Boolean).join('\n');
+    const whatsappUrl = `https://wa.me/919860934080?text=${encodeURIComponent(requestMessage)}`;
 
     return (
       <div>
         <div style={st(`display:flex;align-items:center;gap:12px`)}>
           <span style={st(`width:34px;height:1px;background:${FOREST};display:block`)} />
           <span style={st(`font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:${FOREST};font-weight:500`)}>
-            Request received
+            One more step
           </span>
         </div>
-        <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:40px;line-height:1.05;margin-top:14px")}>
-          We&rsquo;ll hold it for you
+        <h3 id="reserve-dialog-title" style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:40px;line-height:1.05;margin-top:14px")}>
+          Your request is ready
         </h3>
         <p style={st(`font-size:14.5px;line-height:1.8;color:${BODY};margin-top:14px;max-width:44ch`)}>
-          A message goes to {confirmed.phone.trim()} within the hour to confirm. If anything changes, call the café
-          and quote your reference.
+          Send the prepared message to Beanery in WhatsApp. Your table is requested once it is sent; the team will reply to confirm availability.
         </p>
 
         <div style={st('margin-top:30px;border-top:1px solid rgba(94,43,23,.14)')}>
@@ -208,13 +208,18 @@ export default function ReservationForm({ onClose, initial }) {
           </p>
         )}
 
-        <button
-          type="button"
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
           className="hv2"
           onClick={onClose}
-          style={st(`margin-top:26px;width:100%;text-align:left;font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:500;color:#FBF8F4;background:${INK};border:none;padding:19px 26px;cursor:pointer;transition:background .35s ease`)}
+          style={st(`display:block;margin-top:26px;width:100%;text-align:left;font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:500;color:#FBF8F4;background:${INK};border:none;padding:19px 26px;cursor:pointer;transition:background .35s ease;text-decoration:none`)}
         >
-          Done
+          Send request in WhatsApp ↗
+        </a>
+        <button type="button" className="hv2" onClick={onClose} style={st(`margin-top:12px;width:100%;text-align:left;font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:500;color:${INK};background:transparent;border:1px solid ${RULE};padding:18px 25px;cursor:pointer`)}>
+          Close
         </button>
       </div>
     );
@@ -239,11 +244,11 @@ export default function ReservationForm({ onClose, initial }) {
       <div style={st(`font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:${ACCENT};font-weight:500`)}>
         Reservations
       </div>
-      <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:40px;line-height:1.05;margin-top:14px")}>
+      <h3 id="reserve-dialog-title" style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:40px;line-height:1.05;margin-top:14px")}>
         Reserve a table
       </h3>
       <p style={st(`font-size:14.5px;line-height:1.8;color:${BODY};margin-top:14px;max-width:44ch`)}>
-        Share your details and preferred date. We’ll confirm the table by message. For groups over twelve, call Beanery directly.
+        Choose a preferred date and time. We’ll prepare a WhatsApp request for you to send; Beanery will reply to confirm availability. For groups over twelve, call us directly.
       </p>
 
       <div style={st('display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:30px')}>
@@ -382,14 +387,14 @@ export default function ReservationForm({ onClose, initial }) {
       <button
         type="submit"
         className="hv2"
-        disabled={state === 'sending' || bigParty}
+        disabled={bigParty}
         style={st(
           `margin-top:26px;width:100%;text-align:left;font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;` +
           `font-weight:500;color:#FBF8F4;background:${INK};border:none;padding:19px 26px;transition:background .35s ease;` +
-          (state === 'sending' || bigParty ? 'opacity:.45;cursor:not-allowed' : 'cursor:pointer'),
+          (bigParty ? 'opacity:.45;cursor:not-allowed' : 'cursor:pointer'),
         )}
       >
-        {state === 'sending' ? 'Sending…' : 'Request a table'}
+        Request a table
       </button>
 
       <div style={st(`font-size:11.5px;color:${META};margin-top:16px`)}>
