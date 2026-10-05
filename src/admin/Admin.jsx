@@ -893,6 +893,7 @@ function JournalTab({ content, update, uploads, refreshUploads, onError }) {
   const [linkingImage, setLinkingImage] = React.useState(false);
   const [imageLink, setImageLink] = React.useState('');
   const [imageLinkError, setImageLinkError] = React.useState('');
+  const [failedImageUrls, setFailedImageUrls] = React.useState(() => new Set());
   const entries = content.journal || [];
   const active = entries.find((entry) => entry.id === activeId);
 
@@ -906,6 +907,7 @@ function JournalTab({ content, update, uploads, refreshUploads, onError }) {
     try {
       const uploaded = await api.uploadImage(file);
       await refreshUploads();
+      setImageFailed(uploaded.url, false);
       patchEntry(active.id, { image: uploaded.url });
     } catch (err) { onError(err); }
     finally { setBusy(false); }
@@ -928,6 +930,7 @@ function JournalTab({ content, update, uploads, refreshUploads, onError }) {
       return;
     }
     patchEntry(active.id, { image: value });
+    setImageFailed(value, false);
     setImageLinkError('');
     setLinkingImage(false);
   }
@@ -946,7 +949,17 @@ function JournalTab({ content, update, uploads, refreshUploads, onError }) {
     setLinkingImage(false);
   }
 
-  const isReady = (entry) => Boolean(entry.title && entry.category && entry.date && entry.dek && entry.body && entry.image);
+  function setImageFailed(url, failed) {
+    setFailedImageUrls((current) => {
+      const next = new Set(current);
+      if (failed) next.add(url);
+      else next.delete(url);
+      return next;
+    });
+    onImageValidity?.(url, !failed);
+  }
+
+  const isReady = (entry) => Boolean(entry.title && entry.category && entry.date && entry.dek && entry.body && entry.image && !failedImageUrls.has(entry.image));
 
   return (
     <div className="journal-admin">
@@ -976,7 +989,9 @@ function JournalTab({ content, update, uploads, refreshUploads, onError }) {
             <nav className="journal-admin__list" aria-label="Journal entries">
               {entries.map((entry) => (
                 <button key={entry.id} className={`journal-admin__item${entry.id === activeId ? ' is-active' : ''}`} type="button" aria-current={entry.id === activeId ? 'page' : undefined} onClick={() => { setActiveId(entry.id); setLinkingImage(false); }}>
-                  {entry.image ? <img src={entry.image} alt="" /> : <span className="journal-admin__thumb" aria-hidden="true">✳</span>}
+                  {entry.image && !failedImageUrls.has(entry.image)
+                    ? <img src={entry.image} alt="" onLoad={() => setImageFailed(entry.image, false)} onError={() => setImageFailed(entry.image, true)} />
+                    : <span className="journal-admin__thumb" aria-hidden="true">{entry.image ? '!' : '✳'}</span>}
                   <span className="journal-admin__item-copy"><small>{entry.category || 'Uncategorised'}</small><strong>{entry.title || 'Untitled story'}</strong><small>{entry.date || 'No publish date'}</small></span>
                   <span className={`journal-admin__status${isReady(entry) ? ' is-ready' : ''}`}>{isReady(entry) ? 'Ready' : 'Draft'}</span>
                 </button>
@@ -1020,7 +1035,13 @@ function JournalTab({ content, update, uploads, refreshUploads, onError }) {
                       {imageLinkError ? <p className="slot__link-error">{imageLinkError}</p> : null}
                     </form> : null}
                   </div>
-                  <div className="journal-admin__preview">{active.image ? <img src={active.image} alt="Selected journal cover" /> : <div><span aria-hidden="true">✳</span><small>Cover preview</small></div>}</div>
+                  <div className={`journal-admin__preview${failedImageUrls.has(active.image) ? ' is-broken' : ''}`}>
+                    {active.image && !failedImageUrls.has(active.image)
+                      ? <img src={active.image} alt="Selected journal cover" onLoad={() => setImageFailed(active.image, false)} onError={() => setImageFailed(active.image, true)} />
+                      : failedImageUrls.has(active.image)
+                        ? <div role="status"><span aria-hidden="true">!</span><small>This image link didn’t load. Upload a photo or apply a direct link to an image file.</small></div>
+                        : <div><span aria-hidden="true">✳</span><small>Cover preview</small></div>}
+                  </div>
                 </section>
                 <p className="journal-admin__save-note">Save changes below to publish this story. Stories missing required details stay off the live site.</p>
               </div>
@@ -1052,6 +1073,7 @@ function Editor({ user, onSignedOut }) {
   const [saving, setSaving] = React.useState(false);
   const [notificationConfig, setNotificationConfig] = React.useState(null);
   const [notificationStatus, setNotificationStatus] = React.useState('');
+  const [brokenJournalImageUrls, setBrokenJournalImageUrls] = React.useState(() => new Set());
 
   const refreshUploads = React.useCallback(
     () => api.listUploads().then(setUploads).catch(handleError),
@@ -1149,6 +1171,12 @@ function Editor({ user, onSignedOut }) {
   }, [dirty]);
 
   async function save() {
+    const brokenStory = (content?.journal || []).find((entry) => entry.image && brokenJournalImageUrls.has(entry.image));
+    if (brokenStory) {
+      setTab('journal');
+      setError(`The cover image for “${brokenStory.title || 'Untitled story'}” could not load. Upload a photo or replace its direct image link before saving.`);
+      return;
+    }
     setSaving(true);
     setError('');
     try {
@@ -1213,7 +1241,7 @@ function Editor({ user, onSignedOut }) {
 
       <main className="admin__body">
         {tab === 'events' ? <EventsTab events={events} onRefresh={refreshEvents} onDelete={deleteEvent} notificationConfig={notificationConfig} notificationStatus={notificationStatus} onEnableNotifications={enableDeviceNotifications} /> : null}
-        {tab === 'journal' ? <JournalTab {...shared} uploads={uploads} refreshUploads={refreshUploads} onError={handleError} /> : null}
+        {tab === 'journal' ? <JournalTab {...shared} uploads={uploads} refreshUploads={refreshUploads} onError={handleError} onImageValidity={(url, valid) => setBrokenJournalImageUrls((current) => { const next = new Set(current); if (valid) next.delete(url); else next.add(url); return next; })} /> : null}
         {tab === 'pages' ? <PagesTab {...shared} /> : null}
         {tab === 'menu' ? <MenuTab {...shared} /> : null}
         {tab === 'images' ? (
