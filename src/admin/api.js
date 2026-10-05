@@ -1,7 +1,14 @@
 /** Thin wrapper over the CMS API. Cookies carry the session, so every call
  *  sends credentials and treats a 401 as "signed out". */
 
-const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
+// Production serves the website and API from separate deployments. Keep this
+// public API origin in sync with the backend Vercel project. VITE_API_URL can
+// override it for previews or a custom same-site API domain.
+const API_BASE = (
+  import.meta.env.DEV
+    ? ''
+    : import.meta.env.VITE_API_URL || 'https://beanery-eatery-com-backend.vercel.app'
+).replace(/\/+$/, '');
 let csrfToken = '';
 
 async function request(path, options = {}) {
@@ -30,6 +37,9 @@ async function request(path, options = {}) {
   const isJson = res.headers.get('content-type')?.includes('application/json');
   const body = isJson ? await res.json() : null;
 
+  if (!isJson) {
+    throw new Error('The admin API returned a webpage instead of data. Check the production API URL.');
+  }
   if (!res.ok) throw new Error(body?.error || `Request failed (${res.status})`);
   return body;
 }

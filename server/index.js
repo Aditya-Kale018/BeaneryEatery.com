@@ -12,6 +12,7 @@ import multer from 'multer';
 
 import {
   SESSION_COOKIE,
+  SESSION_TTL_MS,
   csrfTokenForSession,
   createSession,
   destroySession,
@@ -166,7 +167,7 @@ async function issueSession(res, username) {
     secure: process.env.NODE_ENV === 'production',
     path: '/',
     priority: 'high',
-    maxAge: 12 * 60 * 60 * 1000,
+    maxAge: SESSION_TTL_MS,
   });
   res.set('X-CSRF-Token', csrfTokenForSession(token));
   return token;

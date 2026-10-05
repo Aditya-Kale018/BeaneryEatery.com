@@ -26,7 +26,11 @@ export function useImagePosition(slotId) {
   return useContent().imagePositions?.[slotId] || null;
 }
 
-const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
+const API_BASE = (
+  import.meta.env.DEV
+    ? ''
+    : import.meta.env.VITE_API_URL || 'https://beanery-eatery-com-backend.vercel.app'
+).replace(/\/+$/, '');
 
 export function ContentProvider({ children }) {
   const [content, setContent] = React.useState(DEFAULT_CONTENT);

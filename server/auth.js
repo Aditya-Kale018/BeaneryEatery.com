@@ -26,7 +26,8 @@ export function verifyPassword(password, record) {
   return crypto.timingSafeEqual(stored, attempt);
 }
 
-const SESSION_TTL_MS = 12 * 60 * 60 * 1000;
+// Keep admin sessions for 30 days; server-side and browser expiry use the same TTL.
+export const SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000;
 const memorySessions = new Map();
 
 /** Never store a bearer token itself: a database read should not grant access. */

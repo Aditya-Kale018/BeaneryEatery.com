@@ -100,11 +100,11 @@ function GoogleSignIn({ clientId, onCredential, onError }) {
   return <div className="gsi" ref={holder} />;
 }
 
-function LoginView({ onSignedIn, hasAdmin, authMode, googleClientId, googleAllowlistEmpty }) {
+function LoginView({ onSignedIn, hasAdmin, authMode, googleClientId, googleAllowlistEmpty, initialError }) {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [showPassword, setShowPassword] = React.useState(false);
-  const [error, setError] = React.useState('');
+  const [error, setError] = React.useState(initialError || '');
   const [busy, setBusy] = React.useState(false);
 
   async function submit(e) {
@@ -112,8 +112,15 @@ function LoginView({ onSignedIn, hasAdmin, authMode, googleClientId, googleAllow
     setBusy(true);
     setError('');
     try {
-      const user = await api.login(username, password);
-      onSignedIn(user);
+      await api.login(username, password);
+      // A successful password response is not enough: the browser may have
+      // rejected a cross-site session cookie. Confirm that the session works
+      // before switching away from the sign-in screen.
+      const session = await api.me();
+      if (!session.user) {
+        throw new Error('Password accepted, but the session cookie was not saved. Set CROSS_SITE_COOKIES=true on the backend and redeploy it.');
+      }
+      onSignedIn(session.user);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -173,7 +180,7 @@ function LoginView({ onSignedIn, hasAdmin, authMode, googleClientId, googleAllow
         <h1 className="login__title">Beanery</h1>
         <p className="login__sub">Content admin</p>
 
-        {!hasAdmin ? (
+        {hasAdmin === false ? (
           <p className="notice notice--warn">
             No admin account exists yet. In the project folder run{' '}
             <code>npm run admin:password</code> to create one.
@@ -1185,7 +1192,12 @@ export default function Admin() {
     api
       .me()
       .then(setSession)
-      .catch(() => setSession({ user: null, hasAdmin: false, authMode: 'password' }));
+      .catch(() => setSession({
+        user: null,
+        hasAdmin: null,
+        authMode: 'password',
+        error: 'Could not connect to the admin API. Check the API URL and allowed origin, then reload.',
+      }));
   }, []);
 
   if (!session) return <div className="loading">Loading…</div>;
@@ -1197,6 +1209,7 @@ export default function Admin() {
         authMode={session.authMode}
         googleClientId={session.googleClientId}
         googleAllowlistEmpty={session.googleAllowlistEmpty}
+        initialError={session.error}
         onSignedIn={(user) => setSession({ ...session, user })}
       />
     );
