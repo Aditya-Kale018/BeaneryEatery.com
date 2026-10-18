@@ -189,17 +189,39 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
+    let lastNavScrolled = null;
+    let scrollScheduled = false;
+
     this.onScroll = () => {
-      const n = this.navRef; if (!n) return;
-      const s = window.scrollY > 40;
-      n.style.background = s ? '#EED7BF' : 'rgba(238,215,191,0)';
-      n.style.boxShadow = s ? '0 1px 0 rgba(53,38,31,.12)' : 'none';
-      n.style.backdropFilter = s ? 'blur(18px) saturate(1.15)' : 'none';
-      n.style.padding = s ? '14px 40px' : '26px 40px';
-      const total = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-      document.documentElement.style.setProperty('--scroll-progress', Math.min(1, window.scrollY / total));
+      if (scrollScheduled) return;
+      scrollScheduled = true;
+      requestAnimationFrame(() => {
+        scrollScheduled = false;
+        const sy = window.scrollY;
+        const s = sy > 40;
+        if (s !== lastNavScrolled) {
+          lastNavScrolled = s;
+          const n = this.navRef;
+          if (n) {
+            n.style.background = s ? '#EED7BF' : 'rgba(238,215,191,0)';
+            n.style.boxShadow = s ? '0 1px 0 rgba(53,38,31,.12)' : 'none';
+            n.style.backdropFilter = s ? 'blur(18px) saturate(1.15)' : 'none';
+            n.style.padding = s ? '14px 40px' : '26px 40px';
+          }
+        }
+        if (!this.scrollProgressEl) {
+          this.scrollProgressEl = document.querySelector('[data-scroll-progress]');
+        }
+        if (this.scrollProgressEl) {
+          const total = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+          const progress = Math.max(0, Math.min(1, sy / total));
+          this.scrollProgressEl.style.transform = `scaleX(${progress})`;
+        }
+        this.setupReveals();
+      });
     };
     window.addEventListener('scroll', this.onScroll, { passive: true });
+    window.addEventListener('resize', this.onScroll, { passive: true });
     this.onPopState = () => {
       const page = window.location.hash.replace('#/', '');
       if (this.pages.some(([key]) => key === page)) this.setState({ page }, () => window.scrollTo({ top: 0 }));
@@ -230,11 +252,11 @@ export default class App extends React.Component {
 
   componentWillUnmount() {
     window.removeEventListener('scroll', this.onScroll);
+    window.removeEventListener('resize', this.onScroll);
     window.removeEventListener('popstate', this.onPopState);
     window.removeEventListener('pointermove', this.onPointerMove);
     window.removeEventListener('blur', this.resetPointer);
     if (this.pointerFrame) cancelAnimationFrame(this.pointerFrame);
-    if (this.revealScroll) { window.removeEventListener('scroll', this.revealScroll); window.removeEventListener('resize', this.revealScroll); }
     clearInterval(this.pulse);
     clearTimeout(this.pulseStop);
     document.body.style.overflow = '';
@@ -278,15 +300,6 @@ export default class App extends React.Component {
       if (forceAll) { this.reveal(el, 0); return; }
       if (el.getBoundingClientRect().top < vh * 0.92) this.reveal(el, delay);
     });
-    if (!this.revealScroll) {
-      this.revealScroll = () => {
-        if (this.revealQueued) return;
-        this.revealQueued = true;
-        requestAnimationFrame(() => { this.revealQueued = false; this.setupReveals(); });
-      };
-      window.addEventListener('scroll', this.revealScroll, { passive: true });
-      window.addEventListener('resize', this.revealScroll, { passive: true });
-    }
   }
 
   scrollRail(key, dir) {
@@ -303,13 +316,13 @@ export default class App extends React.Component {
 
   cups = [
     {
-      cup: 'Ethiopia Guji · Pour-Over',
-      notes: 'Jasmine, bergamot, white peach',
-      body: 'Light roast, 1:16, 92°C',
+      cup: 'Carbonic Naturals · Origami',
+      notes: 'Fig, red apple, lemon',
+      body: '15g, 240ml, 92°C, 3-pour Origami brew',
       dish: 'Burnt Basque Cheesecake',
-      dishNote: 'The Basque’s caramelised top meets the Guji’s tea-like florals, while the creamy centre softens the coffee’s bright acidity and brings the peach forward.',
+      dishNote: 'The Basque’s caramelised top meets the bright, winey fruit notes of carbonic maceration, while the creamy centre brings out the fig sweetness.',
       slot: 'pair-guji',
-      shot: 'Overhead: Basque cheesecake wedge on ceramic, pour-over carafe alongside, warm daylight',
+      shot: 'Overhead: Basque cheesecake wedge on ceramic, Origami dripper carafe alongside, warm daylight',
     },
     {
       cup: 'Lychee Cold Brew',
@@ -339,29 +352,100 @@ export default class App extends React.Component {
       shot: 'Almond croissant with flaked almonds, cortado glass, marble tabletop',
     },
     {
-      cup: 'Kenya Nyeri · AeroPress',
-      notes: 'Blackcurrant, tomato leaf, cane',
-      body: '15g, 200ml, 2:10 inverted',
+      cup: 'Ratnagiri Culture · Chemex',
+      notes: 'Rose, peach, hibiscus',
+      body: '18g, 280ml, gentle circular pour',
       dish: 'Tomato & Burrata Sourdough',
-      dishNote: 'Blackcurrant-like acidity meets ripe tomato, while burrata brings enough richness to pull the cup and the plate into balance.',
+      dishNote: 'Delicate floral and stone fruit notes of Ratnagiri culture meet ripe heirloom tomato, while creamy burrata rounds the gentle acidity.',
       slot: 'pair-kenya',
-      shot: 'Open-faced sourdough with burrata and tomato, AeroPress mid-plunge behind',
+      shot: 'Open-faced sourdough with burrata and tomato, Chemex carafe behind',
     },
   ];
 
   beans = [
-    { origin: 'Ethiopia', farm: 'Guji · Hambela Wamena', alt: '2,050 m', process: 'Natural, 18 days raised bed', roast: 'Light', varietal: 'Heirloom', notes: ['Jasmine', 'Bergamot', 'White peach'], profile: { Acidity: 88, Body: 46, Sweetness: 72, Florality: 92, Bitterness: 22 }, slot: 'bean-eth', shot: 'Ethiopian green beans in a linen bag, hand-lettered origin tag' },
-    { origin: 'Colombia', farm: 'Huila · Finca La Esperanza', alt: '1,750 m', process: 'Washed, 36-hour ferment', roast: 'Medium', varietal: 'Caturra, Castillo', notes: ['Red apple', 'Panela', 'Almond'], profile: { Acidity: 62, Body: 70, Sweetness: 84, Florality: 40, Bitterness: 34 }, slot: 'bean-col', shot: 'Roasted beans cascading from a scoop, close-up, warm light' },
-    { origin: 'Kenya', farm: 'Nyeri · Gichathaini', alt: '1,880 m', process: 'Washed, double soaked', roast: 'Light-medium', varietal: 'SL28, SL34', notes: ['Blackcurrant', 'Tomato leaf', 'Cane'], profile: { Acidity: 94, Body: 58, Sweetness: 66, Florality: 55, Bitterness: 28 }, slot: 'bean-ken', shot: 'Cupping table: spoons, bowls, slurping in progress' },
-    { origin: 'India', farm: 'Chikmagalur · Estate No. 4', alt: '1,300 m', process: 'Monsooned, honey lot', roast: 'Medium-dark', varietal: 'S795', notes: ['Cocoa', 'Date', 'Toasted walnut'], profile: { Acidity: 38, Body: 90, Sweetness: 78, Florality: 18, Bitterness: 58 }, slot: 'bean-ind', shot: 'Drying beds on an Indian estate, low morning sun' },
+    {
+      name: 'Carbonic Naturals',
+      badge: '100% Arabica · Indian Origin',
+      subhead: 'Premium Artisanal Coffee',
+      origin: 'Tamil Nadu',
+      farm: 'Carbonic Naturals · Tamil Nadu',
+      alt: 'Indian Origin',
+      acidity: 'High',
+      process: '(Carbonic Maceration) Naturals',
+      roast: 'Light',
+      varietal: '100% Arabica Artisanal',
+      form: 'Whole Beans & Ground Coffee',
+      notes: ['Fig', 'Red Apple', 'Lemon'],
+      brewMethods: ['Origami', 'Clever Dripper'],
+      profile: { Acidity: 90, Body: 45, Sweetness: 72, Clarity: 88, Bitterness: 16 },
+      slot: 'bean-eth',
+      shot: 'Carbonic naturals coffee beans from Tamil Nadu, warm studio light',
+    },
+    {
+      name: 'Pineapple Fermented',
+      badge: '100% Arabica · Indian Origin',
+      subhead: 'Premium Artisanal Coffee',
+      origin: 'Tamil Nadu',
+      farm: 'Pineapple Fermented · Tamil Nadu',
+      alt: 'Indian Origin',
+      acidity: 'High',
+      process: '(Pineapple Maceration) Naturals',
+      roast: 'Light',
+      varietal: '100% Arabica Artisanal',
+      form: 'Whole Beans & Ground Coffee',
+      notes: ['Berry', 'Milk Chocolate', 'Almonds'],
+      brewMethods: ['French Press', 'V60 Pour Over'],
+      profile: { Acidity: 88, Body: 55, Sweetness: 82, Clarity: 74, Bitterness: 20 },
+      slot: 'bean-col',
+      shot: 'Pineapple fermented coffee beans, golden hour studio, linen surface',
+    },
+    {
+      name: 'Ratnagiri Culture Process',
+      badge: '100% Arabica · Indian Origin',
+      subhead: 'Premium Artisanal Coffee',
+      origin: 'Maharashtra',
+      farm: 'Ratnagiri Estate · Maharashtra',
+      alt: 'Indian Origin',
+      acidity: 'Mild',
+      process: 'Culture Process',
+      roast: 'Light',
+      varietal: '100% Arabica Artisanal',
+      form: 'Whole Beans & Ground Coffee',
+      notes: ['Rose', 'Peach', 'Hibiscus'],
+      brewMethods: ['Chemex', 'Kalita Wave'],
+      profile: { Acidity: 52, Body: 50, Sweetness: 90, Clarity: 92, Bitterness: 12 },
+      slot: 'bean-ken',
+      shot: 'Ratnagiri culture coffee beans from Maharashtra, warm natural light',
+    },
+    {
+      name: 'Attikan Estate Arabica',
+      badge: '100% Arabica · Indian Origin',
+      subhead: 'Premium Artisanal Coffee',
+      origin: 'Karnataka, Attikan Estate',
+      farm: 'Attikan Estate · Karnataka',
+      alt: 'Attikan Estate',
+      acidity: 'Medium',
+      process: 'Washed',
+      roast: 'Medium',
+      varietal: '100% Arabica Artisanal',
+      form: 'Whole Beans & Ground Coffee',
+      notes: ['Citrus', 'Dark Chocolate', 'Fig'],
+      brewMethods: ['Aeropress', 'Origami'],
+      profile: { Acidity: 65, Body: 72, Sweetness: 76, Clarity: 80, Bitterness: 36 },
+      slot: 'bean-ind',
+      shot: 'Attikan estate arabica beans from Karnataka, cupping setup',
+    },
   ];
 
   brews = [
-    { name: 'Espresso', kicker: '27 seconds', spec: ['18 g in · 38 g out', '93°C, 9 bar', 'Served in ceramic'], copy: 'Our bar standard: a syrupy doppio with enough sweetness and structure to drink straight or carry through milk.', price: '₹180', slot: 'brew-esp', shot: 'Espresso pulling into a warm cup, crema forming' },
-    { name: 'Pour-Over', kicker: '3:30 total', spec: ['15 g · 240 ml', '1:16, 92°C', 'Four-pour cascade'], copy: 'Single-origin coffee brewed to order on V60, designed to bring out clarity, aroma and the details of the lot.', price: '₹320', slot: 'brew-po', shot: 'Gooseneck kettle pouring in a spiral, steam catching daylight' },
-    { name: 'French Press', kicker: '4 minutes', spec: ['30 g · 500 ml', 'Full immersion', 'Served for two'], copy: 'Full-immersion brewing gives a rounder body and softer edges. Served for two, made for a slower table.', price: '₹340', slot: 'brew-fp', shot: 'French press on a linen tray, two cups, morning table' },
-    { name: 'AeroPress', kicker: '2:10 inverted', spec: ['15 g · 200 ml', 'Inverted, one press', 'Bright and clean'], copy: 'A compact, expressive brew with a clean finish, especially good when you want sweetness and body without heaviness.', price: '₹290', slot: 'brew-ap', shot: 'AeroPress mid-plunge, barista hands, close crop' },
-    { name: 'Cold Brew', kicker: '18 hours', spec: ['1:8 concentrate', 'Steeped cold, never heated', 'Lychee or classic'], copy: 'Steeped cold for 18 hours and served over clear ice. Choose it classic, or with lychee for a brighter, lightly sweet finish.', price: '₹280', slot: 'brew-cb', shot: 'Tall glass of cold brew, clear ice, condensation, dark wood' },
+    { name: 'Origami Dripper', kicker: '2:45 min', spec: ['15 g · 240 ml', 'Kalita or cone filter', 'Vibrant & structured'], copy: 'Japanese 20-flute ceramic dripper that accentuates lively florals, clean fruit sweetness and delicate acidity.', price: '₹250/-', slot: 'brew-po', shot: 'Origami dripper pouring into carafe, studio light' },
+    { name: 'Clever Dripper', kicker: '3:15 min', spec: ['18 g · 260 ml', 'Immersion + paper filter', 'Sweet & balanced'], copy: 'Combines the round body and rich sweetness of full immersion with the crystalline clarity of a paper filter.', price: '₹240/-', slot: 'brew-fp', shot: 'Clever dripper releasing brew into carafe' },
+    { name: 'V60 Pour Over', kicker: '3:30 min', spec: ['15 g · 240 ml', 'Spiral cascade · 92°C', 'Bright & articulate'], copy: 'Single-origin coffee brewed on the Hario V60 to bring out delicate aromatics, citrus notes, and crisp finish.', price: '₹250/-', slot: 'brew-po', shot: 'Gooseneck kettle pouring in a spiral, steam catching daylight' },
+    { name: 'French Press', kicker: '4 minutes', spec: ['30 g · 500 ml', 'Full immersion', 'Rich & textured'], copy: 'Full-immersion brewing giving a rounder body and softer edges. Served for two, made for a slower table.', price: '₹240/-', slot: 'brew-fp', shot: 'French press on a linen tray, two cups, morning table' },
+    { name: 'Chemex', kicker: '4:00 min', spec: ['25 g · 400 ml', 'Bonded filter paper', 'Tea-like & pristine'], copy: 'Heavy bonded filters remove all sediment and oils, delivering an exceptionally pure, fragrant, tea-like cup.', price: '₹310/-', slot: 'brew-ap', shot: 'Chemex glass flask with wood collar, filtered brew' },
+    { name: 'Kalita Wave', kicker: '3:00 min', spec: ['16 g · 250 ml', 'Flat-bottom · 3 holes', 'Even & sweet'], copy: 'Wave-shaped filter and flat bed geometry encourage even extraction and rich, consistent sweetness.', price: '₹250/-', slot: 'brew-po', shot: 'Kalita wave dripper, stainless steel, brew dripping into server' },
+    { name: 'AeroPress', kicker: '2:10 inverted', spec: ['15 g · 200 ml', 'Inverted, one press', 'Bright & clean'], copy: 'A compact, expressive brew with a clean finish, especially good when you want sweetness and body without heaviness.', price: '₹240/-', slot: 'brew-ap', shot: 'AeroPress mid-plunge, barista hands, close crop' },
+    { name: 'Cold Brew', kicker: '18 hours', spec: ['1:8 concentrate', 'Steeped cold, never heated', 'Slow-crafted'], copy: 'Steeped cold for 18 hours and served over clear ice. Smooth, naturally sweet and low in bitterness.', price: '₹240/-', slot: 'brew-cb', shot: 'Tall glass of cold brew, clear ice, condensation, dark wood' },
   ];
 
   signature = [
@@ -422,7 +506,7 @@ export default class App extends React.Component {
       journal,
       journalPositions: content.imagePositions || {},
       testimonials: this.testimonials,
-      brews: this.brews.slice(0, 4),
+      brews: this.brews,
       showPrices: this.props.showPrices !== false,
       cups: this.cups.map((c, i) => ({
         ...c, i,
@@ -686,37 +770,37 @@ export default class App extends React.Component {
                       Featured coffee · On the bar
                     </div>
                     <h2 data-reveal="90" style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(38px,4.4vw,66px);line-height:1.02;letter-spacing:-.02em;margin:22px 0 0")}>
-                      Ethiopia Guji
+                      Carbonic Naturals
                       <br />
-                      <span style={st("font-style:italic")}>Hambela Wamena</span>
+                      <span style={st("font-style:italic")}>Tamil Nadu · 100% Arabica</span>
                     </h2>
                     <p data-reveal="140" style={st("font-size:15.5px;line-height:1.8;color:#6E4A34;margin-top:28px;max-width:48ch")}>
-                      A naturally processed coffee from Hambela Wamena, grown at 2,050 metres and roasted light for filter. Expect jasmine and bergamot up front, with white peach through the finish. Try it on V60 for clarity or AeroPress for a rounder cup.
+                      An exceptional Indian artisanal coffee grown in Tamil Nadu, processed with carbonic maceration naturals and roasted light for manual brew. Expect sweet fig and crisp red apple up front, with refreshing lemon brightness through the finish.
                     </p>
                     <div data-reveal="190" style={st("margin-top:40px;border-top:1px solid rgba(94,43,23,.18)")}>
                       <div style={st("display:flex;justify-content:space-between;padding:16px 0;border-bottom:1px solid rgba(94,43,23,.12);font-size:13px")}>
                         <span style={st("letter-spacing:.14em;text-transform:uppercase;font-size:10.5px;color:#96755C")}>
+                          Origin
+                        </span>
+                        <span>Tamil Nadu · Indian Origin</span>
+                      </div>
+                      <div style={st("display:flex;justify-content:space-between;padding:16px 0;border-bottom:1px solid rgba(94,43,23,.12);font-size:13px")}>
+                        <span style={st("letter-spacing:.14em;text-transform:uppercase;font-size:10.5px;color:#96755C")}>
                           Process
                         </span>
-                        <span>Natural · raised bed, 18 days</span>
+                        <span>(Carbonic Maceration) Naturals</span>
                       </div>
                       <div style={st("display:flex;justify-content:space-between;padding:16px 0;border-bottom:1px solid rgba(94,43,23,.12);font-size:13px")}>
                         <span style={st("letter-spacing:.14em;text-transform:uppercase;font-size:10.5px;color:#96755C")}>
-                          Altitude
+                          Roast & Acidity
                         </span>
-                        <span>2,050 m</span>
-                      </div>
-                      <div style={st("display:flex;justify-content:space-between;padding:16px 0;border-bottom:1px solid rgba(94,43,23,.12);font-size:13px")}>
-                        <span style={st("letter-spacing:.14em;text-transform:uppercase;font-size:10.5px;color:#96755C")}>
-                          Roast
-                        </span>
-                        <span>Light · filter</span>
+                        <span>Light Roast · High Acidity</span>
                       </div>
                       <div style={st("display:flex;justify-content:space-between;padding:16px 0;font-size:13px")}>
                         <span style={st("letter-spacing:.14em;text-transform:uppercase;font-size:10.5px;color:#96755C")}>
-                          Notes
+                          Notes & Brew
                         </span>
-                        <span>Jasmine · bergamot · white peach</span>
+                        <span>Fig · Red Apple · Lemon (Origami, Clever Dripper)</span>
                       </div>
                     </div>
                     <a className="hv9" href="#top" onClick={goCoffee} data-reveal="240" style={st("display:inline-flex;align-items:center;gap:12px;margin-top:36px;font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:500;padding-bottom:8px;border-bottom:1px solid #5E2B17")}>
@@ -1402,16 +1486,16 @@ export default class App extends React.Component {
                 <div style={st("max-width:1560px;margin:0 auto")}>
                   <div data-reveal="0" style={st("display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap;padding-bottom:26px;border-bottom:1px solid rgba(94,43,23,.14)")}>
                     <div>
-                      <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:500")}>
-                        Current coffees
+                      <div style={st("font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:600")}>
+                        Know your 100% Arabica
                       </div>
                       <h2 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(32px,3.8vw,54px);line-height:1.04;margin-top:16px")}>
-                        On the bar now
+                        Artisanal Coffees
                       </h2>
                     </div>
                     <div style={st("display:flex;gap:8px;flex-wrap:wrap")}>
                       {beans.map((b, i) => (
-                        <button key={i} onClick={b.pick} style={st(b.style)}>{b.origin}</button>
+                        <button key={i} onClick={b.pick} style={st(b.style)}>{b.name}</button>
                       ))}
                     </div>
                   </div>
@@ -1422,47 +1506,67 @@ export default class App extends React.Component {
                       </div>
                     </div>
                     <div style={st("padding:46px 42px;border-right:1px solid rgba(94,43,23,.16)")}>
-                      <div style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#A35730")}>
-                        Origin
+                      <div style={st("display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap")}>
+                        <div style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#A35730;font-weight:600")}>
+                          {bean.badge || '100% Arabica'}
+                        </div>
+                        {bean.form && (
+                          <div style={st("font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:#96755C")}>
+                            {bean.form}
+                          </div>
+                        )}
                       </div>
-                      <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(30px,3.2vw,44px);line-height:1.05;margin-top:12px")}>
-                        {bean.origin}
+                      <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(28px,3vw,40px);line-height:1.1;margin-top:12px")}>
+                        {bean.name}
                       </h3>
-                      <div style={st("font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:21px;color:#6E4A34;margin-top:8px")}>
+                      <div style={st("font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:20px;color:#6E4A34;margin-top:6px")}>
                         {bean.farm}
                       </div>
-                      <div style={st("margin-top:34px")}>
-                        <div style={st("display:flex;justify-content:space-between;padding:14px 0;border-top:1px solid rgba(94,43,23,.14);font-size:13.5px")}>
+                      <div style={st("margin-top:28px")}>
+                        <div style={st("display:flex;justify-content:space-between;padding:12px 0;border-top:1px solid rgba(94,43,23,.14);font-size:13.5px")}>
                           <span style={st("font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#96755C")}>
-                            Altitude
+                            Origin
                           </span>
-                          <span>{bean.alt}</span>
+                          <span>{bean.origin}</span>
                         </div>
-                        <div style={st("display:flex;justify-content:space-between;padding:14px 0;border-top:1px solid rgba(94,43,23,.14);font-size:13.5px;gap:20px")}>
+                        <div style={st("display:flex;justify-content:space-between;padding:12px 0;border-top:1px solid rgba(94,43,23,.14);font-size:13.5px;gap:20px")}>
                           <span style={st("font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#96755C;white-space:nowrap")}>
                             Process
                           </span>
                           <span style={st("text-align:right")}>{bean.process}</span>
                         </div>
-                        <div style={st("display:flex;justify-content:space-between;padding:14px 0;border-top:1px solid rgba(94,43,23,.14);font-size:13.5px")}>
+                        <div style={st("display:flex;justify-content:space-between;padding:12px 0;border-top:1px solid rgba(94,43,23,.14);font-size:13.5px")}>
                           <span style={st("font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#96755C")}>
-                            Varietal
-                          </span>
-                          <span>{bean.varietal}</span>
-                        </div>
-                        <div style={st("display:flex;justify-content:space-between;padding:14px 0;border-top:1px solid rgba(94,43,23,.14);border-bottom:1px solid rgba(94,43,23,.14);font-size:13.5px")}>
-                          <span style={st("font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#96755C")}>
-                            Roast
+                            Roast Level
                           </span>
                           <span>{bean.roast}</span>
                         </div>
-                      </div>
-                      <div style={st("display:flex;gap:8px;flex-wrap:wrap;margin-top:26px")}>
-                        {bean.notes.map((n, i) => (
-                          <span key={i} style={st("font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#A35730;border:1px solid rgba(163,87,48,.4);padding:8px 12px")}>
-                            {n}
+                        <div style={st("display:flex;justify-content:space-between;padding:12px 0;border-top:1px solid rgba(94,43,23,.14);font-size:13.5px")}>
+                          <span style={st("font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#96755C")}>
+                            Acidity
                           </span>
-                        ))}
+                          <span style={st("font-weight:500")}>{bean.acidity}</span>
+                        </div>
+                        {bean.brewMethods && (
+                          <div style={st("display:flex;justify-content:space-between;padding:12px 0;border-top:1px solid rgba(94,43,23,.14);border-bottom:1px solid rgba(94,43,23,.14);font-size:13.5px;gap:16px")}>
+                            <span style={st("font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#96755C;white-space:nowrap")}>
+                              Brew Methods
+                            </span>
+                            <span style={st("text-align:right;font-weight:500;color:#5E2B17")}>{bean.brewMethods.join(' · ')}</span>
+                          </div>
+                        )}
+                      </div>
+                      <div style={st("margin-top:22px")}>
+                        <div style={st("font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#96755C;margin-bottom:10px")}>
+                          Flavour Profile
+                        </div>
+                        <div style={st("display:flex;gap:8px;flex-wrap:wrap")}>
+                          {bean.notes.map((n, i) => (
+                            <span key={i} style={st("font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#A35730;border:1px solid rgba(163,87,48,.4);padding:8px 12px;background:rgba(251,248,244,.5)")}>
+                              {n}
+                            </span>
+                          ))}
+                        </div>
                       </div>
                     </div>
                     <div style={st("padding:46px 42px;background:#EFE3D8")}>

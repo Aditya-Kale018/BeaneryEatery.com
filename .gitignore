@@ -8,3 +8,5 @@ server/uploads/
 /server/data/content.json
 /server/data/*.tmp
 /server/data/uploads/
+*.pdf
+

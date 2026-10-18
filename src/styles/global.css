@@ -273,8 +273,8 @@ textarea.input { min-height: 90px; resize: vertical; }
 /* ── 2. Beanery design ─────────────────────────────────────────────── */
 
 *{box-sizing:border-box}
-html{width:100%;max-width:100%;overflow-x:hidden;scroll-behavior:smooth;scrollbar-width:none;-ms-overflow-style:none}
-body{width:100%;max-width:100%;margin:0;overflow-x:hidden;overscroll-behavior-x:none;background:#EED7BF;color:#35261F;font-family:Archivo,system-ui,sans-serif;-webkit-font-smoothing:antialiased;text-wrap:pretty}
+html{width:100%;max-width:100%;overflow-x:clip;scrollbar-width:none;-ms-overflow-style:none}
+body{width:100%;max-width:100%;margin:0;overflow-x:clip;background:#EED7BF;color:#35261F;font-family:Archivo,system-ui,sans-serif;-webkit-font-smoothing:antialiased;text-wrap:pretty}
 #root,[data-page-enter],main,section,footer{max-width:100%;min-width:0}
 a{color:#35261F;text-decoration:none;transition:color .3s ease}
 a:hover{color:#9A5D3B}
@@ -291,9 +291,8 @@ button{font-family:inherit}
 section[style*="40px"]{padding-left:var(--beanery-page-gutter)!important;padding-right:var(--beanery-page-gutter)!important}
 footer{padding-left:var(--beanery-page-gutter)!important;padding-right:var(--beanery-page-gutter)!important}
 section > div[style*="max-width: 1560px"][style*="padding: 0 40px"],
-section > [data-rail]{padding-left:var(--beanery-page-gutter)!important;padding-right:var(--beanery-page-gutter)!important}
-[data-rail]{width:100%;max-width:100%!important;min-width:0;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;contain:inline-size}
-[data-rail]>*{max-width:calc(100vw - (2 * var(--beanery-page-gutter)))}
+[data-rail]{width:100%;max-width:100%!important;min-width:0;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity!important;contain:inline-size}
+[data-rail]>*{max-width:calc(100vw - (2 * var(--beanery-page-gutter)));scroll-snap-stop:normal!important}
 .imgslot,.imgslot .frame{max-width:100%;min-width:0;contain:layout paint}
 [data-home-trim]{display:none!important}
 .cafe-green-button{background:var(--cafe-green)!important;border-color:var(--cafe-green)!important}
@@ -730,6 +729,8 @@ img[data-await-load]:not([data-settled]) { visibility: hidden; }
 .home-signature-section{
   position:relative;
   isolation:isolate;
+  overflow:hidden!important;
+  contain:paint;
   background:radial-gradient(ellipse at 82% 4%,rgba(183,135,101,.24),transparent 42%),linear-gradient(135deg,#492114 0%,#5E2B17 52%,#3D2118 100%)!important;
 }
 .home-signature-section::before{
@@ -749,7 +750,11 @@ img[data-await-load]:not([data-settled]) { visibility: hidden; }
 .home-signature-section__title span{color:#E2BB94;font-style:italic;}
 .home-signature-section__controls button{border-color:rgba(231,198,164,.48)!important;}
 .home-signature-section__controls button:hover{background:#E2BB94!important;color:#3D2118!important;border-color:#E2BB94!important;}
-.home-signature-section__rail{scrollbar-width:none;}
+.home-signature-section__rail{
+  scrollbar-width:none;
+  scroll-snap-type:x proximity!important;
+  overscroll-behavior-x:contain!important;
+}
 .home-signature-section__rail::-webkit-scrollbar{display:none;}
 .home-signature-card{
   background:linear-gradient(160deg,rgba(255,248,238,.11),rgba(255,248,238,.045))!important;

@@ -41,9 +41,8 @@
   height: 2px;
   pointer-events: none;
   background: linear-gradient(90deg, #9A5D3B, #D2B996);
-  transform: scaleX(var(--scroll-progress, 0));
+  transform: scaleX(0);
   transform-origin: left center;
-  transition: transform .12s linear;
 }
 
 /* The venue's plaster faces become a short piece of brand theatre. The
@@ -176,7 +175,7 @@
 
 /* Framed plaster engraving behind the featured-coffee notes. The arched,
    double-line frame borrows from the cane mirror in the actual room. */
-[data-feature-copy] { position: relative; isolation: isolate; }
+[data-feature-copy] { position: relative; isolation: isolate; overflow: hidden; }
 [data-feature-copy] > *:not([data-feature-relief]) { position: relative; z-index: 2; }
 [data-feature-relief] {
   position: absolute;
