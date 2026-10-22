@@ -1,5 +1,6 @@
 import React from 'react';
 import ImageSlot from './components/ImageSlot';
+import TextLoop from './components/TextLoop';
 import StoryPage from './components/StoryPage';
 import HospitalityHome from './components/HospitalityHome';
 import CafeModules from './components/CafeModules';
@@ -12,6 +13,7 @@ import faceRelief from './assets/brand/beanery-face-relief-v1.webp';
 import flowerLamp from './assets/brand/beanery-flower-lamp-anime-papercraft-v3.webp';
 import venueInterior from './assets/images/beanery-interior-real-v1.webp';
 import { ContentContext, useContent } from './content/ContentProvider';
+import { menuDietTag } from '../shared/menu-data.js';
 import { st } from './lib/style';
 import './styles/global.css';
 import './styles/hover.css';
@@ -87,36 +89,44 @@ function PracticalFoodMenu({ openOrder, openReserve }) {
 
       <nav className="menu-jump" aria-label="Menu categories">
         {groups.map((group) => (
-          <button key={group.id} onClick={() => document.getElementById(`menu-${group.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}>
+          <button key={group.id} onClick={() => {
+            const section = document.getElementById(`menu-${group.id}`);
+            if (section) {
+              section.open = true;
+              section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          }}>
             {group.title}
           </button>
         ))}
       </nav>
 
       <div className="menu-legend">
-        <span><i className="menu-dot menu-dot--veg" /> V · Vegetarian</span>
-        <span><i className="menu-dot menu-dot--nonveg" /> NV · Non-vegetarian</span>
+        <span><i className="menu-dot menu-dot--veg" aria-hidden="true" />Vegetarian</span>
+        <span><i className="menu-dot menu-dot--nonveg" aria-hidden="true" />Non-vegetarian</span>
         <span>{menu.legendNote}</span>
       </div>
 
       <div className="menu-groups">
         {groups.map((group) => (
-          <section id={`menu-${group.id}`} className="menu-group" key={group.id}>
-            <div className="menu-group__heading">
-              <span>{group.number}</span>
-              <div><h2>{group.title}</h2><p>{group.note}</p></div>
+          <details id={`menu-${group.id}`} className="menu-group" key={group.id}>
+            <summary className="menu-group__heading">
+              <span className="menu-group__number">{group.number}</span>
+              <span className="menu-group__copy"><strong>{group.title}</strong><small>{group.note}</small></span>
+              <span className="menu-accordion-mark" aria-hidden="true" />
+            </summary>
+            <div className="menu-items-clip">
+              <div className="menu-items">
+                {group.items.map((entry, i) => (
+                  <article className="menu-item" key={`${group.id}-${i}`}>
+                    <div><h3>{entry.name}</h3>{entry.description ? <p>{entry.description}</p> : null}</div>
+                    {entry.price ? <span className="menu-price">{entry.price}</span> : null}
+                    {menuDietTag(entry, group.id) ? <span className={`menu-diet menu-diet--${menuDietTag(entry, group.id) === 'V' ? 'veg' : 'nonveg'}`} role="img" aria-label={menuDietTag(entry, group.id) === 'V' ? 'Vegetarian' : 'Non-vegetarian'} /> : null}
+                  </article>
+                ))}
+              </div>
             </div>
-            <div className="menu-items">
-              {group.items.map((entry, i) => (
-                <article className="menu-item" key={`${group.id}-${i}`}>
-                  <div><h3>{entry.name}</h3><p>{entry.description}</p></div>
-                  {/* Price is optional - an item with none simply shows the diet mark. */}
-                  {entry.price ? <span className="menu-price">{entry.price}</span> : null}
-                  <span className={`menu-diet menu-diet--${entry.diet === 'V' ? 'veg' : 'nonveg'}`} role="img" aria-label={entry.diet === 'V' ? 'Vegetarian' : 'Non-vegetarian'} />
-                </article>
-              ))}
-            </div>
-          </section>
+          </details>
         ))}
       </div>
 
@@ -161,8 +171,8 @@ export default class App extends React.Component {
   };
 
   dayparts = [
-    { key: 'Morning', hours: '08:00 to 11:30', title: 'First cups, fresh bakes', copy: 'The day starts with a dialled-in bar, warm pastry and the kind of coffee you can make a ritual of. Quick at the counter or slow at the table. Both work.', slot: 'part-morning', shot: 'Morning: sunlight across the counter, espresso being pulled, croissants on a tray' },
-    { key: 'Afternoon', hours: '11:30 - 18:00', title: 'Lunch, filters, a little more time', copy: 'Pasta, sourdough sandwiches and filter coffees take over the table. Come for lunch, stay for a meeting, or make a second cup part of the plan.', slot: 'part-afternoon', shot: 'Afternoon: a window table, plated pasta and a carafe in the west light' },
+    { key: 'Morning', hours: '08:00 to 11:30', title: 'First cups, fresh bakes', copy: 'Start with coffee, a bakery selection or a dish from the all-day menu.', slot: 'part-morning', shot: 'Morning: sunlight across the counter, espresso being pulled, croissants on a tray' },
+    { key: 'Afternoon', hours: '11:30 - 18:00', title: 'Lunch, filters, a little more time', copy: 'Choose pasta, sandwiches, salads, coffee and other all-day menu favourites.', slot: 'part-afternoon', shot: 'Afternoon: a window table, plated pasta and a carafe in the west light' },
     { key: 'Evening', hours: '18:00 to close', title: 'Coffee still on. Plates for the table.', copy: 'The room settles into the evening with plates to share, dessert to linger over and the espresso machine still on. Beanery does not change character after dark - it simply slows down.', slot: 'part-evening', shot: 'Evening: low warm light, shared plates and glassware on marble, a candle' },
   ];
 
@@ -316,124 +326,80 @@ export default class App extends React.Component {
 
   cups = [
     {
-      cup: 'Carbonic Naturals · Origami',
-      notes: 'Fig, red apple, lemon',
-      body: '15g, 240ml, 92°C, 3-pour Origami brew',
-      dish: 'Burnt Basque Cheesecake',
-      dishNote: 'The Basque’s caramelised top meets the bright, winey fruit notes of carbonic maceration, while the creamy centre brings out the fig sweetness.',
+      cup: 'Spanish Bon Bon',
+      notes: 'Espresso · sweet condensed milk',
+      body: 'Espresso layered with condensed milk',
+      dish: 'Truffle Mushroom Pizza',
+      dishNote: 'The Bon Bon’s gentle sweetness balances earthy mushrooms, melted mozzarella and fragrant truffle oil.',
       slot: 'pair-guji',
-      shot: 'Overhead: Basque cheesecake wedge on ceramic, Origami dripper carafe alongside, warm daylight',
+      shot: 'Wood-fired truffle mushroom pizza with mozzarella and arugula beside a small Spanish Bon Bon coffee',
     },
     {
-      cup: 'Lychee Cold Brew',
-      notes: 'Lychee, cane sugar, cocoa nib',
-      body: '18-hour steep, served over clear ice',
-      dish: 'Aglio Olio Pasta',
-      dishNote: 'Cold, lightly sweet lychee lifts the chilli and garlic, giving the palate a clean reset without flattening the pasta’s heat.',
+      cup: 'Whiskey Barrel Aged Cold Brew',
+      notes: 'Rich · warming · smooth',
+      body: 'Slow-brewed and served chilled over ice',
+      dish: "Meat Lover's Pizza",
+      dishNote: 'The cold brew’s deep, warming character cuts through the rich cheese and savoury chicken sausage and pepperoni.',
       slot: 'pair-lychee',
-      shot: 'Aglio olio being twirled, tall glass of cold brew sweating beside it, linen napkin',
+      shot: 'Meat lover’s wood-fired pizza beside a chilled glass of barrel-aged cold brew',
     },
     {
-      cup: 'House Espresso · Doppio',
-      notes: 'Dark chocolate, date, walnut',
-      body: '18g in, 38g out, 27 seconds',
-      dish: 'Cured Ham & Comté Baguette',
-      dishNote: 'Salty ham and nutty Comté sit naturally beside a syrupy, cocoa-led doppio: compact, savoury and built for a quick counter stop.',
+      cup: 'Vietnamese Coffee',
+      notes: 'Robusta · chicory · condensed milk',
+      body: 'Filter coffee served with condensed milk',
+      dish: 'Chicken Xacuti with Butter Garlic Rice',
+      dishNote: 'Bold chicory coffee and a touch of sweetness stand up to the aromatic spices in the Goan-style xacuti curry.',
       slot: 'pair-espresso',
-      shot: 'Close-up: espresso crema in a small ceramic cup, baguette half in soft focus',
+      shot: 'Goan chicken xacuti with butter garlic rice and a glass of Vietnamese coffee',
     },
     {
-      cup: 'Cortado',
-      notes: 'Toasted hazelnut, brown butter',
-      body: 'Doppio with 60ml silk-textured milk',
-      dish: 'Almond Croissant',
-      dishNote: 'Frangipane, toasted almond and browned butter echo the cortado’s soft, nutty sweetness. Rich, balanced and made for alternating bites and sips.',
+      cup: 'Citrus Cold Brew (Orange/Cranberry)',
+      notes: 'Honey sun-dried coffee · citrus · Sprite',
+      body: 'Served over ice',
+      dish: 'Burrata di Puglia with Cherry Tomatoes',
+      dishNote: 'Bright citrus and gentle fizz complement the roasted cherry tomatoes and refresh the palate against creamy burrata.',
       slot: 'pair-cortado',
-      shot: 'Almond croissant with flaked almonds, cortado glass, marble tabletop',
+      shot: 'Burrata with roasted cherry tomatoes and basil pesto beside a bright citrus cold brew',
     },
     {
-      cup: 'Ratnagiri Culture · Chemex',
-      notes: 'Rose, peach, hibiscus',
-      body: '18g, 280ml, gentle circular pour',
-      dish: 'Tomato & Burrata Sourdough',
-      dishNote: 'Delicate floral and stone fruit notes of Ratnagiri culture meet ripe heirloom tomato, while creamy burrata rounds the gentle acidity.',
+      cup: 'Dirty Hot Chocolate',
+      notes: '55% dark chocolate · espresso',
+      body: 'Callebaut 811 dark chocolate with espresso',
+      dish: 'Nutella Pancakes',
+      dishNote: 'The espresso’s bittersweet finish balances Nutella, strawberries and creamy frosting for a rich but rounded pairing.',
       slot: 'pair-kenya',
-      shot: 'Open-faced sourdough with burrata and tomato, Chemex carafe behind',
+      shot: 'Nutella pancakes with fresh strawberries beside a dark hot chocolate',
     },
   ];
 
   beans = [
     {
-      name: 'Carbonic Naturals',
-      badge: '100% Arabica · Indian Origin',
-      subhead: 'Premium Artisanal Coffee',
-      origin: 'Tamil Nadu',
-      farm: 'Carbonic Naturals · Tamil Nadu',
-      alt: 'Indian Origin',
-      acidity: 'High',
-      process: '(Carbonic Maceration) Naturals',
-      roast: 'Light',
-      varietal: '100% Arabica Artisanal',
-      form: 'Whole Beans & Ground Coffee',
-      notes: ['Fig', 'Red Apple', 'Lemon'],
-      brewMethods: ['Origami', 'Clever Dripper'],
-      profile: { Acidity: 90, Body: 45, Sweetness: 72, Clarity: 88, Bitterness: 16 },
-      slot: 'bean-eth',
-      shot: 'Carbonic naturals coffee beans from Tamil Nadu, warm studio light',
+      name: 'Carbonic Naturals', badge: '100% Arabica · Indian Origin', subhead: 'Premium Artisanal Coffee',
+      origin: 'Tamil Nadu', farm: 'Carbonic Naturals · Tamil Nadu', alt: 'Indian Origin', acidity: 'High',
+      process: '(Carbonic Maceration) Naturals', roast: 'Light', varietal: '100% Arabica Artisanal', form: 'Whole Beans & Ground Coffee',
+      notes: ['Fig', 'Red Apple', 'Lemon'], brewMethods: ['Origami', 'Clever Dripper'],
+      profile: { Acidity: 90, Body: 45, Sweetness: 72, Clarity: 88, Bitterness: 16 }, slot: 'bean-eth', shot: 'Carbonic naturals coffee beans from Tamil Nadu, warm studio light',
     },
     {
-      name: 'Pineapple Fermented',
-      badge: '100% Arabica · Indian Origin',
-      subhead: 'Premium Artisanal Coffee',
-      origin: 'Tamil Nadu',
-      farm: 'Pineapple Fermented · Tamil Nadu',
-      alt: 'Indian Origin',
-      acidity: 'High',
-      process: '(Pineapple Maceration) Naturals',
-      roast: 'Light',
-      varietal: '100% Arabica Artisanal',
-      form: 'Whole Beans & Ground Coffee',
-      notes: ['Berry', 'Milk Chocolate', 'Almonds'],
-      brewMethods: ['French Press', 'V60 Pour Over'],
-      profile: { Acidity: 88, Body: 55, Sweetness: 82, Clarity: 74, Bitterness: 20 },
-      slot: 'bean-col',
-      shot: 'Pineapple fermented coffee beans, golden hour studio, linen surface',
+      name: 'Pineapple Fermented', badge: '100% Arabica · Indian Origin', subhead: 'Premium Artisanal Coffee',
+      origin: 'Tamil Nadu', farm: 'Pineapple Fermented · Tamil Nadu', alt: 'Indian Origin', acidity: 'High',
+      process: '(Pineapple Maceration) Naturals', roast: 'Light', varietal: '100% Arabica Artisanal', form: 'Whole Beans & Ground Coffee',
+      notes: ['Berry', 'Milk Chocolate', 'Almonds'], brewMethods: ['French Press', 'V60 Pour Over'],
+      profile: { Acidity: 88, Body: 55, Sweetness: 82, Clarity: 74, Bitterness: 20 }, slot: 'bean-col', shot: 'Pineapple fermented coffee beans, golden hour studio, linen surface',
     },
     {
-      name: 'Ratnagiri Culture Process',
-      badge: '100% Arabica · Indian Origin',
-      subhead: 'Premium Artisanal Coffee',
-      origin: 'Maharashtra',
-      farm: 'Ratnagiri Estate · Maharashtra',
-      alt: 'Indian Origin',
-      acidity: 'Mild',
-      process: 'Culture Process',
-      roast: 'Light',
-      varietal: '100% Arabica Artisanal',
-      form: 'Whole Beans & Ground Coffee',
-      notes: ['Rose', 'Peach', 'Hibiscus'],
-      brewMethods: ['Chemex', 'Kalita Wave'],
-      profile: { Acidity: 52, Body: 50, Sweetness: 90, Clarity: 92, Bitterness: 12 },
-      slot: 'bean-ken',
-      shot: 'Ratnagiri culture coffee beans from Maharashtra, warm natural light',
+      name: 'Ratnagiri Culture Process', badge: '100% Arabica · Indian Origin', subhead: 'Premium Artisanal Coffee',
+      origin: 'Maharashtra', farm: 'Ratnagiri Estate · Maharashtra', alt: 'Indian Origin', acidity: 'Mild',
+      process: 'Culture Process', roast: 'Light', varietal: '100% Arabica Artisanal', form: 'Whole Beans & Ground Coffee',
+      notes: ['Rose', 'Peach', 'Hibiscus'], brewMethods: ['Chemex', 'Kalita Wave'],
+      profile: { Acidity: 52, Body: 50, Sweetness: 90, Clarity: 92, Bitterness: 12 }, slot: 'bean-ken', shot: 'Ratnagiri culture coffee beans from Maharashtra, warm natural light',
     },
     {
-      name: 'Attikan Estate Arabica',
-      badge: '100% Arabica · Indian Origin',
-      subhead: 'Premium Artisanal Coffee',
-      origin: 'Karnataka, Attikan Estate',
-      farm: 'Attikan Estate · Karnataka',
-      alt: 'Attikan Estate',
-      acidity: 'Medium',
-      process: 'Washed',
-      roast: 'Medium',
-      varietal: '100% Arabica Artisanal',
-      form: 'Whole Beans & Ground Coffee',
-      notes: ['Citrus', 'Dark Chocolate', 'Fig'],
-      brewMethods: ['Aeropress', 'Origami'],
-      profile: { Acidity: 65, Body: 72, Sweetness: 76, Clarity: 80, Bitterness: 36 },
-      slot: 'bean-ind',
-      shot: 'Attikan estate arabica beans from Karnataka, cupping setup',
+      name: 'Attikan Estate Arabica', badge: '100% Arabica · Indian Origin', subhead: 'Premium Artisanal Coffee',
+      origin: 'Karnataka, Attikan Estate', farm: 'Attikan Estate · Karnataka', alt: 'Attikan Estate', acidity: 'Medium',
+      process: 'Washed', roast: 'Medium', varietal: '100% Arabica Artisanal', form: 'Whole Beans & Ground Coffee',
+      notes: ['Citrus', 'Dark Chocolate', 'Fig'], brewMethods: ['Aeropress', 'Origami'],
+      profile: { Acidity: 65, Body: 72, Sweetness: 76, Clarity: 80, Bitterness: 36 }, slot: 'bean-ind', shot: 'Attikan estate arabica beans from Karnataka, cupping setup',
     },
   ];
 
@@ -449,12 +415,23 @@ export default class App extends React.Component {
   ];
 
   signature = [
-    { kicker: 'Coffee', name: 'Lychee Cold Brew', copy: 'Cold-steeped for 18 hours, finished with lychee and a touch of cane.', slot: 'sig-1', shot: 'Lychee cold brew, tall glass, clear ice, backlit garnish' },
-    { kicker: 'Pasta', name: 'Aglio Olio', copy: 'Spaghetti, garlic, chilli and olive oil: glossy, savoury and deliberately simple.', slot: 'sig-2', shot: 'Aglio olio plated restaurant-style, chilli oil, overhead' },
-    { kicker: 'Dessert', name: 'Burnt Basque Cheesecake', copy: 'Deeply caramelised on top, creamy through the centre, and never off the favourites list.', slot: 'sig-3', shot: 'Basque cheesecake wedge plated, burnt top, cracked surface, cake fork' },
-    { kicker: 'Bakery', name: 'Levain Sourdough', copy: 'Slow-fermented, baked fresh and served across the menu while it lasts.', slot: 'sig-4', shot: 'Levain loaf, scored crust, flour dust, board' },
-    { kicker: 'Sandwich', name: 'Comté & Cured Ham', copy: 'Cured ham and Comté on baguette with cultured butter and cornichons.', slot: 'sig-5', shot: 'Comté and ham baguette cut clean, plated with cornichons' },
-    { kicker: 'Seasonal', name: 'Saffron Cardamom Latte', copy: 'A seasonal cup with Kashmiri saffron, green cardamom and whole milk.', slot: 'sig-6', shot: 'Saffron latte, threads on foam, ceramic cup, warm tones' },
+    { kicker: 'Salads', name: 'Burrata di Puglia with Cherry Tomatoes', copy: 'Creamy burrata and roasted cherry tomatoes over pesto, parmesan and fresh basil oil.', slot: 'pair-kenya', shot: 'Burrata and roasted cherry tomatoes over pesto, parmesan and fresh basil oil' },
+    { kicker: 'Wood Fired Pizza', name: 'Truffle Mushroom Pizza', copy: 'Wild mushrooms, mozzarella, truffle oil and fresh arugula on Neapolitan-style dough.', slot: 'food-hero-2', shot: 'Wood-fired Neapolitan truffle mushroom pizza with arugula and mozzarella' },
+    { kicker: 'Entrée', name: 'Chicken Xacuti with Butter Garlic Rice', copy: 'Tender chicken in rich Goan-style xacuti curry with aromatic spices and buttery garlic rice.', slot: 'dish-1', shot: 'Goan chicken xacuti curry served with butter garlic rice' },
+    { kicker: 'Wood Fired Pizza', name: 'Burrata Arugula Tomato Pizza', copy: 'Creamy burrata, sun-dried tomatoes, arugula and fresh salad on Neapolitan-style dough.', slot: 'pair-kenya', shot: 'Neapolitan burrata pizza with sun-dried tomatoes and arugula' },
+    { kicker: 'Wood Fired Pizza', name: 'Chicken Mortadella Burrata Pizza', copy: 'Chicken mortadella, creamy burrata and basil pesto on a wood-fired pizza.', slot: 'food-hero-2', shot: 'Wood-fired chicken mortadella pizza topped with burrata and basil pesto' },
+    { kicker: 'Hot Chocolate', name: 'Dirty Hot Chocolate', copy: 'Callebaut 811 55% dark chocolate with a shot of espresso.', slot: 'sig-1', shot: 'Dark hot chocolate with espresso in a ceramic cup' },
+    { kicker: 'Cold Brews', name: 'Whiskey Barrel Aged Cold Brew', copy: 'Barrel-aged coffee with rich, warming notes and a smooth finish, served chilled over ice.', slot: 'pair-guji', shot: 'Chilled barrel-aged coffee cold brew with clear ice' },
+  ];
+
+  barDrinks = [
+    { name: 'Whiskey Barrel Aged Cold Brew', detail: 'Barrel-aged coffee · rich, warming notes · served chilled over ice' },
+    { name: 'Orange Zest Mocha', detail: 'Espresso, chocolate, fresh orange zest and milk · hot or iced' },
+    { name: 'Coconut Groove', detail: 'Cold filter coffee, condensed milk and coconut milk' },
+    { name: 'Dirty Hot Chocolate', detail: '55% Callebaut 811 dark chocolate with espresso' },
+    { name: 'Coconut Cloud Matcha', detail: 'Whisked matcha, fresh cream and whipped cream over coconut water' },
+    { name: 'Citrus Cold Brew (Orange/Cranberry)', detail: 'Honey sun-dried cold brew, citrus juice and Sprite' },
+    { name: 'Biscoff Shake', detail: 'Vanilla ice cream, milk and Biscoff spread' },
   ];
 
   testimonials = [];
@@ -502,7 +479,7 @@ export default class App extends React.Component {
       isHome: page === 'home', isStory: page === 'story', isCoffee: page === 'coffee',
       isFood: page === 'food', isExp: page === 'experiences', isJournal: page === 'journal',
       isVisit: page === 'visit',
-      signature: this.signature.slice(0, 4),
+      signature: this.signature,
       journal,
       journalPositions: content.imagePositions || {},
       testimonials: this.testimonials,
@@ -700,6 +677,34 @@ export default class App extends React.Component {
                   </div>
                 </div>
               </section>
+              <section aria-label="Beanery coffee note" style={st("width:100vw;margin-left:calc(50% - 50vw);padding:44px 0 0;background:#EED7BF")}>
+                <div style={st("width:100%;overflow:hidden")}>
+                  <TextLoop
+                    text="Good coffee, good company, all day long"
+                    shape="line"
+                    speed={48}
+                    direction="forward"
+                    separator=""
+                    curviness={0}
+                    tilt={0}
+                    fontSize={46}
+                    fontWeight={700}
+                    letterSpacing={1.1}
+                    wordSpacing={8}
+                    uppercase
+                    ribbon
+                    ribbonColor="#A35730"
+                    ribbonWidth={68}
+                    edgeFade={0}
+                    cross={false}
+                    draggable={false}
+                    scrollBoost={0}
+                    outline={false}
+                    color="#FBF8F4"
+                    pauseOnHover
+                  />
+                </div>
+              </section>
               <HospitalityHome openReserve={openReserve} goFood={goFood} />
               <section data-home-trim="" style={st("padding:140px 40px 120px;background:#EED7BF")}>
                 <div style={st("max-width:1560px;margin:0 auto")}>
@@ -839,10 +844,6 @@ export default class App extends React.Component {
                           <span style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#A35730")}>
                             Italy
                           </span>
-                          <span style={st("display:flex;align-items:center;gap:6px;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:#2E5D36;border:1px solid rgba(107,143,90,.6);padding:4px 8px")}>
-                            <span style={st("width:5px;height:5px;background:#6B8F5A;display:block")} />
-                            Veg
-                          </span>
                         </div>
                         <div style={st("font-size:11px;color:#96755C")}>Most ordered</div>
                       </div>
@@ -875,7 +876,7 @@ export default class App extends React.Component {
                     <div data-reveal="200">
                       <div style={st("overflow:hidden;background:#EFE3D8;aspect-ratio:3/4")}>
                         <div className="hv10" style={st("width:100%;height:100%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)")}>
-                          <ImageSlot id="dish-3" placeholder="Basque cheesecake: caramelised top, one wedge lifted, crumb visible, cake fork and linen" />
+                          <ImageSlot id="dessert-1" placeholder="Basque cheesecake: caramelised top, one wedge lifted, crumb visible, cake fork and linen" />
                         </div>
                       </div>
                       <div style={st("display:flex;justify-content:space-between;align-items:baseline;margin-top:20px;gap:16px")}>
@@ -1536,23 +1537,17 @@ export default class App extends React.Component {
                           <span style={st("text-align:right")}>{bean.process}</span>
                         </div>
                         <div style={st("display:flex;justify-content:space-between;padding:12px 0;border-top:1px solid rgba(94,43,23,.14);font-size:13.5px")}>
-                          <span style={st("font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#96755C")}>
-                            Roast Level
-                          </span>
+                          <span style={st("font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#96755C")}>Roast Level</span>
                           <span>{bean.roast}</span>
                         </div>
                         <div style={st("display:flex;justify-content:space-between;padding:12px 0;border-top:1px solid rgba(94,43,23,.14);font-size:13.5px")}>
-                          <span style={st("font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#96755C")}>
-                            Acidity
-                          </span>
-                          <span style={st("font-weight:500")}>{bean.acidity}</span>
+                          <span style={st("font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#96755C")}>Acidity</span>
+                          <span>{bean.acidity}</span>
                         </div>
                         {bean.brewMethods && (
-                          <div style={st("display:flex;justify-content:space-between;padding:12px 0;border-top:1px solid rgba(94,43,23,.14);border-bottom:1px solid rgba(94,43,23,.14);font-size:13.5px;gap:16px")}>
-                            <span style={st("font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#96755C;white-space:nowrap")}>
-                              Brew Methods
-                            </span>
-                            <span style={st("text-align:right;font-weight:500;color:#5E2B17")}>{bean.brewMethods.join(' · ')}</span>
+                          <div style={st("display:flex;justify-content:space-between;padding:12px 0;border-top:1px solid rgba(94,43,23,.14);border-bottom:1px solid rgba(94,43,23,.14);font-size:13.5px")}>
+                            <span style={st("font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#96755C")}>Brew Methods</span>
+                            <span>{bean.brewMethods.join(' · ')}</span>
                           </div>
                         )}
                       </div>
@@ -1631,11 +1626,7 @@ export default class App extends React.Component {
                           <h3 className="coffee-brew-section__name" style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:28px")}>
                             {b.name}
                           </h3>
-                          {showPrices && (
-                            <>
-                              <span style={st("font-size:14px;color:#B78765")}>{b.price}</span>
-                            </>
-                          )}
+
                         </div>
                         <div style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(251,248,244,.55);margin-top:8px")}>
                           {b.kicker}
@@ -1676,118 +1667,23 @@ export default class App extends React.Component {
                     </div>
                   </div>
                   <div className="coffee-bar-feature__list" data-reveal="80">
-                    <div style={st("display:flex;justify-content:space-between;align-items:baseline;padding-bottom:14px;border-bottom:1px solid rgba(94,43,23,.18)")}>
-                      <span style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#96755C")}>
-                        Drink
-                      </span>
-                      {showPrices && (
-                        <>
-                          <span style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#96755C")}>
-                            Price
-                          </span>
-                        </>
-                      )}
+                    <div style={st("display:flex;align-items:baseline;padding-bottom:14px;border-bottom:1px solid rgba(94,43,23,.18)")}>
+                      <span style={st("font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#96755C")}>Drinks</span>
                     </div>
-                    <div className="coffee-bar-feature__item" style={st("display:flex;justify-content:space-between;gap:24px;padding:22px 0;border-bottom:1px solid rgba(94,43,23,.1)")}>
-                      <div>
-                        <div style={st("font-size:16px")}>Lychee Cold Brew</div>
-                        <div style={st("font-size:12.5px;color:#96755C;margin-top:5px")}>
-                          18-hour steep, lychee, cane · house signature
+                    {this.barDrinks.map((drink) => (
+                      <div className="coffee-bar-feature__item" key={drink.name} style={st("display:flex;justify-content:space-between;gap:24px;padding:22px 0;border-bottom:1px solid rgba(94,43,23,.1)")}>
+                        <div>
+                          <div style={st("font-size:16px")}>{drink.name}</div>
+                          <div style={st("font-size:12.5px;color:#96755C;margin-top:5px")}>{drink.detail}</div>
                         </div>
                       </div>
-                      {showPrices && (
-                        <>
-                          <div style={st("font-size:14px;color:#6E4A34;white-space:nowrap")}>₹280</div>
-                        </>
-                      )}
-                    </div>
-                    <div className="coffee-bar-feature__item" style={st("display:flex;justify-content:space-between;gap:24px;padding:22px 0;border-bottom:1px solid rgba(94,43,23,.1)")}>
-                      <div>
-                        <div style={st("font-size:16px")}>Saffron Cardamom Latte</div>
-                        <div style={st("font-size:12.5px;color:#96755C;margin-top:5px")}>
-                          Kashmiri saffron, green cardamom · winter only
-                        </div>
-                      </div>
-                      {showPrices && (
-                        <>
-                          <div style={st("font-size:14px;color:#6E4A34;white-space:nowrap")}>₹300</div>
-                        </>
-                      )}
-                    </div>
-                    <div className="coffee-bar-feature__item" style={st("display:flex;justify-content:space-between;gap:24px;padding:22px 0;border-bottom:1px solid rgba(94,43,23,.1)")}>
-                      <div>
-                        <div style={st("font-size:16px")}>Darjeeling First Flush</div>
-                        <div style={st("font-size:12.5px;color:#96755C;margin-top:5px")}>
-                          Single estate, brewed in glass, 3 minutes
-                        </div>
-                      </div>
-                      {showPrices && (
-                        <>
-                          <div style={st("font-size:14px;color:#6E4A34;white-space:nowrap")}>₹260</div>
-                        </>
-                      )}
-                    </div>
-                    <div className="coffee-bar-feature__item" style={st("display:flex;justify-content:space-between;gap:24px;padding:22px 0;border-bottom:1px solid rgba(94,43,23,.1)")}>
-                      <div>
-                        <div style={st("display:flex;align-items:center;gap:10px")}>
-                          <span style={st("font-size:16px")}>Ceremonial Matcha</span>
-                          <span style={st("width:7px;height:7px;background:#6B8F5A;display:block")} />
-                        </div>
-                        <div style={st("font-size:12.5px;color:#96755C;margin-top:5px")}>
-                          First-harvest Uji, whisked, milk on the side
-                        </div>
-                      </div>
-                      {showPrices && (
-                        <>
-                          <div style={st("font-size:14px;color:#6E4A34;white-space:nowrap")}>₹320</div>
-                        </>
-                      )}
-                    </div>
-                    <div className="coffee-bar-feature__item" style={st("display:flex;justify-content:space-between;gap:24px;padding:22px 0;border-bottom:1px solid rgba(94,43,23,.1)")}>
-                      <div>
-                        <div style={st("font-size:16px")}>Drinking Chocolate</div>
-                        <div style={st("font-size:12.5px;color:#96755C;margin-top:5px")}>
-                          70% single-origin, whole milk, no sugar added
-                        </div>
-                      </div>
-                      {showPrices && (
-                        <>
-                          <div style={st("font-size:14px;color:#6E4A34;white-space:nowrap")}>₹290</div>
-                        </>
-                      )}
-                    </div>
-                    <div className="coffee-bar-feature__item" style={st("display:flex;justify-content:space-between;gap:24px;padding:22px 0;border-bottom:1px solid rgba(94,43,23,.1)")}>
-                      <div>
-                        <div style={st("font-size:16px")}>Espresso Tonic</div>
-                        <div style={st("font-size:12.5px;color:#96755C;margin-top:5px")}>
-                          Doppio, tonic, orange peel · summer list
-                        </div>
-                      </div>
-                      {showPrices && (
-                        <>
-                          <div style={st("font-size:14px;color:#6E4A34;white-space:nowrap")}>₹270</div>
-                        </>
-                      )}
-                    </div>
-                    <div className="coffee-bar-feature__item" style={st("display:flex;justify-content:space-between;gap:24px;padding:22px 0")}>
-                      <div>
-                        <div style={st("font-size:16px")}>Filter Flight</div>
-                        <div style={st("font-size:12.5px;color:#96755C;margin-top:5px")}>
-                          Three origins, 60 ml each, tasting card included
-                        </div>
-                      </div>
-                      {showPrices && (
-                        <>
-                          <div style={st("font-size:14px;color:#6E4A34;white-space:nowrap")}>₹480</div>
-                        </>
-                      )}
-                    </div>
+                    ))}
                     <div style={st("margin-top:44px;padding:34px 32px;background:#EFE3D8")}>
                       <div style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#A35730")}>
                         New to the bar?
                       </div>
                       <p style={st("font-family:'Cormorant Garamond',Georgia,serif;font-size:22px;line-height:1.55;font-style:italic;margin-top:14px")}>
-                        Start with the filter flight. Three coffees side by side make it easy to taste what changes from one origin to the next, and to find the style you like.
+                        Try a Coconut Groove for a creamy chilled coffee, or a Dirty Hot Chocolate for a richer cup with a bittersweet espresso finish.
                       </p>
                       <div style={st("font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#96755C;margin-top:18px")}>
                         Ask the bar team
@@ -1917,7 +1813,7 @@ export default class App extends React.Component {
                           Vegetarian
                         </div>
                         <div style={st("font-family:'Playfair Display',Georgia,serif;font-size:38px;margin-top:16px")}>
-                          14
+                          14/22
                         </div>
                         <p style={st("font-size:13px;line-height:1.7;color:rgba(251,248,244,.72);margin-top:10px")}>
                           of 22 dishes on the board are vegetarian, with clear menu markers.
@@ -1927,7 +1823,7 @@ export default class App extends React.Component {
                         <div style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#A7B88F")}>
                           Sourced within
                         </div>
-                        <div style={st("font-family:'Playfair Display',Georgia,serif;font-size:38px;margin-top:16px")}>
+                        <div style={st("font-family:'Playfair Display',Georgia,serif;font-size:28px;margin-top:16px")}>
                           40 km
                         </div>
                         <p style={st("font-size:13px;line-height:1.7;color:rgba(251,248,244,.72);margin-top:10px")}>
@@ -2072,7 +1968,7 @@ export default class App extends React.Component {
                         )}
                       </div>
                       <div style={st("display:flex;justify-content:space-between;gap:20px;padding:16px 0;border-top:1px solid rgba(94,43,23,.14);border-bottom:1px solid rgba(94,43,23,.14);font-size:14.5px")}>
-                        <span>Focaccia, rosemary & sea salt</span>
+                        <span>Focaccia, rosemary &amp; sea salt</span>
                         {showPrices && (
                           <>
                             <span style={st("color:#6E4A34")}>₹220</span>
@@ -2098,7 +1994,7 @@ export default class App extends React.Component {
                         <span>Burnt Basque cheesecake</span>
                         {showPrices && (
                           <>
-                            <span style={st("color:#6E4A34")}>₹320</span>
+                            <span style={st("color:#6E4A34")}>₹260</span>
                           </>
                         )}
                       </div>
@@ -2258,7 +2154,7 @@ export default class App extends React.Component {
                       Reserve a table
                     </h2>
                     <p style={st("font-size:14.5px;line-height:1.8;color:#6E4A34;margin-top:16px;max-width:40ch")}>
-                      Reserve an everyday table, or talk with us about the Private Lounge, Rooftop Table or a team gathering. We’ll help you find the right setting.
+                      Reserve an everyday table, or talk with us about the Open Lounge, a ventilated space, Rooftop Table or a team gathering. We’ll help you find the right setting.
                     </p>
                     <button className="hv2" onClick={openReserve} style={st("margin-top:28px;width:100%;text-align:left;font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:500;color:#FBF8F4;background:#5E2B17;border:none;padding:19px 26px;cursor:pointer;transition:background .35s ease")}>
                       Make a reservation

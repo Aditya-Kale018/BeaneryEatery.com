@@ -82,7 +82,7 @@ app.use(cookieParser());
 
 /* ------------------------------------------------------------ event enquiries -- */
 
-const EVENT_TYPES = new Set(['Private Lounge', 'Rooftop Table', 'Business Gathering', 'Celebration', 'Other']);
+const EVENT_TYPES = new Set(['Open Lounge', 'Rooftop Table', 'Business Gathering', 'Celebration', 'Other']);
 const fieldText = (value, limit) => typeof value === 'string' ? value.trim().slice(0, limit) : '';
 
 app.post('/api/events', eventLimiter, async (req, res) => {

@@ -1,0 +1,34 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;700;800&display=swap');
+
+.text-loop {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  height: clamp(64px, 7vw, 84px);
+}
+
+.text-loop--draggable {
+  cursor: grab;
+  touch-action: pan-y;
+}
+
+.text-loop-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.text-loop-text {
+  user-select: none;
+}
+
+.text-loop-measure {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+
+.text-loop-text,
+.text-loop-measure {
+  font-family: "DM Sans", Arial, sans-serif;
+}

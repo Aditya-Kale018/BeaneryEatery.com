@@ -13,8 +13,8 @@ const modules = [
   },
   {
     label: 'Private dining',
-    name: 'The Private Lounge',
-    copy: 'A more intimate setting for celebrations, close-knit dinners and conversations worth lingering over.',
+    name: 'The Open Lounge',
+    copy: 'Ventilated space for celebrations, close-knit dinners and conversations worth lingering over.',
     image: 'exp-3',
     alt: 'A private dining setting at Beanery',
     action: 'Enquire about the lounge',

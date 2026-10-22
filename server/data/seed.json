@@ -72,90 +72,58 @@
       "legendNote": "Please tell the team about allergies before ordering.",
       "groups": [
         {
-          "id": "manual-brewing",
-          "number": "01",
-          "title": "Manual Brewing",
-          "note": "Coffee, brewed with intention. Choose your bean (290/-) and your method.",
-          "items": [
-            {
-              "name": "Ratnagiri Culture",
-              "description": "Profile — Rose, Peach, Hibiscus. Available V60, Clever Dripper, Chemex, Origami, French Press, Kalita Wave, Aeropress",
-              "price": "290/-",
-              "diet": "V"
-            },
-            {
-              "name": "Attikan Arabica",
-              "description": "Profile — Citrus, Dark Chocolate, Fig. Available Hot/Iced",
-              "price": "290/-",
-              "diet": "V"
-            },
-            {
-              "name": "Pineapple Fermented",
-              "description": "Profile — Berry, Milk Chocolate, Almonds. Available Hot/Iced",
-              "price": "290/-",
-              "diet": "V"
-            },
-            {
-              "name": "Carbonic Natural",
-              "description": "Profile — Fig, Red Apple, Lemon. Available Hot/Iced",
-              "price": "290/-",
-              "diet": "V"
-            }
-          ]
-        },
-        {
           "id": "espresso-classics",
           "number": "02",
           "title": "Espresso Classics",
-          "note": "Our house espresso, pulled fresh.",
+          "note": "Espresso favourites, served hot or iced where noted.",
           "items": [
             {
               "name": "Espresso Double Shot",
-              "description": "Rich, bold and concentrated",
-              "price": "150/-",
-              "diet": "V"
+              "description": "Rich, bold and concentrated.",
+              "diet": "",
+              "price": ""
             },
             {
-              "name": "Americano",
-              "description": "Espresso, lengthened with water. Hot/Iced",
-              "price": "180/- / 210/-",
-              "diet": "V"
+              "name": "Americano (Hot/Iced)",
+              "description": "Espresso, lengthened with water.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Cortado",
-              "description": "Equal parts espresso and warm milk",
-              "price": "180/-",
-              "diet": "V"
+              "description": "Equal parts espresso and warm milk.",
+              "diet": "",
+              "price": ""
             },
             {
-              "name": "Latte",
-              "description": "Smooth espresso with silky milk. Hot/Iced",
-              "price": "210/- / 230/-",
-              "diet": "V"
+              "name": "Latte (Hot/Iced)",
+              "description": "Smooth espresso with silky milk.",
+              "diet": "",
+              "price": ""
             },
             {
-              "name": "Cappuccino",
-              "description": "Espresso, velvety milk and airy foam. Hot/Iced",
-              "price": "210/- / 220/-",
-              "diet": "V"
+              "name": "Cappuccino (Hot/Iced)",
+              "description": "Espresso, velvety milk and airy foam.",
+              "diet": "",
+              "price": ""
             },
             {
-              "name": "Cafe Mocha",
-              "description": "Espresso, chocolate and creamy milk. Hot/Iced",
-              "price": "235/-",
-              "diet": "V"
+              "name": "Cafe Mocha (Hot/Iced)",
+              "description": "Espresso, chocolate and creamy milk.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Spanish Bon Bon",
-              "description": "Espresso layered with sweet condensed milk",
-              "price": "180/-",
-              "diet": "V"
+              "description": "Espresso layered with sweet condensed milk.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Affogato",
-              "description": "Rich Arabic espresso with Vanilla ice cream",
-              "price": "250/-",
-              "diet": "V"
+              "description": "Arabic espresso with vanilla ice cream.",
+              "diet": "",
+              "price": ""
             }
           ]
         },
@@ -163,25 +131,25 @@
           "id": "iced-coffee",
           "number": "03",
           "title": "Iced Coffee",
-          "note": "Chilled and refreshing.",
+          "note": "Chilled coffee favourites.",
           "items": [
             {
               "name": "Vietnamese Coffee",
-              "description": "Robusta and chicory filter coffee, sweetened with condensed milk, served over ice",
-              "price": "250/-",
-              "diet": "V"
+              "description": "Robusta and chicory filter coffee, sweetened with condensed milk and served over ice.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Shakerato",
-              "description": "Robusta and chicory filter coffee, sweetened with condensed milk and cinnamon, shaken over ice",
-              "price": "265/-",
-              "diet": "V"
+              "description": "Robusta and chicory filter coffee with condensed milk and cinnamon, shaken over ice.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Biscoff Iced Latte",
-              "description": "Espresso, creamy milk and Biscoff spread, served over ice",
-              "price": "265/-",
-              "diet": "V"
+              "description": "Espresso, creamy milk and Biscoff spread, served over ice.",
+              "diet": "",
+              "price": ""
             }
           ]
         },
@@ -193,65 +161,77 @@
           "items": [
             {
               "name": "Classic Ice Cream Blend",
-              "description": "Vanilla ice cream, milk and espresso, blended until smooth and creamy",
-              "price": "250/-",
-              "diet": "V"
+              "description": "Vanilla ice cream, milk and espresso.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Brownie Crumble Blend",
-              "description": "Espresso, milk and vanilla ice cream, blended with brownie crumble",
-              "price": "270/-",
-              "diet": "V"
+              "description": "Espresso, milk, vanilla ice cream and brownie crumble.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Biscoff Blend",
-              "description": "Espresso, milk and vanilla ice cream with Biscoff spread and cookie crumble",
-              "price": "280/-",
-              "diet": "V"
+              "description": "Espresso, milk, vanilla ice cream, Biscoff spread and cookie crumble.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Nutella Mocha Blend",
-              "description": "Espresso, milk and vanilla ice cream blended with Nutella and mocha",
-              "price": "280/-",
-              "diet": "V"
+              "description": "Espresso, milk, vanilla ice cream, Nutella and mocha.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Milk Alternatives",
+              "description": "Oat milk or almond milk.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Flavour Syrups",
+              "description": "Hazelnut, Irish, caramel or vanilla.",
+              "diet": "",
+              "price": ""
             }
           ]
         },
         {
-          "id": "cold-brew",
+          "id": "crafted-cold-brews",
           "number": "05",
-          "title": "Cold Brews",
-          "note": "Slow-brewed for hours, crafted to highlight the coffee's natural character.",
+          "title": "Beanery Crafted Cold Brews",
+          "note": "Slow-brewed for hours and served chilled over ice.",
           "items": [
             {
               "name": "Honey Sun Dried Cold Brew",
-              "description": "Smooth, naturally sweet cold brew with a clean, refreshing finish",
-              "price": "240/-",
-              "diet": "V"
+              "description": "Smooth, naturally sweet cold brew with a clean, refreshing finish.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Whiskey Barrel Aged Cold Brew",
-              "description": "Barrel-aged coffee cold brew with rich, warming notes and a smooth finish",
-              "price": "270/-",
-              "diet": "V"
+              "description": "Barrel-aged coffee with rich, warming notes and a smooth finish.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Cold Brew Tonic",
-              "description": "Honey sun-dried cold brew topped with crisp tonic for a bright, refreshing finish",
-              "price": "280/-",
-              "diet": "V"
+              "description": "Honey sun-dried cold brew topped with crisp tonic.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Honey Cinnamon Cold Brew",
-              "description": "Honey sun-dried cold brew with cinnamon-infused honey, shaken over ice",
-              "price": "240/-",
-              "diet": "V"
+              "description": "Honey sun-dried cold brew with cinnamon-infused honey.",
+              "diet": "",
+              "price": ""
             },
             {
-              "name": "Citrus Cold Brew",
-              "description": "Honey sun-dried cold brew, citrus juice and Sprite, served over ice. Orange/Cranberry",
-              "price": "300/-",
-              "diet": "V"
+              "name": "Citrus Cold Brew (Orange/Cranberry)",
+              "description": "Honey sun-dried cold brew, citrus juice and Sprite, served over ice.",
+              "diet": "",
+              "price": ""
             }
           ]
         },
@@ -262,34 +242,34 @@
           "note": "Crafted specials from behind the bar.",
           "items": [
             {
-              "name": "Orange Zest Mocha",
-              "description": "Espresso, chocolate, fresh orange zest and milk, finished with a bright citrus aroma. Hot/Iced",
-              "price": "250/- / 260/-",
-              "diet": "V"
+              "name": "Orange Zest Mocha (Hot/Iced)",
+              "description": "Espresso, chocolate, fresh orange zest and milk, finished with a bright citrus aroma.",
+              "diet": "",
+              "price": ""
             },
             {
-              "name": "Spanish Latte",
-              "description": "Espresso with condensed milk and steam milk, finished with a delicate sprinkle of cinnamon. Hot/Iced",
-              "price": "245/- / 260/-",
-              "diet": "V"
+              "name": "Spanish Latte (Hot/Iced)",
+              "description": "Espresso with condensed milk and steamed milk, finished with a delicate sprinkle of cinnamon.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Coconut Groove",
-              "description": "Cold filter coffee with condensed milk and coconut milk, served over ice",
-              "price": "280/-",
-              "diet": "V"
+              "description": "Cold filter coffee with condensed milk and coconut milk, served over ice.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Arabic Date Iced Latte",
-              "description": "Espresso infused with dates, combined with milk and served over ice for a naturally sweet finish",
-              "price": "280/-",
-              "diet": "V"
+              "description": "Espresso infused with dates and combined with milk.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Banoffee Iced Latte",
-              "description": "Espresso, milk, banana and caramel, served over ice for a smooth, dessert-inspired finish",
-              "price": "290/-",
-              "diet": "V"
+              "description": "Espresso, milk, banana and caramel.",
+              "diet": "",
+              "price": ""
             }
           ]
         },
@@ -297,43 +277,43 @@
           "id": "milkshakes",
           "number": "07",
           "title": "Milkshakes",
-          "note": "Blended smooth and creamy.",
+          "note": "Vanilla ice cream and milk, blended smooth.",
           "items": [
             {
               "name": "Vanilla Shake",
-              "description": "Vanilla ice cream and milk, blended until smooth and creamy",
-              "price": "250/-",
-              "diet": "V"
+              "description": "Vanilla ice cream and milk.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Nutella Shake",
-              "description": "Vanilla ice cream, milk and Nutella, blended into a rich, indulgent shake",
-              "price": "280/-",
-              "diet": "V"
+              "description": "Vanilla ice cream, milk and Nutella.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Brownie Shake",
-              "description": "Vanilla ice cream, milk and brownie, blended for a rich chocolate finish",
-              "price": "280/-",
-              "diet": "V"
+              "description": "Vanilla ice cream, milk and brownie.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Biscoff Shake",
-              "description": "Vanilla ice cream, milk and Biscoff spread, blended with a smooth caramelised finish",
-              "price": "280/-",
-              "diet": "V"
+              "description": "Vanilla ice cream, milk and Biscoff spread.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Strawberry Shake",
-              "description": "Vanilla ice cream, milk and strawberry crush, blended smooth and creamy",
-              "price": "280/-",
-              "diet": "V"
+              "description": "Vanilla ice cream, milk and strawberry crush.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Mango Shake",
-              "description": "Vanilla ice cream, milk and mango crush, blended into a rich, fruity shake",
-              "price": "280/-",
-              "diet": "V"
+              "description": "Vanilla ice cream, milk and mango crush.",
+              "diet": "",
+              "price": ""
             }
           ]
         },
@@ -341,19 +321,25 @@
           "id": "hot-chocolate",
           "number": "08",
           "title": "Hot Chocolate",
-          "note": "Made with Callebaut 811.",
+          "note": "Rich chocolate cups and toppings.",
           "items": [
             {
               "name": "55% Dark Hot Chocolate",
-              "description": "55% dark chocolate crafted with Callebaut 811, creating a rich, velvety and indulgent cup",
-              "price": "260/-",
-              "diet": "V"
+              "description": "55% dark chocolate crafted with Callebaut 811.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Dirty Hot Chocolate",
-              "description": "55% dark chocolate with a shot of espresso for a bold, bittersweet finish",
-              "price": "280/-",
-              "diet": "V"
+              "description": "55% dark chocolate with a shot of espresso.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Toppings and Finishes",
+              "description": "Marshmallow cloud, roasted nut crunch or chocolate shavings.",
+              "diet": "",
+              "price": ""
             }
           ]
         },
@@ -361,647 +347,947 @@
           "id": "tea-infusions",
           "number": "09",
           "title": "Tea & Infusions",
-          "note": "Loose-leaf brewed to order.",
+          "note": "Brewed to bring out each tea’s character.",
           "items": [
             {
               "name": "Jasmine Tea",
-              "description": "Delicately floral with a fragrant, aromatic finish",
-              "price": "150/-",
-              "diet": "V"
+              "description": "Delicately floral with a fragrant, aromatic finish.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Green Tea",
-              "description": "Light and refreshing with a clean, subtly vegetal character",
-              "price": "150/-",
-              "diet": "V"
+              "description": "Light and refreshing with a clean, subtly vegetal character.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Hibiscus Tea",
-              "description": "Bright and tangy with a naturally vibrant, fruity character",
-              "price": "180/-",
-              "diet": "V"
+              "description": "Bright and tangy with a naturally vibrant, fruity character.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Chamomile Tea",
-              "description": "Soft and delicate with gentle floral notes and a soothing finish",
-              "price": "150/-",
-              "diet": "V"
+              "description": "Soft, delicate floral notes with a soothing finish.",
+              "diet": "",
+              "price": ""
             }
           ]
         },
         {
-          "id": "matcha-ube",
+          "id": "matcha",
           "number": "10",
-          "title": "Matcha & Ube",
-          "note": "Hot and iced ceremonial specials.",
+          "title": "Matcha",
+          "note": "Matcha, served hot or iced where noted.",
           "items": [
             {
               "name": "Iced Matcha",
-              "description": "Smooth matcha with creamy milk, served over ice",
-              "price": "270/-",
-              "diet": "V"
+              "description": "Smooth matcha with creamy milk, served over ice. Flavour or milk alternative available.",
+              "diet": "",
+              "price": ""
             },
             {
-              "name": "Fruited Matcha",
-              "description": "Vibrant matcha with creamy milk and your choice of mango or strawberry, served over ice",
-              "price": "290/-",
-              "diet": "V"
+              "name": "Fruited Matcha (Strawberry/Mango)",
+              "description": "Vibrant matcha with creamy milk and your choice of mango or strawberry, served over ice.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Coconut Cloud Matcha",
-              "description": "Whisked matcha with fresh cream and whipped cream, served over chilled coconut water and ice",
-              "price": "300/-",
-              "diet": "V"
-            },
-            {
-              "name": "Vanilla Ube Latte",
-              "description": "Creamy ube, vanilla and milk, served chilled over ice",
-              "price": "270/-",
-              "diet": "V"
-            },
-            {
-              "name": "Mango Ube",
-              "description": "Smooth ube and vibrant mango with creamy milk, served over ice",
-              "price": "270/-",
-              "diet": "V"
-            },
-            {
-              "name": "Coconut Ube Cloud",
-              "description": "Creamy ube with coconut water and a light whipped cream finish, served chilled over ice",
-              "price": "270/-",
-              "diet": "V"
+              "description": "Whisked matcha with fresh cream and whipped cream over chilled coconut water and ice.",
+              "diet": "",
+              "price": ""
             }
           ]
         },
         {
-          "id": "soups-salads",
+          "id": "ube",
           "number": "11",
-          "title": "Soups & Salads",
-          "note": "Lighter plates, made to order.",
+          "title": "Ube",
+          "note": "Creamy, chilled ube drinks.",
           "items": [
             {
-              "name": "Carrot Bisque",
-              "description": "Silky carrot and ginger soup, crispy sweet potato",
-              "price": "",
-              "diet": "V"
+              "name": "Vanilla Ube Latte (Iced)",
+              "description": "Creamy ube, vanilla and milk, served chilled over ice.",
+              "diet": "",
+              "price": ""
             },
             {
-              "name": "Burrata di Puglia",
-              "description": "Burrata, heirloom tomatoes, basil, extra virgin olive oil",
-              "price": "",
-              "diet": "V"
+              "name": "Mango Ube (Iced)",
+              "description": "Smooth ube and vibrant mango with creamy milk, served over ice.",
+              "diet": "",
+              "price": ""
             },
             {
-              "name": "Beetroot & Orange Salad",
-              "description": "Kale, wild rice, candied walnut, mascarpone, citrus",
-              "price": "",
-              "diet": "V"
-            },
-            {
-              "name": "Chicken Caesar Salad",
-              "description": "Roasted chicken, romaine, croutons, tomato, parmesan",
-              "price": "",
-              "diet": "NV"
+              "name": "Coconut Ube Cloud (Iced)",
+              "description": "Creamy ube with coconut water and a light whipped cream finish, served chilled over ice.",
+              "diet": "",
+              "price": ""
             }
           ]
         },
         {
-          "id": "small-plates",
+          "id": "refreshments",
           "number": "12",
-          "title": "Sandwiches & Small Plates",
-          "note": "For the table or a quick lunch.",
+          "title": "The Refreshments",
+          "note": "Bright, refreshing drinks served chilled.",
           "items": [
             {
-              "name": "Roasted Mushroom Sandwich",
-              "description": "Sour cream, cheddar, mushroom and confit onion",
-              "price": "",
-              "diet": "V"
+              "name": "Hibiscus Lemonade",
+              "description": "Vibrant hibiscus with zesty lemon.",
+              "diet": "",
+              "price": ""
             },
             {
-              "name": "Three Cheese Sandwich",
-              "description": "Focaccia, onion marmalade and three cheeses",
-              "price": "",
-              "diet": "V"
+              "name": "Fresh Lime Soda",
+              "description": "Fresh lime, soda and a touch of sweetness.",
+              "diet": "",
+              "price": ""
             },
             {
-              "name": "Corn Ribs",
-              "description": "Charred sweet corn with herb tzatziki",
-              "price": "",
-              "diet": "V"
+              "name": "Peach Iced Tea",
+              "description": "Refreshing iced tea with delicate peach notes.",
+              "diet": "",
+              "price": ""
             },
             {
-              "name": "French Chicken Confit",
-              "description": "Slow-cooked chicken, mash and chicken jus",
-              "price": "",
-              "diet": "NV"
+              "name": "Lemon Iced Tea",
+              "description": "Classic iced tea with bright lemon.",
+              "diet": "",
+              "price": ""
+            }
+          ]
+        },
+        {
+          "id": "smoothies",
+          "number": "13",
+          "title": "Smoothies",
+          "note": "Creamy fruit and chocolate blends.",
+          "items": [
+            {
+              "name": "Berry Smoothie",
+              "description": "Mixed berries, milk, banana and yogurt, finished with berry toppings.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Chocolate Banana Smoothie",
+              "description": "Chocolate and banana smoothie with chocolate and banana toppings.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Avocado Smoothie",
+              "description": "Creamy avocado smoothie with a naturally rich finish.",
+              "diet": "",
+              "price": ""
+            }
+          ]
+        },
+        {
+          "id": "starters",
+          "number": "14",
+          "title": "Starters",
+          "note": "Small plates for the table.",
+          "items": [
+            {
+              "name": "Classic Fries with Garlic Sauce",
+              "description": "Crispy golden French fries with a creamy garlic dip.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Smoked Hot Garlic Lotus Stem",
+              "description": "Crispy fried lotus stems in smoky, spicy hot garlic sauce.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Corn Ribs with Tzatziki Sauce",
+              "description": "Golden-fried corn ribs with peri-peri seasoning and cool tzatziki.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Couscous with Hummus",
+              "description": "Light couscous with assorted vegetables and creamy hummus.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Butter Garlic Mushrooms",
+              "description": "Mushrooms sautéed in garlic butter and finished with herbs.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Crispy Chicken Bites",
+              "description": "Crisp golden chicken with creamy, tangy peri-peri cocktail sauce.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Chicken Croquettes (with Muhammara Sauce)",
+              "description": "Golden chicken croquettes with a tender filling, served with smoky muhammara sauce.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Garlic Butter Prawns",
+              "description": "Prawns sautéed in garlic butter and finished with herbs.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Eggplant Cream Cheese Roll",
+              "description": "Eggplant rolls filled with cream cheese over tangy pomodoro sauce.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Roasted Chicken Harissa Wings",
+              "description": "Roasted chicken wings coated in a bold harissa glaze.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Soya Pudding",
+              "description": "Tender soya pieces tossed in a spicy, tangy hot red sauce.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Veg Garden Croquettes",
+              "description": "Garden vegetable croquettes with smoky, mildly spicy muhammara.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Roast Tomato Ricotta",
+              "description": "Blanched tomatoes with olive oil and herbs, served with whipped ricotta.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Grilled Pomfret with Capers Sauce",
+              "description": "Grilled pomfret, spicy baby potatoes and beans with white wine, butter, garlic and lemon caper sauce.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Chilli Garlic Prawns",
+              "description": "Prawns in chilli, lemon and ginger-garlic sauce with mint and coriander.",
+              "diet": "",
+              "price": ""
+            }
+          ]
+        },
+        {
+          "id": "soups",
+          "number": "15",
+          "title": "Soups",
+          "note": "Comforting bowls, made to order.",
+          "items": [
+            {
+              "name": "Carrot Bisque with Sweet Potato Shard",
+              "description": "Creamy carrot soup topped with a crisp sweet potato shard and fresh cream.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Roasted Bell Pepper & Tomato Soup",
+              "description": "Roasted tomato and bell pepper soup with olive oil and crisp toast.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Truffle Mushroom Soup",
+              "description": "Creamy mushroom soup with truffle oil and crisp toast.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Chicken Broth Soup",
+              "description": "Light chicken broth with garlic, herbs and crisp toast.",
+              "diet": "",
+              "price": ""
+            }
+          ]
+        },
+        {
+          "id": "salads",
+          "number": "16",
+          "title": "Salads",
+          "note": "Fresh greens, grains and seasonal produce.",
+          "items": [
+            {
+              "name": "Avocado & Coriander Walnut Salad",
+              "description": "Avocado and crunchy walnuts tossed in fresh cilantro dressing.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Avocado Quinoa Salad",
+              "description": "Quinoa, bell peppers, avocado guacamole, pomegranate, dill and pumpkin seeds.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Burrata di Puglia with Cherry Tomatoes",
+              "description": "Burrata and roasted cherry tomatoes over pesto, parmesan and fresh basil oil.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Grilled Chicken Salad with Couscous",
+              "description": "Grilled chicken, greens, vegetables and couscous with lemon-herb chilli-garlic dressing.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Apple Cranberry Walnut Salad",
+              "description": "Crisp iceberg, apple, lemon-honey vinaigrette, cranberries and pomegranate.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Roasted Beetroot and Citrus Salad",
+              "description": "Roasted beetroot, orange and feta with greens, nuts, seeds and citrus dressing.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Market Green Salad",
+              "description": "Lettuce, cherry tomatoes, lemon vinaigrette, olive oil, red chilli and couscous.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Cucumber Dill Salad",
+              "description": "Cucumber and cherry tomatoes in burnt garlic-dill dressing with mixed seeds.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Choice of Protein",
+              "description": "Chicken, egg or paneer.",
+              "diet": "",
+              "price": ""
+            }
+          ]
+        },
+        {
+          "id": "sandwiches",
+          "number": "17",
+          "title": "Sandwiches",
+          "note": "Toasted focaccia with sweet potato wafers; bread options vary.",
+          "items": [
+            {
+              "name": "Truffle Mushroom Sandwich",
+              "description": "Roasted mushrooms, garlic, herbs, cheese and truffle oil with mayo dip.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Chicken Mortadella Sandwich",
+              "description": "Chicken mortadella, salami, lettuce, parmesan and garlic mayo.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Buffalo Mozzarella Tomato Basil",
+              "description": "Buffalo mozzarella, tomato, basil and pesto with mayo dip.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Chicken Spicy Mortadella Sandwich",
+              "description": "Spicy chicken mortadella with chilli, garlic, egg and garlic butter.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Smoked Cottage Cheese Sandwich",
+              "description": "Harissa cottage cheese with onion cocktail sauce.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Pulled Chicken Sandwich",
+              "description": "Shredded chicken with pineapple salsa and creamy cocktail sauce.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Roasted Vegetable Hummus Sandwich",
+              "description": "Hummus with roasted zucchini, bell peppers and broccoli.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Pesto Chicken Sandwich",
+              "description": "Pesto-marinated chicken, roasted tomatoes and basil pesto.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Paneer Pesto Sandwich",
+              "description": "Pesto-marinated cottage cheese, roasted tomatoes and basil pesto.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Smoky Chicken Sandwich",
+              "description": "Indian-spiced chicken with smoky mayo and melted mozzarella.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Ratatouille Sandwich",
+              "description": "Roasted vegetables and eggplant in tomato-basil sauce.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Chicken Garlic Mayo Sandwich",
+              "description": "Minced chicken with garlic mayo, jalapeño, butter and garlic.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Protein Power Sandwich",
+              "description": "Grilled chicken, chicken salami, lettuce and garlic mayo, topped with egg.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Bread Options",
+              "description": "Focaccia or sourdough.",
+              "diet": "",
+              "price": ""
             }
           ]
         },
         {
           "id": "big-plates",
-          "number": "13",
-          "title": "Big Plates & Mains",
-          "note": "Substantial plates from the kitchen.",
+          "number": "18",
+          "title": "Big Plates",
+          "note": "A generous plate from the kitchen.",
           "items": [
             {
               "name": "Cottage Cheese Stick",
-              "description": "Grilled cottage cheese in coriander marinade with zucchini spaghetti, grilled cherry tomatoes and parmesan",
-              "price": "510/-",
-              "diet": "V"
+              "description": "Grilled coriander-marinated cottage cheese with zucchini spaghetti, cherry tomatoes and parmesan.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Harissa Grilled Chicken",
-              "description": "Juicy grilled chicken in spicy harissa with creamy mashed potatoes and assorted vegetables. Also available in Cottage Cheese",
-              "price": "510/-",
-              "diet": "NV"
+              "description": "Harissa chicken with mashed potatoes and vegetables. Also available in cottage cheese.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Grilled Chicken Plate",
-              "description": "Herb-grilled chicken with herb rice, assorted vegetables and creamy coconut sauce",
-              "price": "525/-",
-              "diet": "NV"
+              "description": "Herb-grilled chicken with herb rice, vegetables and creamy coconut sauce.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Chicken Stroganoff",
-              "description": "Tender chicken and mushrooms in creamy stroganoff sauce with herbs and fragrant herb rice",
-              "price": "530/-",
-              "diet": "NV"
+              "description": "Chicken and mushrooms in creamy stroganoff sauce with herbs and herb rice.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Fish and Chips",
-              "description": "Crispy battered fish served with golden fries and tartar sauce",
-              "price": "500/-",
-              "diet": "NV"
+              "description": "Crispy battered fish with golden fries and tartar sauce.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Grilled Bhetki with Capers Sauce",
-              "description": "Grilled bhetki with spicy baby potatoes, beans and white wine, butter, garlic and lemon caper sauce",
-              "price": "500/-",
-              "diet": "NV"
-            },
+              "description": "Grilled bhetki, spicy baby potatoes and beans with white wine, butter, garlic and lemon caper sauce.",
+              "diet": "",
+              "price": ""
+            }
+          ]
+        },
+        {
+          "id": "entree-main-course",
+          "number": "19",
+          "title": "Entrée & Main Course",
+          "note": "Thoughtful, flavour-led plates.",
+          "items": [
             {
               "name": "Grilled Paneer al Pesto",
-              "description": "Herb-infused rice with grilled paneer, assorted vegetables and a fragrant basil pesto sauce",
-              "price": "510/-",
-              "diet": "V"
+              "description": "Herb rice, grilled paneer, assorted vegetables and basil pesto sauce.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Chicken Xacuti with Butter Garlic Rice",
-              "description": "Tender chicken in rich Goan-style xacuti curry with aromatic spices and buttery garlic rice",
-              "price": "550/-",
-              "diet": "NV"
+              "description": "Chicken in Goan-style xacuti curry with aromatic spices and buttery garlic rice.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Confit Chicken with Mashed Potato",
-              "description": "Slow-cooked confit chicken served with creamy mashed potatoes, finished with a rich jus sauce",
-              "price": "350/-",
-              "diet": "NV"
+              "description": "Slow-cooked confit chicken with creamy mashed potatoes and rich jus.",
+              "diet": "",
+              "price": ""
             }
           ]
         },
         {
           "id": "burgers",
-          "number": "14",
+          "number": "20",
           "title": "Burgers",
-          "note": "Served with sweet potato wafers.",
+          "note": "Served with sweet potato wafers or fries as noted.",
           "items": [
             {
               "name": "Grilled Veggie Burger",
-              "description": "Crispy vegetable patty with lettuce, tomatoes, cheese and cocktail sauce in a soft toasted bun",
-              "price": "330/-",
-              "diet": "V"
+              "description": "Vegetable patty, lettuce, tomato, cheese and cocktail sauce in a toasted bun.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Smoky Paneer Burger",
-              "description": "Harissa-marinated paneer with lettuce and melted cheese in a toasted bun, served with sweet potato wafers",
-              "price": "380/-",
-              "diet": "V"
+              "description": "Harissa paneer, lettuce and melted cheese in a toasted bun.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Grilled Chicken Burger",
-              "description": "Spicy marinated grilled chicken with lettuce and creamy garlic mayo in a toasted bun, with sweet potato wafers",
-              "price": "389/-",
-              "diet": "NV"
+              "description": "Spicy grilled chicken, lettuce and garlic mayo in a toasted bun.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Crunchy Chicken Burger",
-              "description": "Buttermilk-marinated chicken with lettuce, tomato, cheese and cocktail sauce, with sweet potato wafers",
-              "price": "380/-",
-              "diet": "NV"
+              "description": "Buttermilk-marinated chicken, lettuce, tomato, cheese and cocktail sauce.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Mega-Bun Burger",
-              "description": "Minced chicken patty with chicken salami, lettuce, tomato, garlic mayo and sunny-side-up egg, served with sweet potato fries",
-              "price": "430/-",
-              "diet": "NV"
+              "description": "Minced chicken patty, chicken salami, lettuce, tomato, garlic mayo and egg.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Prawns Popper Burger",
-              "description": "Crispy tempura prawns with homemade tartare sauce, capers, parsley, mayo and mustard, served with sweet potato fries",
-              "price": "470/-",
-              "diet": "NV"
+              "description": "Tempura prawns with tartare sauce, capers, parsley, mayo and mustard.",
+              "diet": "",
+              "price": ""
             }
           ]
         },
         {
           "id": "open-toast",
-          "number": "15",
+          "number": "21",
           "title": "Open Toast",
-          "note": "On sourdough or focaccia.",
+          "note": "Toasted bread topped with savoury favourites.",
           "items": [
             {
               "name": "Baked Beans on Toast",
-              "description": "Homemade baked beans with bell peppers, jaggery, chilli, onion and garlic on toasted bread, topped with jalapeno",
-              "price": "310/-",
-              "diet": "V"
-            },
-            {
-              "name": "Avocado Toast",
-              "description": "Creamy smashed avocado on toasted sourdough, served with choice of eggs as an optional add-on",
-              "price": "389/-",
-              "diet": "V"
-            },
-            {
-              "name": "Burrata Caprese Toast",
-              "description": "Creamy burrata with cherry tomatoes and basil pesto on toasted sourdough bread",
-              "price": "430/-",
-              "diet": "V"
-            },
-            {
-              "name": "Roasted Mushroom Hummus Toast",
-              "description": "Buttered sourdough topped with creamy hummus, roasted mushrooms and a drizzle of olive oil",
-              "price": "355/-",
-              "diet": "V"
+              "description": "Homemade baked beans with vegetables, jaggery, chilli and garlic, topped with jalapeño.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Pulled Chicken Toast",
-              "description": "Shredded chicken with pineapple salsa and creamy cocktail sauce on toasted sourdough",
-              "price": "380/-",
-              "diet": "NV"
+              "description": "Shredded chicken with pineapple salsa and cocktail sauce on sourdough.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Avocado Toast",
+              "description": "Smashed avocado on sourdough; choice of eggs available as an add-on.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Protein Power Toast",
-              "description": "Roasted chicken, chicken salami, lettuce and garlic sauce on sourdough, topped with two sunny-side-up eggs",
-              "price": "450/-",
-              "diet": "NV"
+              "description": "Roasted chicken, chicken salami, lettuce and garlic sauce with sunny-side-up eggs.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Burrata Caprese Toast",
+              "description": "Burrata, cherry tomatoes and basil pesto on sourdough.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Roasted Mushroom Hummus Toast",
+              "description": "Buttered sourdough with hummus, roasted mushrooms and olive oil.",
+              "diet": "",
+              "price": ""
             }
           ]
         },
         {
           "id": "omelette-eggs",
-          "number": "16",
+          "number": "22",
           "title": "Omelette & Eggs",
-          "note": "Served with baked beans and toasted sourdough.",
+          "note": "Served with baked beans and toasted sourdough where noted.",
           "items": [
             {
               "name": "Classic Omelette",
-              "description": "Fluffy three-egg omelette with salt and pepper",
-              "price": "245/-",
-              "diet": "V"
-            },
-            {
-              "name": "Masala Omelette",
-              "description": "Three-egg Indian masala omelette with onion, chilli and tomato",
-              "price": "250/-",
-              "diet": "V"
-            },
-            {
-              "name": "Chicken Sausage Omelette",
-              "description": "Three-egg omelette with chicken sausages",
-              "price": "255/-",
-              "diet": "NV"
-            },
-            {
-              "name": "Spanish Omelette",
-              "description": "Spanish-style omelette with fried potatoes and onions",
-              "price": "260/-",
-              "diet": "V"
-            },
-            {
-              "name": "Frittata Omelette",
-              "description": "Italian-style frittata with zucchini, bell peppers, olives and assorted vegetables",
-              "price": "270/-",
-              "diet": "V"
-            },
-            {
-              "name": "Truffle Scrambled Egg",
-              "description": "Creamy scrambled eggs with truffle oil",
-              "price": "270/-",
-              "diet": "V"
-            },
-            {
-              "name": "Turkish Eggs",
-              "description": "Two poached eggs over creamy garlic Greek yogurt with chilli oil and dill",
-              "price": "330/-",
-              "diet": "V"
-            },
-            {
-              "name": "Egg Shakshuka",
-              "description": "Two poached eggs in tomato-bell pepper sauce with onion, garlic, spinach, chicken ham and hollandaise",
-              "price": "325/-",
-              "diet": "NV"
-            },
-            {
-              "name": "Eggs Benedict",
-              "description": "Two poached eggs with garlic, spinach and chicken ham, finished with hollandaise on toasted sourdough",
-              "price": "350/-",
-              "diet": "NV"
-            },
-            {
-              "name": "Sunny Side Up",
-              "description": "Three sunny-side-up eggs with salt and pepper",
-              "price": "225/-",
-              "diet": "V"
+              "description": "Three-egg omelette with salt and pepper.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Breakfast Platter (3 Eggs)",
-              "description": "Three eggs with baked beans, crispy baby potatoes, chicken sausage, sauteed vegetables and toasted sourdough",
-              "price": "485/-",
-              "diet": "NV"
+              "description": "Three eggs with baked beans, potatoes, chicken sausage, vegetables and sourdough.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Masala Omelette",
+              "description": "Three-egg Indian masala omelette with onion, chilli and tomato.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Chicken Sausage Omelette",
+              "description": "Three-egg omelette with chicken sausages.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Spanish Omelette",
+              "description": "Spanish-style omelette with fried potatoes and onions.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Frittata Omelette",
+              "description": "Italian-style frittata with zucchini, bell peppers, olives and vegetables.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Truffle Scrambled Egg",
+              "description": "Creamy scrambled eggs with truffle oil.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Turkish Eggs",
+              "description": "Poached eggs over garlic Greek yogurt with chilli oil and dill.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Egg Shakshuka",
+              "description": "Poached eggs in tomato-bell pepper sauce with spinach, chicken ham and hollandaise.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Eggs Benedict",
+              "description": "Poached eggs with garlic, spinach and chicken ham, finished with hollandaise on sourdough.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Sunny Side Up",
+              "description": "Three sunny-side-up eggs with salt and pepper.",
+              "diet": "",
+              "price": ""
             }
           ]
         },
         {
           "id": "pasta",
-          "number": "17",
+          "number": "23",
           "title": "Pasta",
-          "note": "Add-ons: Chicken 80/- Broccoli 60/- Assorted Vegetables 70/-",
+          "note": "Pasta add-ons available: chicken, broccoli or assorted vegetables.",
           "items": [
             {
               "name": "Spaghetti Aglio e Olio",
-              "description": "Spaghetti tossed with garlic, chilli and olive oil, finished with olives and cherry tomatoes",
-              "price": "445/-",
-              "diet": "V"
+              "description": "Spaghetti with garlic, chilli and olive oil, finished with olives and cherry tomatoes.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Fettuccini Pasta Parmesan",
-              "description": "Fettuccine tossed in a creamy parmesan and garlic sauce, finished with oregano",
-              "price": "460/-",
-              "diet": "V"
+              "description": "Fettuccine in creamy parmesan and garlic sauce, finished with oregano.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Farfalle Pasta Marinara / Pink Sauce",
-              "description": "Farfalle pasta tossed in a rich tomato marinara or creamy pink sauce, finished with herbs",
-              "price": "480/-",
-              "diet": "V"
+              "description": "Farfalle in tomato marinara or creamy pink sauce, finished with herbs.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Gnocchi Pasta Pesto",
-              "description": "Soft gnocchi tossed in basil pesto, finished with olives and juicy cherry tomatoes",
-              "price": "425/-",
-              "diet": "V"
+              "description": "Gnocchi tossed in basil pesto with olives and cherry tomatoes.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Gnocchi with Pumpkin Sauce",
-              "description": "Soft gnocchi in creamy pumpkin sauce with onion, garlic, celery and chilli, topped with parmesan and sweet potato crisps",
-              "price": "450/-",
-              "diet": "V"
+              "description": "Gnocchi in creamy pumpkin sauce with onion, garlic, celery and chilli, topped with parmesan and sweet potato crisps.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Chicken Lasagna Pasta",
-              "description": "Layers of lasagna sheets with rich chicken ragu, creamy bechamel and melted cheese, baked to perfection",
-              "price": "489/-",
-              "diet": "NV"
+              "description": "Lasagna sheets layered with chicken ragu, béchamel and melted cheese.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Pasta Add-ons",
+              "description": "Chicken · Broccoli · Assorted vegetables",
+              "diet": "",
+              "price": ""
             }
           ]
         },
         {
-          "id": "pizza",
-          "number": "18",
+          "id": "wood-fired-pizza",
+          "number": "24",
           "title": "Wood Fired Oven Pizza",
-          "note": "Authentic Wood-Fired · Hand Tossed · Fresh Dough.",
+          "note": "Authentic wood-fired · hand tossed · fresh dough.",
           "items": [
             {
               "name": "Margherita Pizza",
-              "description": "Neapolitan-style pizza with rich tomato sauce, creamy mozzarella and fresh basil",
-              "price": "715/-",
-              "diet": "V"
-            },
-            {
-              "name": "Smoky Paprika Cottage Cheese Pizza",
-              "description": "Neapolitan-style pizza with smoky paprika-marinated cottage cheese, bell peppers, onions and melted cheese",
-              "price": "750/-",
-              "diet": "V"
-            },
-            {
-              "name": "Neapolitan Veg Pizza",
-              "description": "Neapolitan-style pizza with marinara, mozzarella, seasonal vegetables and cocktail sauce",
-              "price": "730/-",
-              "diet": "V"
-            },
-            {
-              "name": "Burrata Arugula Tomato Pizza",
-              "description": "Neapolitan-style pizza with creamy burrata, sun-dried tomatoes, arugula and fresh salad",
-              "price": "910/-",
-              "diet": "V"
-            },
-            {
-              "name": "Truffle Mushroom Pizza",
-              "description": "Neapolitan-style pizza with wild mushrooms, mozzarella, truffle oil and fresh arugula",
-              "price": "810/-",
-              "diet": "V"
-            },
-            {
-              "name": "New York Style Pizza",
-              "description": "Foldable crust topped with rich tomato sauce and melted mozzarella and diced cheese",
-              "price": "869/-",
-              "diet": "V"
+              "description": "Neapolitan pizza with tomato sauce, mozzarella and fresh basil.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Meat Lover's Pizza",
-              "description": "Neapolitan-style pizza with rich marinara sauce, chicken sausage, pepperoni and extra cheese",
-              "price": "830/-",
-              "diet": "NV"
+              "description": "Neapolitan pizza with marinara, chicken sausage, pepperoni and extra cheese.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Smoky Paprika Cottage Cheese Pizza",
+              "description": "Paprika-marinated cottage cheese, bell peppers, onions and melted cheese.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Buffalo Chicken Pizza",
-              "description": "Neapolitan-style pizza with spicy buffalo chicken, onions and mozzarella, finished with ranch",
-              "price": "855/-",
-              "diet": "NV"
+              "description": "Spicy buffalo chicken, onions and mozzarella, finished with ranch.",
+              "diet": "",
+              "price": ""
             },
             {
-              "name": "Pesto Chicken Pizza",
-              "description": "Neapolitan-style pizza with grilled chicken, basil pesto, mozzarella and roasted tomatoes",
-              "price": "850/-",
-              "diet": "NV"
+              "name": "Truffle Mushroom Pizza",
+              "description": "Wild mushrooms, mozzarella, truffle oil and fresh arugula.",
+              "diet": "",
+              "price": ""
             },
             {
-              "name": "Chicken Pepperoni Pizza",
-              "description": "Neapolitan-style pizza with marinara, onions, spicy chicken pepperoni and melted mozzarella",
-              "price": "779/-",
-              "diet": "NV"
+              "name": "New York Style Pizza",
+              "description": "Foldable crust with tomato sauce, melted mozzarella and diced cheese.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Neapolitan Veg Pizza",
+              "description": "Marinara, mozzarella, seasonal vegetables and cocktail sauce.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Burrata Arugula Tomato Pizza",
+              "description": "Creamy burrata, sun-dried tomatoes, arugula and fresh salad.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Chicken Mortadella Burrata Pizza",
-              "description": "Neapolitan-style pizza with chicken mortadella, creamy burrata and basil pesto",
-              "price": "935/-",
-              "diet": "NV"
+              "description": "Chicken mortadella, creamy burrata and basil pesto.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Pesto Chicken Pizza",
+              "description": "Grilled chicken, basil pesto, mozzarella and roasted tomatoes.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Chicken Pepperoni Pizza",
+              "description": "Marinara, onions, spicy chicken pepperoni and melted mozzarella.",
+              "diet": "",
+              "price": ""
             }
           ]
         },
         {
           "id": "desserts",
-          "number": "19",
-          "title": "Desserts & Bakery",
-          "note": "Sweet things from the bakery counter.",
+          "number": "25",
+          "title": "Desserts",
+          "note": "Tarts, macarons, brownies and cakes from the bakery.",
           "items": [
             {
-              "name": "Tarts",
-              "description": "Strawberry / Berry / Chocolate / Caramel Chocolate. 99/- each",
-              "price": "99/-",
-              "diet": "V"
+              "name": "Tart — Strawberry",
+              "description": "",
+              "diet": "",
+              "price": ""
             },
             {
-              "name": "Macarons",
-              "description": "Strawberry / Coffee / Pista / Biscoff. 75/- each, Pack of 6 — 360/-",
-              "price": "75/-",
-              "diet": "V"
+              "name": "Tart — Berry",
+              "description": "",
+              "diet": "",
+              "price": ""
             },
             {
-              "name": "Brownie — Chocolate",
-              "description": "Classic chocolate brownie",
-              "price": "200/-",
-              "diet": "V"
+              "name": "Tart — Chocolate",
+              "description": "",
+              "diet": "",
+              "price": ""
             },
             {
-              "name": "Brownie — Biscoff",
-              "description": "Biscoff brownie",
-              "price": "280/-",
-              "diet": "V"
+              "name": "Tart — Caramel Chocolate",
+              "description": "",
+              "diet": "",
+              "price": ""
             },
             {
-              "name": "Brownie — Hazelnut",
-              "description": "Hazelnut brownie",
-              "price": "280/-",
-              "diet": "V"
+              "name": "Macaron — Strawberry",
+              "description": "",
+              "diet": "",
+              "price": ""
             },
             {
-              "name": "Nutella Pancakes",
-              "description": "Pancakes topped with Nutella, fresh strawberries and creamy Nutella cream-cheese frosting",
-              "price": "350/-",
-              "diet": "V"
+              "name": "Macaron — Coffee",
+              "description": "",
+              "diet": "",
+              "price": ""
             },
             {
-              "name": "Mix Fruits Pancakes",
-              "description": "Pancakes topped with fresh apple, banana and blueberries, finished with a drizzle of maple syrup",
-              "price": "350/-",
-              "diet": "V"
+              "name": "Macaron — Pista",
+              "description": "",
+              "diet": "",
+              "price": ""
             },
             {
-              "name": "French Toast",
-              "description": "French toast topped with fresh strawberries, blueberries and pear, served with maple syrup and a scoop of ice cream",
-              "price": "320/-",
-              "diet": "V"
+              "name": "Macaron — Biscoff",
+              "description": "",
+              "diet": "",
+              "price": ""
             },
             {
-              "name": "Tiramisu",
-              "description": "Classic Italian tiramisu",
-              "price": "330/-",
-              "diet": "V"
+              "name": "Macarons — Pack of 6",
+              "description": "",
+              "diet": "",
+              "price": ""
             },
             {
-              "name": "Sourdough Loaf",
-              "description": "House-baked sourdough loaf",
-              "price": "280/-",
-              "diet": "V"
+              "name": "Chocolate Brownie",
+              "description": "Chocolate brownie.",
+              "diet": "",
+              "price": ""
             },
             {
-              "name": "Pick Your Four",
-              "description": "Choose any 4 pieces from our selection of tarts, macarons and brownies. Mix and match. Maximum 1 brownie per selection",
-              "price": "450/-",
-              "diet": "V"
+              "name": "Biscoff Brownie",
+              "description": "Biscoff brownie.",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Hazelnut Brownie",
+              "description": "Hazelnut brownie.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Blueberry Lemon Cake",
-              "description": "A slice of house blueberry lemon cake",
-              "price": "350/-",
-              "diet": "V"
+              "description": "Blueberry and lemon cake.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Pina Colada Cake",
-              "description": "A slice of house Pina Colada cake",
-              "price": "350/-",
-              "diet": "V"
+              "description": "Pina colada cake.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "London Cake",
-              "description": "A slice of London cake",
-              "price": "350/-",
-              "diet": "V"
+              "description": "London cake.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Dark Chocolate Cake",
-              "description": "A slice of rich dark chocolate cake",
-              "price": "350/-",
-              "diet": "V"
+              "description": "Dark chocolate cake.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Chocolate Orange Cake",
-              "description": "A slice of chocolate orange cake",
-              "price": "350/-",
-              "diet": "V"
+              "description": "Chocolate orange cake.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Nutty Crunch Cake",
-              "description": "A slice of nutty crunch cake",
-              "price": "375/-",
-              "diet": "V"
+              "description": "Nutty crunch cake.",
+              "diet": "",
+              "price": ""
             },
             {
               "name": "Cherry Chocolate Cake",
-              "description": "A slice of cherry chocolate cake",
-              "price": "350/-",
-              "diet": "V"
+              "description": "Cherry chocolate cake.",
+              "diet": "",
+              "price": ""
             }
           ]
         },
         {
-          "id": "bake-house",
-          "number": "20",
-          "title": "Bake House",
-          "note": "Freshly baked bread, tartlets and savoury pastry bites.",
+          "id": "pancakes-french-toast",
+          "number": "26",
+          "title": "Pancakes & French Toast",
+          "note": "Freshly made sweet plates.",
           "items": [
             {
-              "name": "Garlic Bread",
-              "description": "Freshly baked bread with aromatic garlic butter, golden crisp crust and a soft, flavourful centre.",
-              "diet": "V",
-              "price": "280/-"
+              "name": "Nutella Pancakes",
+              "description": "Pancakes with Nutella, fresh strawberries and Nutella cream-cheese frosting.",
+              "diet": "",
+              "price": ""
             },
             {
-              "name": "Three Cheese Garlic Bread",
-              "description": "Freshly baked bread topped with three cheeses (mozzarella, processed cheese and cheddar) and aromatic garlic butter.",
-              "diet": "V",
-              "price": "310/-"
+              "name": "Mix Fruits Pancakes",
+              "description": "Pancakes with apple, banana and blueberries, finished with maple syrup.",
+              "diet": "",
+              "price": ""
             },
             {
-              "name": "Spinach Corn Tartlets",
-              "description": "Golden, flaky tartlets filled with creamy spinach and sweet corn.",
-              "diet": "V",
-              "price": "329/-"
+              "name": "French Toast",
+              "description": "French toast with strawberries, blueberries, pear, maple syrup and ice cream.",
+              "diet": "",
+              "price": ""
             },
             {
-              "name": "Pulled Chicken Tartlets",
-              "description": "Tartlet shells filled with pulled chicken, pineapple salsa and cocktail sauce.",
-              "diet": "NV",
-              "price": "345/-"
+              "name": "Tiramisu",
+              "description": "Tiramisu.",
+              "diet": "",
+              "price": ""
             },
             {
-              "name": "Creamy Chicken Tartlets",
-              "description": "Delicate, buttery tartlet shells filled with a rich and creamy chicken mixture.",
-              "diet": "NV",
-              "price": "359/-"
+              "name": "Sourdough Loaf",
+              "description": "Sourdough loaf.",
+              "diet": "",
+              "price": ""
             },
             {
-              "name": "Chicken Pastry Bites",
-              "description": "Golden, flaky pastry bites filled with a delicious, savoury chicken filling.",
-              "diet": "NV",
-              "price": "370/-"
-            },
-            {
-              "name": "Creamy Mushroom Tartlet",
-              "description": "Golden, flaky pastry bites filled with a delicious, creamy roasted mushroom filling.",
-              "diet": "V",
-              "price": "359/-"
+              "name": "Pick Your Four",
+              "description": "Choose any four tarts, macarons and brownies; maximum one brownie.",
+              "diet": "",
+              "price": ""
             }
           ]
         }

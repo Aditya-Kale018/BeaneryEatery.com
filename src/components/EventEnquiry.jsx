@@ -2,7 +2,7 @@ import React from 'react';
 import './EventEnquiry.css';
 import { API_BASE } from '../lib/apiBase';
 
-const EVENT_TYPES = ['Private Lounge', 'Rooftop Table', 'Business Gathering', 'Celebration', 'Other'];
+const EVENT_TYPES = ['Open Lounge', 'Rooftop Table', 'Business Gathering', 'Celebration', 'Other'];
 
 export default function EventEnquiry() {
   const [busy, setBusy] = React.useState(false);
@@ -45,7 +45,7 @@ export default function EventEnquiry() {
         <p className="hospitality-label">A thoughtful place to gather</p>
         <h2>Tell us what<br /><em>you’re planning.</em></h2>
         <p>Share a few details and our team will help shape the right Beanery setting for your occasion.</p>
-        <div className="event-enquiry__promise">Private Lounge <span>·</span> Rooftop Table <span>·</span> Business Gatherings</div>
+        <div className="event-enquiry__promise">Open Lounge <span>·</span> Rooftop Table <span>·</span> Business Gatherings</div>
       </div>
       <form className="event-form" onSubmit={submit}>
         <div className="event-form__row">

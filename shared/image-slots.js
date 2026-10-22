@@ -63,7 +63,7 @@ export const SLOT_GROUPS = [
         slots: [
           ['sig-1', 'Signature 1', 'Lychee cold brew, tall glass, clear ice, backlit garnish'],
           ['sig-2', 'Signature 2', 'Aglio olio plated restaurant-style, chilli oil, overhead'],
-          ['sig-3', 'Signature 3', 'Basque cheesecake wedge plated, burnt top, cracked surface'],
+          ['sig-3', 'Signature 3', 'Basque cheesecake, caramelised top, one wedge lifted'],
           ['sig-4', 'Signature 4', 'Levain loaf, scored crust, flour dust, board'],
           ['sig-5', 'Signature 5', 'Comté and ham baguette cut clean, plated with cornichons'],
           ['sig-6', 'Signature 6', 'Saffron latte, threads on foam, ceramic cup, warm tones'],
@@ -214,7 +214,7 @@ export const SLOT_GROUPS = [
           ['food-hero-2', 'Old food hero (right)', 'Tweezers finishing a plate, sauce spooned, motion at the pass'],
           ['dishstory-1', 'Old dish story', 'Aglio olio plated restaurant-style, nested strands, chilli oil'],
           ['bakery-1', 'Old bakery', 'Levain loaves cooling on racks, scored crust, flour and morning light'],
-          ['dessert-1', 'Old dessert', 'Basque cheesecake, tarts and tiramisu plated for the case'],
+          ['dessert-1', 'Desserts', 'Basque cheesecake, tarts and tiramisu plated for the case'],
           ['story-preview', 'Old story preview', 'The founders behind the bar mid-service, unposed, warm daylight'],
         ],
       },
