@@ -97,10 +97,7 @@ export const DEFAULT_CONTENT = {
     intro:
       'A full guide to our coffee, kitchen and bakery. Availability and pricing can change with the day; the live ordering menu is always current.',
     legendNote: 'Please tell the team about allergies before ordering.',
-    groups: MENU_GROUPS.filter((group) => group.id !== 'manual-brewing').map((group) => ({
-      ...group,
-      items: group.items.map((entry) => ({ ...entry, diet: '', price: '' })),
-    })),
+    groups: MENU_GROUPS,
   },
 
   // Journal posts are authored from the content admin. Keep the shipped list

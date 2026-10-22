@@ -15,7 +15,7 @@ const MENU_PRICES = {
   'Arabic Date Iced Latte': '₹280/-', 'Banoffee Iced Latte': '₹290/-', 'Vanilla Shake': '₹250/-',
   'Nutella Shake': '₹280/-', 'Brownie Shake': '₹280/-', 'Biscoff Shake': '₹280/-',
   'Strawberry Shake': '₹280/-', 'Mango Shake': '₹280/-', '55% Dark Hot Chocolate': '₹260/-',
-  'Dirty Hot Chocolate': '₹280/-', 'Toppings and Finishes': '₹45/-', 'Jasmine Tea': '₹150/-',
+  'Dirty Hot Chocolate': '₹260/-', 'Toppings and Finishes': '₹45/-', 'Jasmine Tea': '₹150/-',
   'Green Tea': '₹150/-', 'Hibiscus Tea': '₹180/-', 'Chamomile Tea': '₹150/-', 'Iced Matcha': '₹270/-',
   'Fruited Matcha (Strawberry/Mango)': '₹290/-', 'Coconut Cloud Matcha': '₹300/-',
   'Vanilla Ube Latte (Iced)': '₹270/-', 'Mango Ube (Iced)': '₹270/-', 'Coconut Ube Cloud (Iced)': '₹270/-',

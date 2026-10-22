@@ -425,13 +425,13 @@ export default class App extends React.Component {
   ];
 
   barDrinks = [
-    { name: 'Whiskey Barrel Aged Cold Brew', detail: 'Barrel-aged coffee · rich, warming notes · served chilled over ice' },
-    { name: 'Orange Zest Mocha', detail: 'Espresso, chocolate, fresh orange zest and milk · hot or iced' },
-    { name: 'Coconut Groove', detail: 'Cold filter coffee, condensed milk and coconut milk' },
-    { name: 'Dirty Hot Chocolate', detail: '55% Callebaut 811 dark chocolate with espresso' },
-    { name: 'Coconut Cloud Matcha', detail: 'Whisked matcha, fresh cream and whipped cream over coconut water' },
-    { name: 'Citrus Cold Brew (Orange/Cranberry)', detail: 'Honey sun-dried cold brew, citrus juice and Sprite' },
-    { name: 'Biscoff Shake', detail: 'Vanilla ice cream, milk and Biscoff spread' },
+    { name: 'Barrel Cold Brew', detail: 'Whisky barrel-aged · smooth, warming notes · served over ice', price: '₹270' },
+    { name: 'Orange Mocha', detail: 'Espresso, chocolate, fresh orange zest and milk · hot or iced', price: '₹260' },
+    { name: 'Coconut Groove', detail: 'Cold filter coffee with condensed milk and coconut milk', price: '₹280' },
+    { name: 'Dirty Hot Choc', detail: '55% Callebaut 811 dark chocolate with a shot of espresso', price: '₹260' },
+    { name: 'Coconut Matcha', detail: 'Whisked matcha, fresh cream and whipped cream over coconut water', price: '₹300' },
+    { name: 'Citrus Cold Brew', detail: 'Honey sun-dried cold brew, orange or cranberry citrus and Sprite', price: '₹300' },
+    { name: 'Biscoff Shake', detail: 'Vanilla ice cream and milk blended with Biscoff', price: '₹280' },
   ];
 
   testimonials = [];
@@ -705,7 +705,7 @@ export default class App extends React.Component {
                   />
                 </div>
               </section>
-              <HospitalityHome openReserve={openReserve} goFood={goFood} />
+              <HospitalityHome openReserve={openReserve} goFood={goFood} goCoffee={goCoffee} goExperiences={goExp} />
               <section data-home-trim="" style={st("padding:140px 40px 120px;background:#EED7BF")}>
                 <div style={st("max-width:1560px;margin:0 auto")}>
                   <div data-reveal="0" style={st("display:flex;align-items:baseline;gap:18px;padding-bottom:26px;border-bottom:1px solid rgba(94,43,23,.14)")}>
@@ -876,7 +876,7 @@ export default class App extends React.Component {
                     <div data-reveal="200">
                       <div style={st("overflow:hidden;background:#EFE3D8;aspect-ratio:3/4")}>
                         <div className="hv10" style={st("width:100%;height:100%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)")}>
-                          <ImageSlot id="dessert-1" placeholder="Basque cheesecake: caramelised top, one wedge lifted, crumb visible, cake fork and linen" />
+                          <ImageSlot id="dessert-1" placeholder="A dessert selection from the Beanery bake house" />
                         </div>
                       </div>
                       <div style={st("display:flex;justify-content:space-between;align-items:baseline;margin-top:20px;gap:16px")}>
@@ -892,10 +892,10 @@ export default class App extends React.Component {
                         <div style={st("font-size:11px;color:#96755C")}>Baked fresh daily</div>
                       </div>
                       <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:27px;margin-top:10px")}>
-                        Burnt Basque Cheesecake
+                        Nutella Pancakes
                       </h3>
                       <p style={st("font-size:14px;line-height:1.75;color:#6E4A34;margin-top:10px")}>
-                        Deeply caramelised on top, soft at the centre, baked fresh and served simply.
+                        Fluffy pancakes with Nutella, fresh strawberries and a creamy Nutella frosting.
                       </p>
                     </div>
                   </div>
@@ -1676,6 +1676,7 @@ export default class App extends React.Component {
                           <div style={st("font-size:16px")}>{drink.name}</div>
                           <div style={st("font-size:12.5px;color:#96755C;margin-top:5px")}>{drink.detail}</div>
                         </div>
+                        <div style={st("font-size:14px;color:#6E4A34;white-space:nowrap")}>{drink.price}</div>
                       </div>
                     ))}
                     <div style={st("margin-top:44px;padding:34px 32px;background:#EFE3D8")}>
@@ -1775,7 +1776,7 @@ export default class App extends React.Component {
                         Spain
                       </h3>
                       <p style={st("font-size:14px;line-height:1.75;color:#6E4A34;margin-top:14px")}>
-                        Small plates, good bread and a Basque cheesecake that earned a permanent place on the menu. Tortilla, pan con tomate and olives keep returning too.
+                        Small plates, good bread, tortilla, pan con tomate and olives bring familiar European café flavours to the table.
                       </p>
                     </div>
                     <div data-reveal="190" style={st("padding:40px 0 44px 32px")}>
@@ -1963,7 +1964,7 @@ export default class App extends React.Component {
                         <span>Almond croissant</span>
                         {showPrices && (
                           <>
-                            <span style={st("color:#6E4A34")}>₹260</span>
+                            <span style={st("color:#6E4A34")}>₹350</span>
                           </>
                         )}
                       </div>
@@ -1980,18 +1981,18 @@ export default class App extends React.Component {
                   <div data-reveal="80">
                     <div style={st("overflow:hidden;aspect-ratio:5/4;background:#DFCBB9")}>
                       <div className="hv7" style={st("width:100%;height:100%;transition:transform 1.5s cubic-bezier(.2,.7,.2,1)")}>
-                        <ImageSlot id="dessert-1" placeholder="Dessert presentation: Basque cheesecake, tarts and tiramisu plated for the case, overhead" />
+                        <ImageSlot id="dessert-1" placeholder="A selection of current Beanery desserts from the bake house" />
                       </div>
                     </div>
                     <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(28px,3vw,42px);line-height:1.06;margin-top:30px")}>
                       Desserts
                     </h3>
                     <p style={st("font-size:15px;line-height:1.8;color:#6E4A34;margin-top:16px;max-width:44ch")}>
-                      The dessert case stays intentionally small. The Basque is the constant; the rest rotates with the season, the produce and whatever the kitchen is excited about.
+                      The dessert case brings together current bakery favourites, from tarts and brownies to pancakes and cakes.
                     </p>
                     <div style={st("margin-top:26px")}>
                       <div style={st("display:flex;justify-content:space-between;gap:20px;padding:16px 0;border-top:1px solid rgba(94,43,23,.14);font-size:14.5px")}>
-                        <span>Burnt Basque cheesecake</span>
+                        <span>Nutella Pancakes</span>
                         {showPrices && (
                           <>
                             <span style={st("color:#6E4A34")}>₹260</span>
@@ -2154,7 +2155,7 @@ export default class App extends React.Component {
                       Reserve a table
                     </h2>
                     <p style={st("font-size:14.5px;line-height:1.8;color:#6E4A34;margin-top:16px;max-width:40ch")}>
-                      Reserve an everyday table, or talk with us about the Open Lounge, a ventilated space, Rooftop Table or a team gathering. We’ll help you find the right setting.
+                      Reserve an everyday table, or talk with us about the ventilated gathering room, rooftop seating, conference room or a team event. We’ll help you find the right setting.
                     </p>
                     <button className="hv2" onClick={openReserve} style={st("margin-top:28px;width:100%;text-align:left;font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:500;color:#FBF8F4;background:#5E2B17;border:none;padding:19px 26px;cursor:pointer;transition:background .35s ease")}>
                       Make a reservation

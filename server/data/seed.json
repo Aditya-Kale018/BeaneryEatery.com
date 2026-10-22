@@ -72,6 +72,80 @@
       "legendNote": "Please tell the team about allergies before ordering.",
       "groups": [
         {
+          "id": "manual-brewing",
+          "number": "01",
+          "title": "Manual Brewing",
+          "note": "Choose your bean and brewing method · Available hot or iced.",
+          "items": [
+            {
+              "name": "Ratnagiri Culture",
+              "description": "Rose · Peach · Hibiscus",
+              "diet": "",
+              "price": "₹290/-"
+            },
+            {
+              "name": "Attikan Arabica",
+              "description": "Citrus · Dark chocolate · Fig",
+              "diet": "",
+              "price": "₹290/-"
+            },
+            {
+              "name": "Pineapple Fermented",
+              "description": "Berry · Milk chocolate · Almonds",
+              "diet": "",
+              "price": "₹290/-"
+            },
+            {
+              "name": "Carbonic Natural",
+              "description": "Fig · Red apple · Lemon",
+              "diet": "",
+              "price": "₹290/-"
+            },
+            {
+              "name": "V60 Pour Over",
+              "description": "Clean · Bright · Aromatic",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Clever Dripper",
+              "description": "Smooth · Sweet · Full-bodied",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Chemex",
+              "description": "Clean · Light · Silky",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Origami",
+              "description": "Sweet · Balanced · Expressive",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "French Press",
+              "description": "Rich · Bold · Textured",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "Kalita Wave",
+              "description": "Balanced · Sweet · Smooth",
+              "diet": "",
+              "price": ""
+            },
+            {
+              "name": "AeroPress",
+              "description": "Smooth · Vibrant · Versatile",
+              "diet": "",
+              "price": ""
+            }
+          ]
+        },
+        {
           "id": "espresso-classics",
           "number": "02",
           "title": "Espresso Classics",
@@ -81,49 +155,49 @@
               "name": "Espresso Double Shot",
               "description": "Rich, bold and concentrated.",
               "diet": "",
-              "price": ""
+              "price": "₹150/-"
             },
             {
               "name": "Americano (Hot/Iced)",
               "description": "Espresso, lengthened with water.",
               "diet": "",
-              "price": ""
+              "price": "₹180/- hot · ₹210/- iced"
             },
             {
               "name": "Cortado",
               "description": "Equal parts espresso and warm milk.",
               "diet": "",
-              "price": ""
+              "price": "₹180/-"
             },
             {
               "name": "Latte (Hot/Iced)",
               "description": "Smooth espresso with silky milk.",
               "diet": "",
-              "price": ""
+              "price": "₹210/- hot · ₹230/- iced"
             },
             {
               "name": "Cappuccino (Hot/Iced)",
               "description": "Espresso, velvety milk and airy foam.",
               "diet": "",
-              "price": ""
+              "price": "₹210/- hot · ₹220/- iced"
             },
             {
               "name": "Cafe Mocha (Hot/Iced)",
               "description": "Espresso, chocolate and creamy milk.",
               "diet": "",
-              "price": ""
+              "price": "₹235/- hot · ₹235/- iced"
             },
             {
               "name": "Spanish Bon Bon",
               "description": "Espresso layered with sweet condensed milk.",
               "diet": "",
-              "price": ""
+              "price": "₹180/-"
             },
             {
               "name": "Affogato",
               "description": "Arabic espresso with vanilla ice cream.",
               "diet": "",
-              "price": ""
+              "price": "₹250/-"
             }
           ]
         },
@@ -137,19 +211,19 @@
               "name": "Vietnamese Coffee",
               "description": "Robusta and chicory filter coffee, sweetened with condensed milk and served over ice.",
               "diet": "",
-              "price": ""
+              "price": "₹250/-"
             },
             {
               "name": "Shakerato",
               "description": "Robusta and chicory filter coffee with condensed milk and cinnamon, shaken over ice.",
               "diet": "",
-              "price": ""
+              "price": "₹265/-"
             },
             {
               "name": "Biscoff Iced Latte",
               "description": "Espresso, creamy milk and Biscoff spread, served over ice.",
               "diet": "",
-              "price": ""
+              "price": "₹265/-"
             }
           ]
         },
@@ -163,37 +237,37 @@
               "name": "Classic Ice Cream Blend",
               "description": "Vanilla ice cream, milk and espresso.",
               "diet": "",
-              "price": ""
+              "price": "₹250/-"
             },
             {
               "name": "Brownie Crumble Blend",
               "description": "Espresso, milk, vanilla ice cream and brownie crumble.",
               "diet": "",
-              "price": ""
+              "price": "₹270/-"
             },
             {
               "name": "Biscoff Blend",
               "description": "Espresso, milk, vanilla ice cream, Biscoff spread and cookie crumble.",
               "diet": "",
-              "price": ""
+              "price": "₹280/-"
             },
             {
               "name": "Nutella Mocha Blend",
               "description": "Espresso, milk, vanilla ice cream, Nutella and mocha.",
               "diet": "",
-              "price": ""
+              "price": "₹280/-"
             },
             {
               "name": "Milk Alternatives",
               "description": "Oat milk or almond milk.",
               "diet": "",
-              "price": ""
+              "price": "₹60/-"
             },
             {
               "name": "Flavour Syrups",
               "description": "Hazelnut, Irish, caramel or vanilla.",
               "diet": "",
-              "price": ""
+              "price": "₹50/-"
             }
           ]
         },
@@ -207,31 +281,31 @@
               "name": "Honey Sun Dried Cold Brew",
               "description": "Smooth, naturally sweet cold brew with a clean, refreshing finish.",
               "diet": "",
-              "price": ""
+              "price": "₹240/-"
             },
             {
               "name": "Whiskey Barrel Aged Cold Brew",
               "description": "Barrel-aged coffee with rich, warming notes and a smooth finish.",
               "diet": "",
-              "price": ""
+              "price": "₹270/-"
             },
             {
               "name": "Cold Brew Tonic",
               "description": "Honey sun-dried cold brew topped with crisp tonic.",
               "diet": "",
-              "price": ""
+              "price": "₹280/-"
             },
             {
               "name": "Honey Cinnamon Cold Brew",
               "description": "Honey sun-dried cold brew with cinnamon-infused honey.",
               "diet": "",
-              "price": ""
+              "price": "₹240/-"
             },
             {
               "name": "Citrus Cold Brew (Orange/Cranberry)",
               "description": "Honey sun-dried cold brew, citrus juice and Sprite, served over ice.",
               "diet": "",
-              "price": ""
+              "price": "₹300/-"
             }
           ]
         },
@@ -245,31 +319,31 @@
               "name": "Orange Zest Mocha (Hot/Iced)",
               "description": "Espresso, chocolate, fresh orange zest and milk, finished with a bright citrus aroma.",
               "diet": "",
-              "price": ""
+              "price": "₹250/- hot · ₹260/- iced"
             },
             {
               "name": "Spanish Latte (Hot/Iced)",
               "description": "Espresso with condensed milk and steamed milk, finished with a delicate sprinkle of cinnamon.",
               "diet": "",
-              "price": ""
+              "price": "₹245/- hot · ₹260/- iced"
             },
             {
               "name": "Coconut Groove",
               "description": "Cold filter coffee with condensed milk and coconut milk, served over ice.",
               "diet": "",
-              "price": ""
+              "price": "₹280/-"
             },
             {
               "name": "Arabic Date Iced Latte",
               "description": "Espresso infused with dates and combined with milk.",
               "diet": "",
-              "price": ""
+              "price": "₹280/-"
             },
             {
               "name": "Banoffee Iced Latte",
               "description": "Espresso, milk, banana and caramel.",
               "diet": "",
-              "price": ""
+              "price": "₹290/-"
             }
           ]
         },
@@ -283,37 +357,37 @@
               "name": "Vanilla Shake",
               "description": "Vanilla ice cream and milk.",
               "diet": "",
-              "price": ""
+              "price": "₹250/-"
             },
             {
               "name": "Nutella Shake",
               "description": "Vanilla ice cream, milk and Nutella.",
               "diet": "",
-              "price": ""
+              "price": "₹280/-"
             },
             {
               "name": "Brownie Shake",
               "description": "Vanilla ice cream, milk and brownie.",
               "diet": "",
-              "price": ""
+              "price": "₹280/-"
             },
             {
               "name": "Biscoff Shake",
               "description": "Vanilla ice cream, milk and Biscoff spread.",
               "diet": "",
-              "price": ""
+              "price": "₹280/-"
             },
             {
               "name": "Strawberry Shake",
               "description": "Vanilla ice cream, milk and strawberry crush.",
               "diet": "",
-              "price": ""
+              "price": "₹280/-"
             },
             {
               "name": "Mango Shake",
               "description": "Vanilla ice cream, milk and mango crush.",
               "diet": "",
-              "price": ""
+              "price": "₹280/-"
             }
           ]
         },
@@ -327,19 +401,19 @@
               "name": "55% Dark Hot Chocolate",
               "description": "55% dark chocolate crafted with Callebaut 811.",
               "diet": "",
-              "price": ""
+              "price": "₹260/-"
             },
             {
               "name": "Dirty Hot Chocolate",
               "description": "55% dark chocolate with a shot of espresso.",
               "diet": "",
-              "price": ""
+              "price": "₹260/-"
             },
             {
               "name": "Toppings and Finishes",
               "description": "Marshmallow cloud, roasted nut crunch or chocolate shavings.",
               "diet": "",
-              "price": ""
+              "price": "₹45/-"
             }
           ]
         },
@@ -353,25 +427,25 @@
               "name": "Jasmine Tea",
               "description": "Delicately floral with a fragrant, aromatic finish.",
               "diet": "",
-              "price": ""
+              "price": "₹150/-"
             },
             {
               "name": "Green Tea",
               "description": "Light and refreshing with a clean, subtly vegetal character.",
               "diet": "",
-              "price": ""
+              "price": "₹150/-"
             },
             {
               "name": "Hibiscus Tea",
               "description": "Bright and tangy with a naturally vibrant, fruity character.",
               "diet": "",
-              "price": ""
+              "price": "₹180/-"
             },
             {
               "name": "Chamomile Tea",
               "description": "Soft, delicate floral notes with a soothing finish.",
               "diet": "",
-              "price": ""
+              "price": "₹150/-"
             }
           ]
         },
@@ -385,19 +459,19 @@
               "name": "Iced Matcha",
               "description": "Smooth matcha with creamy milk, served over ice. Flavour or milk alternative available.",
               "diet": "",
-              "price": ""
+              "price": "₹270/-"
             },
             {
               "name": "Fruited Matcha (Strawberry/Mango)",
               "description": "Vibrant matcha with creamy milk and your choice of mango or strawberry, served over ice.",
               "diet": "",
-              "price": ""
+              "price": "₹290/-"
             },
             {
               "name": "Coconut Cloud Matcha",
               "description": "Whisked matcha with fresh cream and whipped cream over chilled coconut water and ice.",
               "diet": "",
-              "price": ""
+              "price": "₹300/-"
             }
           ]
         },
@@ -411,19 +485,19 @@
               "name": "Vanilla Ube Latte (Iced)",
               "description": "Creamy ube, vanilla and milk, served chilled over ice.",
               "diet": "",
-              "price": ""
+              "price": "₹270/-"
             },
             {
               "name": "Mango Ube (Iced)",
               "description": "Smooth ube and vibrant mango with creamy milk, served over ice.",
               "diet": "",
-              "price": ""
+              "price": "₹270/-"
             },
             {
               "name": "Coconut Ube Cloud (Iced)",
               "description": "Creamy ube with coconut water and a light whipped cream finish, served chilled over ice.",
               "diet": "",
-              "price": ""
+              "price": "₹270/-"
             }
           ]
         },
@@ -437,25 +511,25 @@
               "name": "Hibiscus Lemonade",
               "description": "Vibrant hibiscus with zesty lemon.",
               "diet": "",
-              "price": ""
+              "price": "₹230/-"
             },
             {
               "name": "Fresh Lime Soda",
               "description": "Fresh lime, soda and a touch of sweetness.",
               "diet": "",
-              "price": ""
+              "price": "₹200/-"
             },
             {
               "name": "Peach Iced Tea",
               "description": "Refreshing iced tea with delicate peach notes.",
               "diet": "",
-              "price": ""
+              "price": "₹200/-"
             },
             {
               "name": "Lemon Iced Tea",
               "description": "Classic iced tea with bright lemon.",
               "diet": "",
-              "price": ""
+              "price": "₹200/-"
             }
           ]
         },
@@ -469,19 +543,19 @@
               "name": "Berry Smoothie",
               "description": "Mixed berries, milk, banana and yogurt, finished with berry toppings.",
               "diet": "",
-              "price": ""
+              "price": "₹350/-"
             },
             {
               "name": "Chocolate Banana Smoothie",
               "description": "Chocolate and banana smoothie with chocolate and banana toppings.",
               "diet": "",
-              "price": ""
+              "price": "₹350/-"
             },
             {
               "name": "Avocado Smoothie",
               "description": "Creamy avocado smoothie with a naturally rich finish.",
               "diet": "",
-              "price": ""
+              "price": "₹350/-"
             }
           ]
         },
@@ -495,91 +569,91 @@
               "name": "Classic Fries with Garlic Sauce",
               "description": "Crispy golden French fries with a creamy garlic dip.",
               "diet": "",
-              "price": ""
+              "price": "₹310/-"
             },
             {
               "name": "Smoked Hot Garlic Lotus Stem",
               "description": "Crispy fried lotus stems in smoky, spicy hot garlic sauce.",
               "diet": "",
-              "price": ""
+              "price": "₹285/-"
             },
             {
               "name": "Corn Ribs with Tzatziki Sauce",
               "description": "Golden-fried corn ribs with peri-peri seasoning and cool tzatziki.",
               "diet": "",
-              "price": ""
+              "price": "₹260/-"
             },
             {
               "name": "Couscous with Hummus",
               "description": "Light couscous with assorted vegetables and creamy hummus.",
               "diet": "",
-              "price": ""
+              "price": "₹330/-"
             },
             {
               "name": "Butter Garlic Mushrooms",
               "description": "Mushrooms sautéed in garlic butter and finished with herbs.",
               "diet": "",
-              "price": ""
+              "price": "₹300/-"
             },
             {
               "name": "Crispy Chicken Bites",
               "description": "Crisp golden chicken with creamy, tangy peri-peri cocktail sauce.",
               "diet": "",
-              "price": ""
+              "price": "₹350/-"
             },
             {
               "name": "Chicken Croquettes (with Muhammara Sauce)",
               "description": "Golden chicken croquettes with a tender filling, served with smoky muhammara sauce.",
               "diet": "",
-              "price": ""
+              "price": "₹310/-"
             },
             {
               "name": "Garlic Butter Prawns",
               "description": "Prawns sautéed in garlic butter and finished with herbs.",
               "diet": "",
-              "price": ""
+              "price": "₹410/-"
             },
             {
               "name": "Eggplant Cream Cheese Roll",
               "description": "Eggplant rolls filled with cream cheese over tangy pomodoro sauce.",
               "diet": "",
-              "price": ""
+              "price": "₹310/-"
             },
             {
               "name": "Roasted Chicken Harissa Wings",
               "description": "Roasted chicken wings coated in a bold harissa glaze.",
               "diet": "",
-              "price": ""
+              "price": "₹380/-"
             },
             {
               "name": "Soya Pudding",
               "description": "Tender soya pieces tossed in a spicy, tangy hot red sauce.",
               "diet": "",
-              "price": ""
+              "price": "₹299/-"
             },
             {
               "name": "Veg Garden Croquettes",
               "description": "Garden vegetable croquettes with smoky, mildly spicy muhammara.",
               "diet": "",
-              "price": ""
+              "price": "₹330/-"
             },
             {
               "name": "Roast Tomato Ricotta",
               "description": "Blanched tomatoes with olive oil and herbs, served with whipped ricotta.",
               "diet": "",
-              "price": ""
+              "price": "₹330/-"
             },
             {
               "name": "Grilled Pomfret with Capers Sauce",
               "description": "Grilled pomfret, spicy baby potatoes and beans with white wine, butter, garlic and lemon caper sauce.",
               "diet": "",
-              "price": ""
+              "price": "₹999/-"
             },
             {
               "name": "Chilli Garlic Prawns",
               "description": "Prawns in chilli, lemon and ginger-garlic sauce with mint and coriander.",
               "diet": "",
-              "price": ""
+              "price": "₹530/-"
             }
           ]
         },
@@ -593,25 +667,25 @@
               "name": "Carrot Bisque with Sweet Potato Shard",
               "description": "Creamy carrot soup topped with a crisp sweet potato shard and fresh cream.",
               "diet": "",
-              "price": ""
+              "price": "₹270/-"
             },
             {
               "name": "Roasted Bell Pepper & Tomato Soup",
               "description": "Roasted tomato and bell pepper soup with olive oil and crisp toast.",
               "diet": "",
-              "price": ""
+              "price": "₹275/-"
             },
             {
               "name": "Truffle Mushroom Soup",
               "description": "Creamy mushroom soup with truffle oil and crisp toast.",
               "diet": "",
-              "price": ""
+              "price": "₹289/-"
             },
             {
               "name": "Chicken Broth Soup",
               "description": "Light chicken broth with garlic, herbs and crisp toast.",
               "diet": "",
-              "price": ""
+              "price": "₹310/-"
             }
           ]
         },
@@ -625,55 +699,55 @@
               "name": "Avocado & Coriander Walnut Salad",
               "description": "Avocado and crunchy walnuts tossed in fresh cilantro dressing.",
               "diet": "",
-              "price": ""
+              "price": "₹410/-"
             },
             {
               "name": "Avocado Quinoa Salad",
               "description": "Quinoa, bell peppers, avocado guacamole, pomegranate, dill and pumpkin seeds.",
               "diet": "",
-              "price": ""
+              "price": "₹360/-"
             },
             {
               "name": "Burrata di Puglia with Cherry Tomatoes",
               "description": "Burrata and roasted cherry tomatoes over pesto, parmesan and fresh basil oil.",
               "diet": "",
-              "price": ""
+              "price": "₹455/-"
             },
             {
               "name": "Grilled Chicken Salad with Couscous",
               "description": "Grilled chicken, greens, vegetables and couscous with lemon-herb chilli-garlic dressing.",
               "diet": "",
-              "price": ""
+              "price": "₹340/-"
             },
             {
               "name": "Apple Cranberry Walnut Salad",
               "description": "Crisp iceberg, apple, lemon-honey vinaigrette, cranberries and pomegranate.",
               "diet": "",
-              "price": ""
+              "price": "₹380/-"
             },
             {
               "name": "Roasted Beetroot and Citrus Salad",
               "description": "Roasted beetroot, orange and feta with greens, nuts, seeds and citrus dressing.",
               "diet": "",
-              "price": ""
+              "price": "₹350/-"
             },
             {
               "name": "Market Green Salad",
               "description": "Lettuce, cherry tomatoes, lemon vinaigrette, olive oil, red chilli and couscous.",
               "diet": "",
-              "price": ""
+              "price": "₹320/-"
             },
             {
               "name": "Cucumber Dill Salad",
               "description": "Cucumber and cherry tomatoes in burnt garlic-dill dressing with mixed seeds.",
               "diet": "",
-              "price": ""
+              "price": "₹300/-"
             },
             {
               "name": "Choice of Protein",
               "description": "Chicken, egg or paneer.",
               "diet": "",
-              "price": ""
+              "price": "₹45/-"
             }
           ]
         },
@@ -687,85 +761,85 @@
               "name": "Truffle Mushroom Sandwich",
               "description": "Roasted mushrooms, garlic, herbs, cheese and truffle oil with mayo dip.",
               "diet": "",
-              "price": ""
+              "price": "₹389/-"
             },
             {
               "name": "Chicken Mortadella Sandwich",
               "description": "Chicken mortadella, salami, lettuce, parmesan and garlic mayo.",
               "diet": "",
-              "price": ""
+              "price": "₹410/-"
             },
             {
               "name": "Buffalo Mozzarella Tomato Basil",
               "description": "Buffalo mozzarella, tomato, basil and pesto with mayo dip.",
               "diet": "",
-              "price": ""
+              "price": "₹430/-"
             },
             {
               "name": "Chicken Spicy Mortadella Sandwich",
               "description": "Spicy chicken mortadella with chilli, garlic, egg and garlic butter.",
               "diet": "",
-              "price": ""
+              "price": "₹390/-"
             },
             {
               "name": "Smoked Cottage Cheese Sandwich",
               "description": "Harissa cottage cheese with onion cocktail sauce.",
               "diet": "",
-              "price": ""
+              "price": "₹370/-"
             },
             {
               "name": "Pulled Chicken Sandwich",
               "description": "Shredded chicken with pineapple salsa and creamy cocktail sauce.",
               "diet": "",
-              "price": ""
+              "price": "₹380/-"
             },
             {
               "name": "Roasted Vegetable Hummus Sandwich",
               "description": "Hummus with roasted zucchini, bell peppers and broccoli.",
               "diet": "",
-              "price": ""
+              "price": "₹350/-"
             },
             {
               "name": "Pesto Chicken Sandwich",
               "description": "Pesto-marinated chicken, roasted tomatoes and basil pesto.",
               "diet": "",
-              "price": ""
+              "price": "₹380/-"
             },
             {
               "name": "Paneer Pesto Sandwich",
               "description": "Pesto-marinated cottage cheese, roasted tomatoes and basil pesto.",
               "diet": "",
-              "price": ""
+              "price": "₹385/-"
             },
             {
               "name": "Smoky Chicken Sandwich",
               "description": "Indian-spiced chicken with smoky mayo and melted mozzarella.",
               "diet": "",
-              "price": ""
+              "price": "₹365/-"
             },
             {
               "name": "Ratatouille Sandwich",
               "description": "Roasted vegetables and eggplant in tomato-basil sauce.",
               "diet": "",
-              "price": ""
+              "price": "₹355/-"
             },
             {
               "name": "Chicken Garlic Mayo Sandwich",
               "description": "Minced chicken with garlic mayo, jalapeño, butter and garlic.",
               "diet": "",
-              "price": ""
+              "price": "₹370/-"
             },
             {
               "name": "Protein Power Sandwich",
               "description": "Grilled chicken, chicken salami, lettuce and garlic mayo, topped with egg.",
               "diet": "",
-              "price": ""
+              "price": "₹450/-"
             },
             {
               "name": "Bread Options",
               "description": "Focaccia or sourdough.",
               "diet": "",
-              "price": ""
+              "price": "Charges apply"
             }
           ]
         },
@@ -779,37 +853,37 @@
               "name": "Cottage Cheese Stick",
               "description": "Grilled coriander-marinated cottage cheese with zucchini spaghetti, cherry tomatoes and parmesan.",
               "diet": "",
-              "price": ""
+              "price": "₹510/-"
             },
             {
               "name": "Harissa Grilled Chicken",
               "description": "Harissa chicken with mashed potatoes and vegetables. Also available in cottage cheese.",
               "diet": "",
-              "price": ""
+              "price": "₹510/-"
             },
             {
               "name": "Grilled Chicken Plate",
               "description": "Herb-grilled chicken with herb rice, vegetables and creamy coconut sauce.",
               "diet": "",
-              "price": ""
+              "price": "₹525/-"
             },
             {
               "name": "Chicken Stroganoff",
               "description": "Chicken and mushrooms in creamy stroganoff sauce with herbs and herb rice.",
               "diet": "",
-              "price": ""
+              "price": "₹530/-"
             },
             {
               "name": "Fish and Chips",
               "description": "Crispy battered fish with golden fries and tartar sauce.",
               "diet": "",
-              "price": ""
+              "price": "₹500/-"
             },
             {
               "name": "Grilled Bhetki with Capers Sauce",
               "description": "Grilled bhetki, spicy baby potatoes and beans with white wine, butter, garlic and lemon caper sauce.",
               "diet": "",
-              "price": ""
+              "price": "₹500/-"
             }
           ]
         },
@@ -823,19 +897,19 @@
               "name": "Grilled Paneer al Pesto",
               "description": "Herb rice, grilled paneer, assorted vegetables and basil pesto sauce.",
               "diet": "",
-              "price": ""
+              "price": "₹510/-"
             },
             {
               "name": "Chicken Xacuti with Butter Garlic Rice",
               "description": "Chicken in Goan-style xacuti curry with aromatic spices and buttery garlic rice.",
               "diet": "",
-              "price": ""
+              "price": "₹550/-"
             },
             {
               "name": "Confit Chicken with Mashed Potato",
               "description": "Slow-cooked confit chicken with creamy mashed potatoes and rich jus.",
               "diet": "",
-              "price": ""
+              "price": "₹350/-"
             }
           ]
         },
@@ -849,37 +923,37 @@
               "name": "Grilled Veggie Burger",
               "description": "Vegetable patty, lettuce, tomato, cheese and cocktail sauce in a toasted bun.",
               "diet": "",
-              "price": ""
+              "price": "₹330/-"
             },
             {
               "name": "Smoky Paneer Burger",
               "description": "Harissa paneer, lettuce and melted cheese in a toasted bun.",
               "diet": "",
-              "price": ""
+              "price": "₹380/-"
             },
             {
               "name": "Grilled Chicken Burger",
               "description": "Spicy grilled chicken, lettuce and garlic mayo in a toasted bun.",
               "diet": "",
-              "price": ""
+              "price": "₹389/-"
             },
             {
               "name": "Crunchy Chicken Burger",
               "description": "Buttermilk-marinated chicken, lettuce, tomato, cheese and cocktail sauce.",
               "diet": "",
-              "price": ""
+              "price": "₹380/-"
             },
             {
               "name": "Mega-Bun Burger",
               "description": "Minced chicken patty, chicken salami, lettuce, tomato, garlic mayo and egg.",
               "diet": "",
-              "price": ""
+              "price": "₹430/-"
             },
             {
               "name": "Prawns Popper Burger",
               "description": "Tempura prawns with tartare sauce, capers, parsley, mayo and mustard.",
               "diet": "",
-              "price": ""
+              "price": "₹470/-"
             }
           ]
         },
@@ -893,37 +967,37 @@
               "name": "Baked Beans on Toast",
               "description": "Homemade baked beans with vegetables, jaggery, chilli and garlic, topped with jalapeño.",
               "diet": "",
-              "price": ""
+              "price": "₹310/-"
             },
             {
               "name": "Pulled Chicken Toast",
               "description": "Shredded chicken with pineapple salsa and cocktail sauce on sourdough.",
               "diet": "",
-              "price": ""
+              "price": "₹380/-"
             },
             {
               "name": "Avocado Toast",
               "description": "Smashed avocado on sourdough; choice of eggs available as an add-on.",
               "diet": "",
-              "price": ""
+              "price": "₹389/-"
             },
             {
               "name": "Protein Power Toast",
               "description": "Roasted chicken, chicken salami, lettuce and garlic sauce with sunny-side-up eggs.",
               "diet": "",
-              "price": ""
+              "price": "₹450/-"
             },
             {
               "name": "Burrata Caprese Toast",
               "description": "Burrata, cherry tomatoes and basil pesto on sourdough.",
               "diet": "",
-              "price": ""
+              "price": "₹430/-"
             },
             {
               "name": "Roasted Mushroom Hummus Toast",
               "description": "Buttered sourdough with hummus, roasted mushrooms and olive oil.",
               "diet": "",
-              "price": ""
+              "price": "₹355/-"
             }
           ]
         },
@@ -937,67 +1011,67 @@
               "name": "Classic Omelette",
               "description": "Three-egg omelette with salt and pepper.",
               "diet": "",
-              "price": ""
+              "price": "₹245/-"
             },
             {
               "name": "Breakfast Platter (3 Eggs)",
               "description": "Three eggs with baked beans, potatoes, chicken sausage, vegetables and sourdough.",
               "diet": "",
-              "price": ""
+              "price": "₹485/-"
             },
             {
               "name": "Masala Omelette",
               "description": "Three-egg Indian masala omelette with onion, chilli and tomato.",
               "diet": "",
-              "price": ""
+              "price": "₹250/-"
             },
             {
               "name": "Chicken Sausage Omelette",
               "description": "Three-egg omelette with chicken sausages.",
               "diet": "",
-              "price": ""
+              "price": "₹255/-"
             },
             {
               "name": "Spanish Omelette",
               "description": "Spanish-style omelette with fried potatoes and onions.",
               "diet": "",
-              "price": ""
+              "price": "₹260/-"
             },
             {
               "name": "Frittata Omelette",
               "description": "Italian-style frittata with zucchini, bell peppers, olives and vegetables.",
               "diet": "",
-              "price": ""
+              "price": "₹270/-"
             },
             {
               "name": "Truffle Scrambled Egg",
               "description": "Creamy scrambled eggs with truffle oil.",
               "diet": "",
-              "price": ""
+              "price": "₹270/-"
             },
             {
               "name": "Turkish Eggs",
               "description": "Poached eggs over garlic Greek yogurt with chilli oil and dill.",
               "diet": "",
-              "price": ""
+              "price": "₹330/-"
             },
             {
               "name": "Egg Shakshuka",
               "description": "Poached eggs in tomato-bell pepper sauce with spinach, chicken ham and hollandaise.",
               "diet": "",
-              "price": ""
+              "price": "₹325/-"
             },
             {
               "name": "Eggs Benedict",
               "description": "Poached eggs with garlic, spinach and chicken ham, finished with hollandaise on sourdough.",
               "diet": "",
-              "price": ""
+              "price": "₹350/-"
             },
             {
               "name": "Sunny Side Up",
               "description": "Three sunny-side-up eggs with salt and pepper.",
               "diet": "",
-              "price": ""
+              "price": "₹225/-"
             }
           ]
         },
@@ -1011,43 +1085,43 @@
               "name": "Spaghetti Aglio e Olio",
               "description": "Spaghetti with garlic, chilli and olive oil, finished with olives and cherry tomatoes.",
               "diet": "",
-              "price": ""
+              "price": "₹445/-"
             },
             {
               "name": "Fettuccini Pasta Parmesan",
               "description": "Fettuccine in creamy parmesan and garlic sauce, finished with oregano.",
               "diet": "",
-              "price": ""
+              "price": "₹460/-"
             },
             {
               "name": "Farfalle Pasta Marinara / Pink Sauce",
               "description": "Farfalle in tomato marinara or creamy pink sauce, finished with herbs.",
               "diet": "",
-              "price": ""
+              "price": "₹480/-"
             },
             {
               "name": "Gnocchi Pasta Pesto",
               "description": "Gnocchi tossed in basil pesto with olives and cherry tomatoes.",
               "diet": "",
-              "price": ""
+              "price": "₹425/-"
             },
             {
               "name": "Gnocchi with Pumpkin Sauce",
               "description": "Gnocchi in creamy pumpkin sauce with onion, garlic, celery and chilli, topped with parmesan and sweet potato crisps.",
               "diet": "",
-              "price": ""
+              "price": "₹450/-"
             },
             {
               "name": "Chicken Lasagna Pasta",
               "description": "Lasagna sheets layered with chicken ragu, béchamel and melted cheese.",
               "diet": "",
-              "price": ""
+              "price": "₹489/-"
             },
             {
               "name": "Pasta Add-ons",
               "description": "Chicken · Broccoli · Assorted vegetables",
               "diet": "",
-              "price": ""
+              "price": "Chicken ₹80/- · Broccoli ₹60/- · Assorted vegetables ₹70/-"
             }
           ]
         },
@@ -1061,67 +1135,67 @@
               "name": "Margherita Pizza",
               "description": "Neapolitan pizza with tomato sauce, mozzarella and fresh basil.",
               "diet": "",
-              "price": ""
+              "price": "₹715/-"
             },
             {
               "name": "Meat Lover's Pizza",
               "description": "Neapolitan pizza with marinara, chicken sausage, pepperoni and extra cheese.",
               "diet": "",
-              "price": ""
+              "price": "₹830/-"
             },
             {
               "name": "Smoky Paprika Cottage Cheese Pizza",
               "description": "Paprika-marinated cottage cheese, bell peppers, onions and melted cheese.",
               "diet": "",
-              "price": ""
+              "price": "₹750/-"
             },
             {
               "name": "Buffalo Chicken Pizza",
               "description": "Spicy buffalo chicken, onions and mozzarella, finished with ranch.",
               "diet": "",
-              "price": ""
+              "price": "₹855/-"
             },
             {
               "name": "Truffle Mushroom Pizza",
               "description": "Wild mushrooms, mozzarella, truffle oil and fresh arugula.",
               "diet": "",
-              "price": ""
+              "price": "₹810/-"
             },
             {
               "name": "New York Style Pizza",
               "description": "Foldable crust with tomato sauce, melted mozzarella and diced cheese.",
               "diet": "",
-              "price": ""
+              "price": "₹869/-"
             },
             {
               "name": "Neapolitan Veg Pizza",
               "description": "Marinara, mozzarella, seasonal vegetables and cocktail sauce.",
               "diet": "",
-              "price": ""
+              "price": "₹730/-"
             },
             {
               "name": "Burrata Arugula Tomato Pizza",
               "description": "Creamy burrata, sun-dried tomatoes, arugula and fresh salad.",
               "diet": "",
-              "price": ""
+              "price": "₹910/-"
             },
             {
               "name": "Chicken Mortadella Burrata Pizza",
               "description": "Chicken mortadella, creamy burrata and basil pesto.",
               "diet": "",
-              "price": ""
+              "price": "₹935/-"
             },
             {
               "name": "Pesto Chicken Pizza",
               "description": "Grilled chicken, basil pesto, mozzarella and roasted tomatoes.",
               "diet": "",
-              "price": ""
+              "price": "₹850/-"
             },
             {
               "name": "Chicken Pepperoni Pizza",
               "description": "Marinara, onions, spicy chicken pepperoni and melted mozzarella.",
               "diet": "",
-              "price": ""
+              "price": "₹779/-"
             }
           ]
         },
@@ -1135,115 +1209,115 @@
               "name": "Tart — Strawberry",
               "description": "",
               "diet": "",
-              "price": ""
+              "price": "₹99/- each"
             },
             {
               "name": "Tart — Berry",
               "description": "",
               "diet": "",
-              "price": ""
+              "price": "₹99/- each"
             },
             {
               "name": "Tart — Chocolate",
               "description": "",
               "diet": "",
-              "price": ""
+              "price": "₹99/- each"
             },
             {
               "name": "Tart — Caramel Chocolate",
               "description": "",
               "diet": "",
-              "price": ""
+              "price": "₹99/- each"
             },
             {
               "name": "Macaron — Strawberry",
               "description": "",
               "diet": "",
-              "price": ""
+              "price": "₹75/- each"
             },
             {
               "name": "Macaron — Coffee",
               "description": "",
               "diet": "",
-              "price": ""
+              "price": "₹75/- each"
             },
             {
               "name": "Macaron — Pista",
               "description": "",
               "diet": "",
-              "price": ""
+              "price": "₹75/- each"
             },
             {
               "name": "Macaron — Biscoff",
               "description": "",
               "diet": "",
-              "price": ""
+              "price": "₹75/- each"
             },
             {
               "name": "Macarons — Pack of 6",
               "description": "",
               "diet": "",
-              "price": ""
+              "price": "₹360/-"
             },
             {
               "name": "Chocolate Brownie",
               "description": "Chocolate brownie.",
               "diet": "",
-              "price": ""
+              "price": "₹200/-"
             },
             {
               "name": "Biscoff Brownie",
               "description": "Biscoff brownie.",
               "diet": "",
-              "price": ""
+              "price": "₹280/-"
             },
             {
               "name": "Hazelnut Brownie",
               "description": "Hazelnut brownie.",
               "diet": "",
-              "price": ""
+              "price": "₹280/-"
             },
             {
               "name": "Blueberry Lemon Cake",
               "description": "Blueberry and lemon cake.",
               "diet": "",
-              "price": ""
+              "price": "₹350/-"
             },
             {
               "name": "Pina Colada Cake",
               "description": "Pina colada cake.",
               "diet": "",
-              "price": ""
+              "price": "₹350/-"
             },
             {
               "name": "London Cake",
               "description": "London cake.",
               "diet": "",
-              "price": ""
+              "price": "₹350/-"
             },
             {
               "name": "Dark Chocolate Cake",
               "description": "Dark chocolate cake.",
               "diet": "",
-              "price": ""
+              "price": "₹350/-"
             },
             {
               "name": "Chocolate Orange Cake",
               "description": "Chocolate orange cake.",
               "diet": "",
-              "price": ""
+              "price": "₹350/-"
             },
             {
               "name": "Nutty Crunch Cake",
               "description": "Nutty crunch cake.",
               "diet": "",
-              "price": ""
+              "price": "₹375/-"
             },
             {
               "name": "Cherry Chocolate Cake",
               "description": "Cherry chocolate cake.",
               "diet": "",
-              "price": ""
+              "price": "₹350/-"
             }
           ]
         },
@@ -1257,37 +1331,37 @@
               "name": "Nutella Pancakes",
               "description": "Pancakes with Nutella, fresh strawberries and Nutella cream-cheese frosting.",
               "diet": "",
-              "price": ""
+              "price": "₹350/-"
             },
             {
               "name": "Mix Fruits Pancakes",
               "description": "Pancakes with apple, banana and blueberries, finished with maple syrup.",
               "diet": "",
-              "price": ""
+              "price": "₹350/-"
             },
             {
               "name": "French Toast",
               "description": "French toast with strawberries, blueberries, pear, maple syrup and ice cream.",
               "diet": "",
-              "price": ""
+              "price": "₹320/-"
             },
             {
               "name": "Tiramisu",
               "description": "Tiramisu.",
               "diet": "",
-              "price": ""
+              "price": "₹330/-"
             },
             {
               "name": "Sourdough Loaf",
               "description": "Sourdough loaf.",
               "diet": "",
-              "price": ""
+              "price": "₹280/-"
             },
             {
               "name": "Pick Your Four",
               "description": "Choose any four tarts, macarons and brownies; maximum one brownie.",
               "diet": "",
-              "price": ""
+              "price": "₹450/-"
             }
           ]
         }

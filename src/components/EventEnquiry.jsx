@@ -2,7 +2,7 @@ import React from 'react';
 import './EventEnquiry.css';
 import { API_BASE } from '../lib/apiBase';
 
-const EVENT_TYPES = ['Open Lounge', 'Rooftop Table', 'Business Gathering', 'Celebration', 'Other'];
+const EVENT_TYPES = ['Open Gathering Space', 'Rooftop Table', 'Conference Room', 'Sunday Brunch', 'Corporate Event', 'Birthday Party', 'Meetup', 'Celebration', 'Other'];
 
 export default function EventEnquiry() {
   const [busy, setBusy] = React.useState(false);
@@ -41,11 +41,12 @@ export default function EventEnquiry() {
 
   return (
     <section className="event-enquiry" id="event-enquiry">
+      <div className="event-enquiry__inner">
       <div className="event-enquiry__intro">
         <p className="hospitality-label">A thoughtful place to gather</p>
         <h2>Tell us what<br /><em>you’re planning.</em></h2>
         <p>Share a few details and our team will help shape the right Beanery setting for your occasion.</p>
-        <div className="event-enquiry__promise">Open Lounge <span>·</span> Rooftop Table <span>·</span> Business Gatherings</div>
+        <div className="event-enquiry__promise">Sunday Brunch <span>·</span> Corporate Events <span>·</span> Birthday Parties <span>·</span> Meetups <span>·</span> Open Gathering Space <span>·</span> Conference Room <span>·</span> Rooftop Table</div>
       </div>
       <form className="event-form" onSubmit={submit}>
         <div className="event-form__row">
@@ -66,6 +67,7 @@ export default function EventEnquiry() {
         {result ? <p className="event-form__feedback" role="status">{result}</p> : null}
         {error ? <p className="event-form__feedback event-form__feedback--error" role="alert">{error}</p> : null}
       </form>
+      </div>
     </section>
   );
 }
