@@ -87,7 +87,7 @@ const homeModules = [
   { label: 'Coffee specialty', name: 'Coffee Specialty', copy: 'Explore our selected beans, espresso favourites and carefully prepared brewing methods.', image: 'coffee-hero', alt: 'Beanery coffee prepared at the bar', action: 'Explore coffee', target: 'coffee' },
   { label: 'Fresh from the oven', name: 'Bake House', copy: 'Slow-fermented bread, fresh bakes and a small selection of sweet and savoury favourites.', image: 'bakery-1', alt: 'Freshly baked bread from the Beanery bake house', action: 'Explore the menu', target: 'food' },
   { label: 'From the kitchen', name: 'European Food', copy: 'A considered all-day menu shaped by European café food and made with care in our kitchen.', image: 'dishstory-1', alt: 'A European-style café dish from the Beanery kitchen', action: 'Explore the menu', target: 'food' },
-  { label: 'A place to settle in', name: 'Good Ambience & Facilities', copy: 'A welcoming dining room, ventilated gathering space, rooftop seating and a conference room for longer visits.', image: 'hero-grid-2', alt: 'The welcoming Beanery dining room', action: 'Explore the spaces', target: 'experiences' },
+  { label: 'A place to settle in', name: 'Good Ambience & Facilities', copy: 'A welcoming dining room, ventilated gathering space, rooftop seating and a conference room for longer visits.', image: 'good-ambience', alt: 'The welcoming Beanery dining room', action: 'Explore the spaces', target: 'experiences' },
 ];
 
 export default function CafeModules({ goFood, goCoffee, goExperiences, detailed = false, variant = 'standard' }) {

@@ -25,7 +25,6 @@ import img_dessert_1 from './dessert-1.webp';
 import img_dish_1 from './dish-1.webp';
 import img_dish_2 from './dish-2.webp';
 import img_dish_3 from './dish-3.webp';
-import img_dishstory_1 from './dishstory-1.webp';
 import img_exp_1 from './exp-1.webp';
 import img_exp_2 from './exp-2.webp';
 import img_exp_3 from './exp-3.webp';
@@ -36,6 +35,7 @@ import img_food_hero_1 from './food-hero-1.webp';
 import img_food_hero_2 from './food-hero-2.webp';
 import img_hero_grid_1 from './hero-grid-1.webp';
 import img_hero_grid_2 from './hero-grid-2.webp';
+import img_good_ambience from './good-ambience.webp';
 import img_hero_grid_3 from './hero-grid-3.webp';
 import img_ig_1 from './ig-1.webp';
 import img_ig_2 from './ig-2.webp';
@@ -96,7 +96,7 @@ export const SLOTS = {
   'dish-1': at(img_dish_1),
   'dish-2': at(img_dish_2),
   'dish-3': at(img_dish_3),
-  'dishstory-1': at(img_dishstory_1),
+  'dishstory-1': at(img_hero_grid_2),
   'exp-1': at(img_exp_1),
   'exp-2': at(img_exp_2),
   'exp-3': at(img_exp_3),
@@ -107,6 +107,7 @@ export const SLOTS = {
   'food-hero-2': at(img_food_hero_2),
   'hero-grid-1': at(img_hero_grid_1),
   'hero-grid-2': at(img_hero_grid_2),
+  'good-ambience': at(img_good_ambience),
   'hero-grid-3': at(img_hero_grid_3),
   'ig-1': at(img_ig_1),
   'ig-2': at(img_ig_2),
