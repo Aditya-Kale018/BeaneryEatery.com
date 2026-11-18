@@ -31,8 +31,11 @@ import img_exp_3 from './exp-3.webp';
 import img_exp_4 from './exp-4.webp';
 import img_exp_banner from './exp-banner.webp';
 import img_feat_coffee from './feat-coffee.webp';
+import img_frittata_omelette from './frittata-omelette.webp';
+import img_grilled_pomfret_capers from './grilled-pomfret-capers.webp';
 import img_food_hero_1 from './food-hero-1.webp';
 import img_food_hero_2 from './food-hero-2.webp';
+import img_neapolitan_pizza from './neapolitan-pizza.webp';
 import img_hero_grid_1 from './hero-grid-1.webp';
 import img_hero_grid_2 from './hero-grid-2.webp';
 import img_good_ambience from './good-ambience.webp';
@@ -52,6 +55,14 @@ import img_pair_espresso from './pair-espresso.webp';
 import img_pair_guji from './pair-guji.webp';
 import img_pair_kenya from './pair-kenya.webp';
 import img_pair_lychee from './pair-lychee.webp';
+import img_roast_tomato_ricotta from './roast-tomato-ricotta.webp';
+import img_eggplant_cream_cheese_roll from './eggplant-cream-cheese-roll.webp';
+import img_chicken_croquettes_muhammara from './chicken-croquettes-muhammara.webp';
+import img_gnocchi_pumpkin_sauce from './gnocchi-pumpkin-sauce.webp';
+import img_truffle_mushroom_sandwich from './truffle-mushroom-sandwich.webp';
+import img_chocolate_orange_cake from './chocolate-orange-cake.webp';
+import img_mango_ube from './mango-ube.webp';
+import img_hot_matcha_latte from './hot-matcha-latte.webp';
 import img_part_afternoon from './part-afternoon.webp';
 import img_part_evening from './part-evening.webp';
 import img_part_morning from './part-morning.webp';
@@ -103,6 +114,9 @@ export const SLOTS = {
   'exp-4': at(img_exp_4),
   'exp-banner': at(img_exp_banner),
   'feat-coffee': at(img_feat_coffee),
+  'frittata-omelette': at(img_frittata_omelette),
+  'grilled-pomfret-capers': at(img_grilled_pomfret_capers),
+  'neapolitan-pizza': at(img_neapolitan_pizza),
   'food-hero-1': at(img_food_hero_1),
   'food-hero-2': at(img_food_hero_2),
   'hero-grid-1': at(img_hero_grid_1),
@@ -124,6 +138,14 @@ export const SLOTS = {
   'pair-guji': at(img_pair_guji),
   'pair-kenya': at(img_pair_kenya),
   'pair-lychee': at(img_pair_lychee),
+  'roast-tomato-ricotta': at(img_roast_tomato_ricotta),
+  'eggplant-cream-cheese-roll': at(img_eggplant_cream_cheese_roll),
+  'chicken-croquettes-muhammara': at(img_chicken_croquettes_muhammara),
+  'gnocchi-pumpkin-sauce': at(img_gnocchi_pumpkin_sauce),
+  'truffle-mushroom-sandwich': at(img_truffle_mushroom_sandwich),
+  'chocolate-orange-cake': at(img_chocolate_orange_cake),
+  'mango-ube': at(img_mango_ube),
+  'hot-matcha-latte': at(img_hot_matcha_latte),
   'part-afternoon': at(img_part_afternoon),
   'part-evening': at(img_part_evening),
   'part-morning': at(img_part_morning),

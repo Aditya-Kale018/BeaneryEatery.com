@@ -326,49 +326,49 @@ export default class App extends React.Component {
 
   cups = [
     {
-      cup: 'Spanish Bon Bon',
-      notes: 'Espresso · sweet condensed milk',
-      body: 'Espresso layered with condensed milk',
-      dish: 'Truffle Mushroom Pizza',
-      dishNote: 'The Bon Bon’s gentle sweetness balances earthy mushrooms, melted mozzarella and fragrant truffle oil.',
+      cup: 'Banoffee Iced Latte',
+      notes: 'Espresso · milk · banana · caramel',
+      body: 'Espresso, milk, banana and caramel, served over ice for a smooth, dessert-inspired finish',
+      dish: 'Spaghetti Aglio e Olio',
+      dishNote: 'The latte’s mellow banana and caramel sweetness softens the garlic and chilli, while espresso complements the olives and cherry tomatoes.',
       slot: 'pair-guji',
-      shot: 'Wood-fired truffle mushroom pizza with mozzarella and arugula beside a small Spanish Bon Bon coffee',
-    },
-    {
-      cup: 'Whiskey Barrel Aged Cold Brew',
-      notes: 'Rich · warming · smooth',
-      body: 'Slow-brewed and served chilled over ice',
-      dish: "Meat Lover's Pizza",
-      dishNote: 'The cold brew’s deep, warming character cuts through the rich cheese and savoury chicken sausage and pepperoni.',
-      slot: 'pair-lychee',
-      shot: 'Meat lover’s wood-fired pizza beside a chilled glass of barrel-aged cold brew',
-    },
-    {
-      cup: 'Vietnamese Coffee',
-      notes: 'Robusta · chicory · condensed milk',
-      body: 'Filter coffee served with condensed milk',
-      dish: 'Chicken Xacuti with Butter Garlic Rice',
-      dishNote: 'Bold chicory coffee and a touch of sweetness stand up to the aromatic spices in the Goan-style xacuti curry.',
-      slot: 'pair-espresso',
-      shot: 'Goan chicken xacuti with butter garlic rice and a glass of Vietnamese coffee',
-    },
-    {
-      cup: 'Citrus Cold Brew (Orange/Cranberry)',
-      notes: 'Honey sun-dried coffee · citrus · Sprite',
-      body: 'Served over ice',
-      dish: 'Burrata di Puglia with Cherry Tomatoes',
-      dishNote: 'Bright citrus and gentle fizz complement the roasted cherry tomatoes and refresh the palate against creamy burrata.',
-      slot: 'pair-cortado',
-      shot: 'Burrata with roasted cherry tomatoes and basil pesto beside a bright citrus cold brew',
+      shot: 'Banoffee Iced Latte with Aglio Olio',
     },
     {
       cup: 'Dirty Hot Chocolate',
       notes: '55% dark chocolate · espresso',
-      body: 'Callebaut 811 dark chocolate with espresso',
+      body: '55% dark chocolate with a shot of espresso',
       dish: 'Nutella Pancakes',
-      dishNote: 'The espresso’s bittersweet finish balances Nutella, strawberries and creamy frosting for a rich but rounded pairing.',
+      dishNote: 'Dark chocolate and espresso add a bittersweet counterpoint to the pancakes’ Nutella sweetness and fresh fruit.',
+      slot: 'pair-cortado',
+      shot: 'Dirty Hot Chocolate with Nutella Pancakes',
+    },
+    {
+      cup: 'Coconut Cloud Matcha',
+      notes: 'Matcha · fresh cream · coconut water',
+      body: 'Whisked matcha with fresh cream and whipped cream over chilled coconut water and ice',
+      dish: 'Gnocchi with Pumpkin Sauce',
+      dishNote: 'Earthy matcha and cool coconut water complement the creamy pumpkin sauce, while a light finish balances parmesan and crisp sweet potato.',
+      slot: 'pair-lychee',
+      shot: 'Coconut Cloud Matcha with Gnocchi with Pumpkin Sauce',
+    },
+    {
+      cup: 'Mango Ube (Iced)',
+      notes: 'Ube · mango · creamy milk',
+      body: 'Smooth ube and vibrant mango with creamy milk, served over ice',
+      dish: 'Neapolitan Veg Pizza',
+      dishNote: 'Chilled mango and creamy ube bring a mellow, fruity finish alongside marinara, mozzarella and seasonal vegetables.',
       slot: 'pair-kenya',
-      shot: 'Nutella pancakes with fresh strawberries beside a dark hot chocolate',
+      shot: 'Mango Ube with Neapolitan Veg Pizza',
+    },
+    {
+      cup: 'Citrus Cold Brew (Orange/Cranberry)',
+      notes: 'Honey sun-dried coffee · citrus · Sprite',
+      body: 'Honey sun-dried cold brew with citrus juice and Sprite, served over ice',
+      dish: 'Chicken Xacuti with Butter Garlic Rice',
+      dishNote: 'Bright citrus and fizz refresh the palate alongside aromatic Goan xacuti spices and buttery garlic rice.',
+      slot: 'pair-espresso',
+      shot: 'Citrus Cold Brew with Chicken Xacuti and Butter Garlic Rice',
     },
   ];
 
@@ -415,13 +415,14 @@ export default class App extends React.Component {
   ];
 
   signature = [
-    { kicker: 'Salads', name: 'Burrata di Puglia with Cherry Tomatoes', copy: 'Creamy burrata and roasted cherry tomatoes over pesto, parmesan and fresh basil oil.', slot: 'pair-kenya', shot: 'Burrata and roasted cherry tomatoes over pesto, parmesan and fresh basil oil' },
-    { kicker: 'Wood Fired Pizza', name: 'Truffle Mushroom Pizza', copy: 'Wild mushrooms, mozzarella, truffle oil and fresh arugula on Neapolitan-style dough.', slot: 'food-hero-2', shot: 'Wood-fired Neapolitan truffle mushroom pizza with arugula and mozzarella' },
-    { kicker: 'Entrée', name: 'Chicken Xacuti with Butter Garlic Rice', copy: 'Tender chicken in rich Goan-style xacuti curry with aromatic spices and buttery garlic rice.', slot: 'dish-1', shot: 'Goan chicken xacuti curry served with butter garlic rice' },
-    { kicker: 'Wood Fired Pizza', name: 'Burrata Arugula Tomato Pizza', copy: 'Creamy burrata, sun-dried tomatoes, arugula and fresh salad on Neapolitan-style dough.', slot: 'pair-kenya', shot: 'Neapolitan burrata pizza with sun-dried tomatoes and arugula' },
-    { kicker: 'Wood Fired Pizza', name: 'Chicken Mortadella Burrata Pizza', copy: 'Chicken mortadella, creamy burrata and basil pesto on a wood-fired pizza.', slot: 'food-hero-2', shot: 'Wood-fired chicken mortadella pizza topped with burrata and basil pesto' },
-    { kicker: 'Hot Chocolate', name: 'Dirty Hot Chocolate', copy: 'Callebaut 811 55% dark chocolate with a shot of espresso.', slot: 'sig-1', shot: 'Dark hot chocolate with espresso in a ceramic cup' },
-    { kicker: 'Cold Brews', name: 'Whiskey Barrel Aged Cold Brew', copy: 'Barrel-aged coffee with rich, warming notes and a smooth finish, served chilled over ice.', slot: 'pair-guji', shot: 'Chilled barrel-aged coffee cold brew with clear ice' },
+    { kicker: 'Starters', name: 'Chicken Croquettes with Muhammara Sauce', copy: 'Golden chicken croquettes with a tender filling, served with smoky muhammara sauce.', slot: 'chicken-croquettes-muhammara', shot: 'Golden chicken croquettes served with smoky muhammara sauce' },
+    { kicker: 'Ube', name: 'Mango Ube', copy: 'Smooth ube and vibrant mango with creamy milk, served over ice.', slot: 'mango-ube', shot: 'Mango ube drink with creamy milk, served over ice' },
+    { kicker: 'Pasta', name: 'Gnocchi with Pumpkin Sauce', copy: 'Soft gnocchi in creamy pumpkin sauce with onion, garlic, celery and chilli, topped with parmesan and sweet potato crisps.', slot: 'gnocchi-pumpkin-sauce', shot: 'Gnocchi in creamy pumpkin sauce with parmesan and sweet potato crisps' },
+    { kicker: 'Matcha', name: 'Iced Matcha', copy: 'Smooth matcha with creamy milk, served over ice.', slot: 'hot-matcha-latte', shot: 'Iced matcha with creamy milk' },
+    { kicker: 'Sandwiches', name: 'Truffle Mushroom Sandwich', copy: 'Toasted focaccia with roasted mushrooms, garlic, herbs, cheese and truffle oil, served with mayo dip and sweet potato wafers.', slot: 'truffle-mushroom-sandwich', shot: 'Toasted focaccia with roasted mushrooms and truffle cheese filling' },
+    { kicker: 'Starters', name: 'Roast Tomato Ricotta', copy: 'Blanched tomatoes with olive oil and herbs, served with whipped ricotta.', slot: 'roast-tomato-ricotta', shot: 'Roast tomatoes with olive oil, herbs and whipped ricotta' },
+    { kicker: 'Cakes', name: 'Chocolate Orange Cake', copy: 'Chocolate cake with a bright orange flavour.', slot: 'chocolate-orange-cake', shot: 'Chocolate orange cake topped with a glazed orange slice' },
+    { kicker: 'Starters', name: 'Eggplant Cream Cheese Roll', copy: 'Tender eggplant rolls filled with creamy cheese, served over a rich and tangy pomodoro sauce.', slot: 'eggplant-cream-cheese-roll', shot: 'Eggplant rolls filled with creamy cheese over pomodoro sauce' },
   ];
 
   barDrinks = [
@@ -658,18 +659,18 @@ export default class App extends React.Component {
                       </button>
                     </div>
                   </div>
-                  <div data-reveal="200" style={st("display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:18px;align-items:end")}>
-                    <div style={st("overflow:hidden;height:60vh;min-height:420px;background:#EFE3D8")}>
+                  <div data-reveal="200" style={st("display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:18px;align-items:stretch")}>
+                    <div style={st("overflow:hidden;height:clamp(380px,58vh,620px);background:#EFE3D8")}>
                       <div className="hv7" style={st("width:100%;height:100%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)")}>
                         <ImageSlot id="hero-grid-1" priority placeholder="Wide: the dining room in warm daylight - banquette, glassware, marble counter, a table set for lunch" />
                       </div>
                     </div>
-                    <div style={st("overflow:hidden;height:44vh;min-height:320px;background:#DFCBB9")}>
+                    <div style={st("overflow:hidden;height:clamp(380px,58vh,620px);background:#DFCBB9")}>
                       <div className="hv7" style={st("width:100%;height:100%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)")}>
                         <ImageSlot id="hero-grid-2" priority placeholder="Close craft: espresso extraction into a warm cup, crema forming, barista hands, shallow depth" />
                       </div>
                     </div>
-                    <div style={st("overflow:hidden;height:52vh;min-height:380px;background:#EFE3D8")}>
+                    <div style={st("overflow:hidden;height:clamp(380px,58vh,620px);background:#EFE3D8")}>
                       <div className="hv7" style={st("width:100%;height:100%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)")}>
                         <ImageSlot id="hero-grid-3" priority placeholder="Restaurant plating: chef's hands finishing a dish with sauce and oil, overhead, dark ceramic" />
                       </div>
@@ -682,7 +683,7 @@ export default class App extends React.Component {
                   <TextLoop
                     text="Good coffee, good company, all day long"
                     shape="line"
-                    speed={48}
+                    speed={100}
                     direction="forward"
                     separator=""
                     curviness={0}
@@ -836,7 +837,7 @@ export default class App extends React.Component {
                     <div data-reveal="40">
                       <div style={st("overflow:hidden;background:#EFE3D8;aspect-ratio:3/4")}>
                         <div className="hv10" style={st("width:100%;height:100%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)")}>
-                          <ImageSlot id="dish-1" placeholder="Restaurant plating: aglio olio nested with tongs, chilli oil and parsley, dark ceramic, overhead" />
+                          <ImageSlot id="frittata-omelette" placeholder="Italian-style frittata with vegetables, served with baked beans and sourdough" />
                         </div>
                       </div>
                       <div style={st("display:flex;justify-content:space-between;align-items:baseline;margin-top:20px;gap:16px")}>
@@ -848,54 +849,54 @@ export default class App extends React.Component {
                         <div style={st("font-size:11px;color:#96755C")}>Most ordered</div>
                       </div>
                       <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:27px;margin-top:10px")}>
-                        Aglio Olio
+                        Frittata Omelette
                       </h3>
                       <p style={st("font-size:14px;line-height:1.75;color:#6E4A34;margin-top:10px")}>
-                        Spaghetti, garlic, chilli, parsley and olive oil, emulsified until glossy. Simple ingredients, exacting technique.
+                        Italian-style frittata with zucchini, bell peppers, olives and assorted vegetables, served with baked beans and sourdough.
                       </p>
                     </div>
                     <div data-reveal="120">
                       <div style={st("overflow:hidden;background:#EFE3D8;aspect-ratio:3/4")}>
                         <div className="hv10" style={st("width:100%;height:100%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)")}>
-                          <ImageSlot id="dish-2" placeholder="Croque monsieur cut clean, béchamel edge caught under the grill, on ceramic with cornichons" />
+                          <ImageSlot id="neapolitan-pizza" placeholder="Buffalo chicken pizza with onions, mozzarella and ranch" />
                         </div>
                       </div>
                       <div style={st("display:flex;justify-content:space-between;align-items:baseline;margin-top:20px;gap:16px")}>
                         <div style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#A35730")}>
-                          France
+                          AMERICAN
                         </div>
                         <div style={st("font-size:11px;color:#96755C")}>All day</div>
                       </div>
                       <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:27px;margin-top:10px")}>
-                        Croque Monsieur
+                        Buffalo Chicken Pizza
                       </h3>
                       <p style={st("font-size:14px;line-height:1.75;color:#6E4A34;margin-top:10px")}>
-                        House sourdough layered with cured ham and Comté béchamel, grilled until crisp at the edges. Cornichons on the side.
+                        Neapolitan-style pizza with spicy buffalo chicken, onions and mozzarella, finished with ranch.
                       </p>
                     </div>
                     <div data-reveal="200">
                       <div style={st("overflow:hidden;background:#EFE3D8;aspect-ratio:3/4")}>
                         <div className="hv10" style={st("width:100%;height:100%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)")}>
-                          <ImageSlot id="dessert-1" placeholder="A dessert selection from the Beanery bake house" />
+                          <ImageSlot id="grilled-pomfret-capers" placeholder="Grilled pomfret with lemon caper sauce and vegetables" />
                         </div>
                       </div>
                       <div style={st("display:flex;justify-content:space-between;align-items:baseline;margin-top:20px;gap:16px")}>
                         <div style={st("display:flex;align-items:center;gap:10px")}>
                           <span style={st("font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#A35730")}>
-                            Spain
+                            Continental
                           </span>
-                          <span style={st("display:flex;align-items:center;gap:6px;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:#2E5D36;border:1px solid rgba(107,143,90,.6);padding:4px 8px")}>
-                            <span style={st("width:5px;height:5px;background:#6B8F5A;display:block")} />
-                            Veg
+                          <span style={st("display:flex;align-items:center;gap:6px;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:#B5473C;border:1px solid rgba(181,71,60,.6);padding:4px 8px")}>
+                            <span style={st("width:5px;height:5px;background:#B5473C;display:block")} />
+                            Non-Veg
                           </span>
                         </div>
-                        <div style={st("font-size:11px;color:#96755C")}>Baked fresh daily</div>
+                        <div style={st("font-size:11px;color:#96755C")}>Big Plates</div>
                       </div>
                       <h3 style={st("font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:27px;margin-top:10px")}>
-                        Nutella Pancakes
+                        Grilled Pomfret with Capers Sauce
                       </h3>
                       <p style={st("font-size:14px;line-height:1.75;color:#6E4A34;margin-top:10px")}>
-                        Fluffy pancakes with Nutella, fresh strawberries and a creamy Nutella frosting.
+                        Grilled bhetki with spicy baby potatoes, beans and white wine, butter, garlic and lemon caper sauce.
                       </p>
                     </div>
                   </div>
@@ -1131,7 +1132,7 @@ export default class App extends React.Component {
                       </h2>
                     </div>
                     <p style={st("font-size:14px;line-height:1.75;color:#6E4A34;max-width:34ch")}>
-                      Five pairings chosen to make both the cup and the plate taste better.
+                      Five pairings, featuring dishes and artwork from the Beanery menu.
                     </p>
                   </div>
                   <div style={st("display:grid;grid-template-columns:minmax(300px,1fr) 1.55fr;gap:56px;margin-top:56px;align-items:start")}>

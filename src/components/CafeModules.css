@@ -70,9 +70,10 @@
 }
 .cafe-module--home .cafe-module__image {
   position: relative;
-  aspect-ratio: 1.12 / 1;
+  aspect-ratio: 1 / 1;
   background: #DFCBB9;
 }
+.cafe-module--home:first-child .cafe-module__image img { object-position: 50% 64% !important; }
 .cafe-module--home .cafe-module__image .imgslot { transition: transform 1.2s cubic-bezier(.2,.7,.2,1); }
 .cafe-module--home:hover .cafe-module__image .imgslot { transform: scale(1.035); }
 .cafe-module__index {
@@ -194,7 +195,7 @@
   .cafe-module__image { aspect-ratio: 4 / 3; }
   .cafe-module-grid--home { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
   .cafe-module--home { display: flex; gap: 0; }
-  .cafe-module--home .cafe-module__image { aspect-ratio: 1.25 / 1; }
+  .cafe-module--home .cafe-module__image { aspect-ratio: 1 / 1; }
 }
 @media (max-width: 560px) {
   .cafe-module-grid { grid-template-columns: 1fr; gap: 42px; }
@@ -447,4 +448,56 @@
   }
   .cafe-module--home .cafe-module__copy button span,
   .cafe-module--home .cafe-module__copy a span{flex-basis:22px;width:22px;height:22px;font-size:15px;}
+}
+
+/* On phones, let each home feature breathe: image first, full-width copy below. */
+@media(max-width:560px){
+  .cafe-module-grid--home{
+    grid-template-columns:minmax(0,1fr);
+    grid-auto-rows:auto;
+    gap:18px;
+  }
+  .cafe-module--home{
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
+  }
+  .cafe-module--home .cafe-module__image{
+    flex:none;
+    min-height:0;
+    aspect-ratio:1.42/1;
+  }
+  .cafe-module--home .cafe-module__copy{
+    flex:none;
+    padding:22px 20px 20px;
+  }
+  .cafe-module--home .cafe-module__copy h3{
+    margin-top:9px;
+    font-size:clamp(27px,8vw,34px);
+    line-height:1.05;
+  }
+  .cafe-module--home .cafe-module__copy p{
+    max-width:42ch;
+    margin-top:10px;
+    font-size:14px;
+    line-height:1.65;
+  }
+  .cafe-module--home .cafe-module__copy button,
+  .cafe-module--home .cafe-module__copy a{
+    align-self:stretch;
+    width:100%;
+    min-height:48px;
+    margin-top:18px;
+    padding:7px 9px 7px 14px;
+    gap:10px;
+    font-size:9px;
+    letter-spacing:.08em;
+  }
+  .cafe-module--home .cafe-module__copy button span,
+  .cafe-module--home .cafe-module__copy a span{
+    flex-basis:30px;
+    width:30px;
+    height:30px;
+    font-size:18px;
+  }
 }

@@ -390,6 +390,11 @@ section > div[style*="max-width: 1560px"][style*="padding: 0 40px"],
   [data-r="herotype"]{padding:120px 24px 60px!important}
   [data-r="switcher"]{display:none!important}
 
+  /* Preserve each hero photo's natural crop when the three cards stack. */
+  section[data-home-hero] [data-reveal="200"]>div:first-child{height:auto!important;aspect-ratio:1.49/1}
+  section[data-home-hero] [data-reveal="200"]>div:nth-child(2),
+  section[data-home-hero] [data-reveal="200"]>div:nth-child(3){height:auto!important;aspect-ratio:2/3}
+
   /* Keep split-layout copy on the same page gutter as the Journal heading. */
   section > [style*="padding: 130px 40px"],
   section > [style*="padding: 120px 40px"]{padding-left:0!important;padding-right:0!important}
