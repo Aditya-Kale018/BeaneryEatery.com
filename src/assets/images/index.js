@@ -13,9 +13,16 @@ import img_bean_ken from './bean-ken.webp';
 import img_bev_hero from './bev-hero.webp';
 import img_brew_ap from './brew-ap.webp';
 import img_brew_cb from './brew-cb.webp';
+import img_brew_chemex from './brew-chemex.webp';
+import img_brew_clever from './brew-clever.webp';
+import img_brew_aeropress from './brew-aeropress.webp';
 import img_brew_esp from './brew-esp.webp';
 import img_brew_fp from './brew-fp.webp';
+import img_brew_french_press from './brew-french-press.webp';
+import img_brew_kalita from './brew-kalita.webp';
+import img_brew_origami from './brew-origami.webp';
 import img_brew_po from './brew-po.webp';
+import img_brew_v60 from './brew-v60.webp';
 import img_btb_1 from './btb-1.webp';
 import img_btb_2 from './btb-2.webp';
 import img_btb_3 from './btb-3.webp';
@@ -30,6 +37,8 @@ import img_exp_2 from './exp-2.webp';
 import img_exp_3 from './exp-3.webp';
 import img_exp_4 from './exp-4.webp';
 import img_exp_banner from './exp-banner.webp';
+import img_open_lounge from './open-lounge.webp';
+import img_rooftop_table from './rooftop-table.webp';
 import img_feat_coffee from './feat-coffee.webp';
 import img_frittata_omelette from './frittata-omelette.webp';
 import img_grilled_pomfret_capers from './grilled-pomfret-capers.webp';
@@ -66,6 +75,7 @@ import img_hot_matcha_latte from './hot-matcha-latte.webp';
 import img_part_afternoon from './part-afternoon.webp';
 import img_part_evening from './part-evening.webp';
 import img_part_morning from './part-morning.webp';
+import img_sunday_brunch from './sunday-brunch.webp';
 import img_people_1 from './people-1.webp';
 import img_people_2 from './people-2.webp';
 import img_people_3 from './people-3.webp';
@@ -95,9 +105,16 @@ export const SLOTS = {
   'bev-hero': at(img_bev_hero),
   'brew-ap': at(img_brew_ap),
   'brew-cb': at(img_brew_cb),
+  'brew-chemex': at(img_brew_chemex),
+  'brew-clever': at(img_brew_clever),
+  'brew-aeropress': at(img_brew_aeropress),
   'brew-esp': at(img_brew_esp),
   'brew-fp': at(img_brew_fp),
+  'brew-french-press': at(img_brew_french_press),
+  'brew-kalita': at(img_brew_kalita),
+  'brew-origami': at(img_brew_origami),
   'brew-po': at(img_brew_po),
+  'brew-v60': at(img_brew_v60),
   'btb-1': at(img_btb_1),
   'btb-2': at(img_btb_2),
   'btb-3': at(img_btb_3),
@@ -113,6 +130,8 @@ export const SLOTS = {
   'exp-3': at(img_exp_3),
   'exp-4': at(img_exp_4),
   'exp-banner': at(img_exp_banner),
+  'open-lounge': at(img_open_lounge),
+  'rooftop-table': at(img_rooftop_table),
   'feat-coffee': at(img_feat_coffee),
   'frittata-omelette': at(img_frittata_omelette),
   'grilled-pomfret-capers': at(img_grilled_pomfret_capers),
@@ -149,6 +168,7 @@ export const SLOTS = {
   'part-afternoon': at(img_part_afternoon),
   'part-evening': at(img_part_evening),
   'part-morning': at(img_part_morning),
+  'sunday-brunch': at(img_sunday_brunch),
   'people-1': at(img_people_1),
   'people-2': at(img_people_2),
   'people-3': at(img_people_3),

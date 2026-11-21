@@ -526,6 +526,25 @@ img[data-await-load]:not([data-settled]) { visibility: hidden; }
   .coffee-bar-feature__item > div:first-child > div:first-child{font-size:17px!important;}
 }
 
+/* Gather links lead to sections on the existing Events page. */
+.nav-gather-links{position:relative;color:#5E2B17;font-size:12px;letter-spacing:.11em;text-transform:uppercase;}
+.nav-gather-links summary{list-style:none;padding:5px 0;cursor:pointer;}
+.nav-gather-links summary::-webkit-details-marker{display:none;}
+.nav-gather-links summary::after{content:'⌄';margin-left:6px;font-size:13px;}
+.nav-gather-links summary:focus-visible,.nav-gather-links__panel a:focus-visible,.mobile-gather-links a:focus-visible{outline:3px solid rgba(163,87,48,.38);outline-offset:4px;}
+.nav-gather-links__panel{position:absolute;z-index:100;top:calc(100% + 14px);right:0;display:grid;gap:0;min-width:210px;padding:8px 16px;border:1px solid rgba(94,43,23,.16);background:#FBF8F4;box-shadow:0 14px 36px rgba(53,38,31,.14);}
+.nav-gather-links__panel a{padding:12px 0;border-bottom:1px solid rgba(94,43,23,.1);color:#5E2B17;font-size:10px;letter-spacing:.08em;text-decoration:none;}
+.nav-gather-links__panel a:last-child{border-bottom:0;}
+.nav-gather-links__panel a:hover{color:#A35730;}
+.mobile-gather-links{display:grid;gap:0;padding:20px 0 8px;border-bottom:1px solid rgba(94,43,23,.14);}
+.mobile-gather-links>span{margin-bottom:6px;color:#96755C;font-size:9px;letter-spacing:.16em;text-transform:uppercase;}
+.mobile-gather-links a{display:flex;justify-content:space-between;align-items:center;padding:11px 0;color:#5E2B17;font:400 22px/1.2 'Playfair Display',Georgia,serif;text-decoration:none;}
+.mobile-gather-links a span{font:18px/1 Georgia,serif;color:#A35730;}
+.cafe-experiences__modules .cafe-module[id],#event-enquiry{scroll-margin-top:110px;}
+@media(max-width:760px){
+  [data-overlay="menu"] nav{max-height:calc(100dvh - 235px);overflow-y:auto;overscroll-behavior:contain;}
+}
+
 /* Coffee page: tactile, low contrast treatment for the existing brew carousel. */
 .coffee-brew-section{
   position:relative;

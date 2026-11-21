@@ -404,13 +404,13 @@ export default class App extends React.Component {
   ];
 
   brews = [
-    { name: 'Origami Dripper', kicker: '2:45 min', spec: ['15 g · 240 ml', 'Kalita or cone filter', 'Vibrant & structured'], copy: 'Japanese 20-flute ceramic dripper that accentuates lively florals, clean fruit sweetness and delicate acidity.', price: '₹250/-', slot: 'brew-po', shot: 'Origami dripper pouring into carafe, studio light' },
-    { name: 'Clever Dripper', kicker: '3:15 min', spec: ['18 g · 260 ml', 'Immersion + paper filter', 'Sweet & balanced'], copy: 'Combines the round body and rich sweetness of full immersion with the crystalline clarity of a paper filter.', price: '₹240/-', slot: 'brew-fp', shot: 'Clever dripper releasing brew into carafe' },
-    { name: 'V60 Pour Over', kicker: '3:30 min', spec: ['15 g · 240 ml', 'Spiral cascade · 92°C', 'Bright & articulate'], copy: 'Single-origin coffee brewed on the Hario V60 to bring out delicate aromatics, citrus notes, and crisp finish.', price: '₹250/-', slot: 'brew-po', shot: 'Gooseneck kettle pouring in a spiral, steam catching daylight' },
-    { name: 'French Press', kicker: '4 minutes', spec: ['30 g · 500 ml', 'Full immersion', 'Rich & textured'], copy: 'Full-immersion brewing giving a rounder body and softer edges. Served for two, made for a slower table.', price: '₹240/-', slot: 'brew-fp', shot: 'French press on a linen tray, two cups, morning table' },
-    { name: 'Chemex', kicker: '4:00 min', spec: ['25 g · 400 ml', 'Bonded filter paper', 'Tea-like & pristine'], copy: 'Heavy bonded filters remove all sediment and oils, delivering an exceptionally pure, fragrant, tea-like cup.', price: '₹310/-', slot: 'brew-ap', shot: 'Chemex glass flask with wood collar, filtered brew' },
-    { name: 'Kalita Wave', kicker: '3:00 min', spec: ['16 g · 250 ml', 'Flat-bottom · 3 holes', 'Even & sweet'], copy: 'Wave-shaped filter and flat bed geometry encourage even extraction and rich, consistent sweetness.', price: '₹250/-', slot: 'brew-po', shot: 'Kalita wave dripper, stainless steel, brew dripping into server' },
-    { name: 'AeroPress', kicker: '2:10 inverted', spec: ['15 g · 200 ml', 'Inverted, one press', 'Bright & clean'], copy: 'A compact, expressive brew with a clean finish, especially good when you want sweetness and body without heaviness.', price: '₹240/-', slot: 'brew-ap', shot: 'AeroPress mid-plunge, barista hands, close crop' },
+    { name: 'Origami Dripper', kicker: '2:45 min', spec: ['15 g · 240 ml', 'Kalita or cone filter', 'Vibrant & structured'], copy: 'Japanese 20-flute ceramic dripper that accentuates lively florals, clean fruit sweetness and delicate acidity.', price: '₹250/-', slot: 'brew-origami', shot: 'Origami dripper pouring into carafe, studio light' },
+    { name: 'Clever Dripper', kicker: '3:15 min', spec: ['18 g · 260 ml', 'Immersion + paper filter', 'Sweet & balanced'], copy: 'Combines the round body and rich sweetness of full immersion with the crystalline clarity of a paper filter.', price: '₹240/-', slot: 'brew-clever', shot: 'Clever dripper releasing brew into carafe' },
+    { name: 'V60 Pour Over', kicker: '3:30 min', spec: ['15 g · 240 ml', 'Spiral cascade · 92°C', 'Bright & articulate'], copy: 'Single-origin coffee brewed on the Hario V60 to bring out delicate aromatics, citrus notes, and crisp finish.', price: '₹250/-', slot: 'brew-v60', shot: 'Gooseneck kettle pouring in a spiral, steam catching daylight' },
+    { name: 'French Press', kicker: '4 minutes', spec: ['30 g · 500 ml', 'Full immersion', 'Rich & textured'], copy: 'Full-immersion brewing giving a rounder body and softer edges. Served for two, made for a slower table.', price: '₹240/-', slot: 'brew-french-press', shot: 'French press on a linen tray, two cups, morning table' },
+    { name: 'Chemex', kicker: '4:00 min', spec: ['25 g · 400 ml', 'Bonded filter paper', 'Tea-like & pristine'], copy: 'Heavy bonded filters remove all sediment and oils, delivering an exceptionally pure, fragrant, tea-like cup.', price: '₹310/-', slot: 'brew-chemex', shot: 'Chemex glass flask with wood collar, filtered brew' },
+    { name: 'Kalita Wave', kicker: '3:00 min', spec: ['16 g · 250 ml', 'Flat-bottom · 3 holes', 'Even & sweet'], copy: 'Wave-shaped filter and flat bed geometry encourage even extraction and rich, consistent sweetness.', price: '₹250/-', slot: 'brew-kalita', shot: 'Kalita wave dripper, stainless steel, brew dripping into server' },
+    { name: 'AeroPress', kicker: '2:10 inverted', spec: ['15 g · 200 ml', 'Inverted, one press', 'Bright & clean'], copy: 'A compact, expressive brew with a clean finish, especially good when you want sweetness and body without heaviness.', price: '₹240/-', slot: 'brew-aeropress', shot: 'AeroPress mid-plunge, barista hands, close crop' },
     { name: 'Cold Brew', kicker: '18 hours', spec: ['1:8 concentrate', 'Steeped cold, never heated', 'Slow-crafted'], copy: 'Steeped cold for 18 hours and served over clear ice. Smooth, naturally sweet and low in bitterness.', price: '₹240/-', slot: 'brew-cb', shot: 'Tall glass of cold brew, clear ice, condensation, dark wood' },
   ];
 
@@ -473,6 +473,14 @@ export default class App extends React.Component {
         key, label,
         go: (e) => { if (e) e.preventDefault(); if (window.location.hash !== `#/${key}`) window.history.pushState({ page: key }, '', `#/${key}`); this.setState({ menu: false, page: key }, () => window.scrollTo({ top: 0 })); requestAnimationFrame(() => this.setupReveals(true)); },
       })),
+      goExperienceSection: (id) => (e) => {
+        if (e) e.preventDefault();
+        const route = '#/experiences';
+        if (window.location.hash !== route) window.history.pushState({ page: 'experiences' }, '', route);
+        this.setState({ page: 'experiences', menu: false }, () => {
+          window.setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 40);
+        });
+      },
       navRef: (el) => { this.navRef = el; },
       navLeft: mk(this.pages.slice(0, 4)),
       navRight: mk(this.pages.slice(4)),
@@ -531,7 +539,7 @@ export default class App extends React.Component {
       journal, journalPositions, menuOpen, navAll, navLeft, navRef, navRight, openMenu, openMenuOrder, openOrder, openReserve,
       part, pillars, railBrewNext, railBrewPrev, railExpNext, railExpPrev, railRefBrew,
       railRefExp, railRefSig, railSigNext, railSigPrev,
-      showPrices, signature, site, testimonials,
+      showPrices, signature, site, testimonials, goExperienceSection,
     } = this.renderVals();
     const faceImage = this.context.images?.['face-relief'] || faceRelief;
     const facePosition = this.context.imagePositions?.['face-relief'];
@@ -581,9 +589,21 @@ export default class App extends React.Component {
           </a>
           <nav data-r="deskonly" style={st("display:flex;gap:26px;align-items:center;justify-content:flex-end")}>
             {navRight.map((item, i) => (
-              <a key={i} className="hv1" href={`#/${item.key}`} onClick={item.go} data-navlink="1" data-navactive={item.active} style={st("font-size:12px;letter-spacing:.11em;text-transform:uppercase;font-weight:500;padding-bottom:5px;cursor:pointer")}>
-                {item.label}
-              </a>
+              <React.Fragment key={i}>
+                <a className="hv1" href={`#/${item.key}`} onClick={item.go} data-navlink="1" data-navactive={item.active} style={st("font-size:12px;letter-spacing:.11em;text-transform:uppercase;font-weight:500;padding-bottom:5px;cursor:pointer")}>
+                  {item.label}
+                </a>
+                {item.key === 'experiences' ? (
+                  <details className="nav-gather-links">
+                    <summary>Gather</summary>
+                    <div className="nav-gather-links__panel">
+                      <a href="#/experiences#meeting-room" onClick={goExperienceSection('meeting-room')}>Meeting Room</a>
+                      <a href="#/experiences#coworking-space" onClick={goExperienceSection('coworking-space')}>Coworking Space</a>
+                      <a href="#/experiences#event-enquiry" onClick={goExperienceSection('event-enquiry')}>Event Booking</a>
+                    </div>
+                  </details>
+                ) : null}
+              </React.Fragment>
             ))}
             <button className="hv2 cafe-green-button" onClick={openReserve} style={st("font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:500;color:#FBF8F4;background:#5E2B17;border:none;padding:13px 22px;cursor:pointer;transition:background .3s ease")}>
               Reserve a table
@@ -611,6 +631,12 @@ export default class App extends React.Component {
                   {item.label}
                 </a>
               ))}
+              <div className="mobile-gather-links">
+                <span>Plan a gathering</span>
+                <a href="#/experiences#meeting-room" onClick={goExperienceSection('meeting-room')}>Meeting Room <span aria-hidden="true">→</span></a>
+                <a href="#/experiences#coworking-space" onClick={goExperienceSection('coworking-space')}>Coworking Space <span aria-hidden="true">→</span></a>
+                <a href="#/experiences#event-enquiry" onClick={goExperienceSection('event-enquiry')}>Event Booking <span aria-hidden="true">→</span></a>
+              </div>
             </nav>
             <div style={st("margin-top:auto;padding-top:34px;display:flex;flex-direction:column;gap:14px")}>
               <button onClick={openReserve} style={st("text-align:left;font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:500;color:#FBF8F4;background:#5E2B17;border:none;padding:19px 24px;cursor:pointer")}>
@@ -2236,6 +2262,9 @@ export default class App extends React.Component {
                 <a className="hv17" href="#top" onClick={goExp} style={st("color:rgba(251,248,244,.85)")}>
                   Events
                 </a>
+                <a className="hv17" href="#/experiences#meeting-room" onClick={goExperienceSection('meeting-room')} style={st("color:rgba(251,248,244,.85)")}>Meeting Room</a>
+                <a className="hv17" href="#/experiences#coworking-space" onClick={goExperienceSection('coworking-space')} style={st("color:rgba(251,248,244,.85)")}>Coworking Space</a>
+                <a className="hv17" href="#/experiences#event-enquiry" onClick={goExperienceSection('event-enquiry')} style={st("color:rgba(251,248,244,.85)")}>Event Booking</a>
                 <a className="hv17" href="#top" onClick={goJournal} style={st("color:rgba(251,248,244,.85)")}>
                   Journal
                 </a>

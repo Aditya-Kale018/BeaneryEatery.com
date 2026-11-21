@@ -55,6 +55,7 @@ import {
 } from './security.js';
 import { removeLocalUpload, uploadedFileMatchesMime } from './upload-security.js';
 import { eventNotificationConfig, notifyNewEvent } from './event-notifications.js';
+import { LEGACY_EVENT_TYPES, PUBLIC_EVENT_TYPES } from '../shared/venue-config.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const distDir = path.join(here, '..', 'dist');
@@ -82,10 +83,15 @@ app.use(cookieParser());
 
 /* ------------------------------------------------------------ event enquiries -- */
 
-const EVENT_TYPES = new Set(['Open Gathering Space', 'Rooftop Table', 'Conference Room', 'Sunday Brunch', 'Corporate Event', 'Birthday Party', 'Meetup', 'Business Gathering', 'Celebration', 'Other']);
+const EVENT_TYPES = new Set([...PUBLIC_EVENT_TYPES, ...LEGACY_EVENT_TYPES]);
 const fieldText = (value, limit) => typeof value === 'string' ? value.trim().slice(0, limit) : '';
 
 app.post('/api/events', eventLimiter, async (req, res) => {
+  // Quietly accept honeypot submissions without storing them or notifying staff.
+  if (fieldText(req.body?.website, 200)) {
+    res.status(202).json({ ok: true });
+    return;
+  }
   const name = fieldText(req.body?.name, 100);
   const phone = fieldText(req.body?.phone, 40);
   const email = fieldText(req.body?.email, 160);
@@ -94,13 +100,33 @@ app.post('/api/events', eventLimiter, async (req, res) => {
   const preferredDate = fieldText(req.body?.preferredDate, 10);
   const preferredTime = fieldText(req.body?.preferredTime, 60);
   const message = fieldText(req.body?.message, 2000);
-  if (!name || !phone || !EVENT_TYPES.has(eventType) || !guestCount || !message) {
-    res.status(400).json({ error: 'Please include your name, phone, guest count, event setting and a short note.' });
+  if (!name || !phone || !EVENT_TYPES.has(eventType) || !guestCount) {
+    res.status(400).json({ error: 'Please include your name, phone number, event type and number of guests.' });
+    return;
+  }
+  if (guestCount < 25) {
+    res.status(400).json({ error: 'Event bookings are available for groups of 25 or more guests.' });
+    return;
+  }
+  const phoneDigits = phone.replace(/\D/g, '');
+  if (phoneDigits.length < 7 || phoneDigits.length > 15) {
+    res.status(400).json({ error: 'Please enter a phone number with 7 to 15 digits, including the country code if needed.' });
     return;
   }
   if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     res.status(400).json({ error: 'Please enter a valid email address.' });
     return;
+  }
+  if (preferredDate && !/^\d{4}-\d{2}-\d{2}$/.test(preferredDate)) {
+    res.status(400).json({ error: 'Please choose a valid preferred date.' });
+    return;
+  }
+  if (preferredDate) {
+    const parsedDate = new Date(`${preferredDate}T00:00:00.000Z`);
+    if (Number.isNaN(parsedDate.getTime()) || parsedDate.toISOString().slice(0, 10) !== preferredDate || preferredDate < new Date().toISOString().slice(0, 10)) {
+      res.status(400).json({ error: 'Please choose a valid date today or later.' });
+      return;
+    }
   }
   try {
     const entry = await addEventEntry({

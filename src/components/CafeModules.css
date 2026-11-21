@@ -318,6 +318,40 @@
   font-size:13.5px;
   line-height:1.75;
 }
+.cafe-module__cover-charge{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  gap:4px 12px;
+  width:100%;
+  margin-top:18px;
+  padding:13px 15px;
+  border:1px solid rgba(94,43,23,.16);
+  background:#F4E9DC;
+  color:#68432D;
+}
+.cafe-module__cover-charge strong{font:500 19px/1.1 'Playfair Display',Georgia,serif;color:#35261F;}
+.cafe-module__cover-charge>span:nth-child(2){font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#896B55;}
+.cafe-module__cover-charge .cafe-module__redeemable{justify-self:end;padding:5px 8px;border:1px solid rgba(46,93,54,.28);color:#2E5D36;font-size:8px;letter-spacing:.1em;text-transform:uppercase;}
+.cafe-module__cover-charge p{grid-column:1/-1;margin:5px 0 0!important;color:#2E5D36!important;font-size:11px!important;line-height:1.5!important;}
+.cafe-experiences__modules .cafe-module__copy p.cafe-module__confirmation-note{margin-top:12px;color:#795D49;font-size:11px;line-height:1.65;}
+.cafe-module__contact-actions{display:flex;flex-wrap:wrap;gap:10px;width:100%;margin-top:auto;padding-top:20px;}
+.cafe-experiences__modules .cafe-module__copy .cafe-module__contact-actions a{flex:1 1 130px;justify-content:space-between;min-width:0;margin:0;padding:12px 14px;border:1px solid rgba(94,43,23,.24);font-size:9px;letter-spacing:.1em;}
+.cafe-experiences__modules .cafe-module__copy .cafe-module__contact-actions a:hover{border-color:#5E2B17;background:#5E2B17;color:#FBF8F4;}
+.cafe-experiences__modules .cafe-module__copy .cafe-module__amenities{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px 16px;
+  width:100%;
+  margin:18px 0 0;
+  padding:0;
+  list-style:none;
+  color:#6E4A34;
+  font-size:11px;
+  line-height:1.5;
+}
+.cafe-module__amenities li::before{content:'·';margin-right:8px;color:#A35730;font-weight:700;}
+.cafe-experiences__modules .cafe-module__copy p.cafe-module__detail-note{margin-top:11px;color:#96755C;font-size:10px;line-height:1.6;}
 .cafe-experiences__modules .cafe-module__copy button,
 .cafe-experiences__modules .cafe-module__copy a{
   display:inline-flex;
